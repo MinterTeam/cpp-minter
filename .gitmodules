@@ -1,0 +1,6 @@
+[submodule "libs/bip39"]
+	path = libs/bip39
+	url = https://github.com/edwardstock/native-bip39.git
+[submodule "libs/secp256k1"]
+	path = libs/secp256k1
+	url = https://github.com/edwardstock/native-secp256k1-java.git
