@@ -64,7 +64,7 @@ class MinterTxConan(ConanFile):
         cmake.build()
 
     def package(self):
-        self.copy("*.h", dst="include", src="include", keep_path=True)
+        self.copy("*", dst="include", src="include", keep_path=True)
         self.copy("*minter_tx.lib", dst="lib", keep_path=False)
         self.copy("*minter_tx.so", dst="lib", keep_path=False)
         self.copy("*minter_tx.dylib", dst="lib", keep_path=False)

@@ -28,6 +28,12 @@ jobs:
       - run: conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan
       - run: conan remote add minter https://api.bintray.com/conan/minterteam/minter
       - run: conan user -p $BINTRAY_API_KEY -r minter edwardstock
+      - run: conan install gtest/1.8.1@bincrafters/stable
+      - run: conan install toolboxpp/2.2.0@scatter/latest
+      - run: conan install boost_multiprecision/1.69.0@bincrafters/stable
+      - run: conan install boost_system/1.69.0@bincrafters/stable
+      - run: conan install boost_filesystem/1.69.0@bincrafters/stable
+      - run: conan install boost_thread/1.69.0@bincrafters/stable
       - run: mkdir -p _build
       - run: export CC=/usr/bin/gcc
       - run: export CXX=/usr/bin/g++
