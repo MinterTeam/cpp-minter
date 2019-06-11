@@ -24,6 +24,7 @@ jobs:
             - /tmp/pkgs
       - run: pip3 install setuptools -U
       - run: pip3 install conan
+      - run: conan remove --locks
       - run: conan remote add scatter https://api.bintray.com/conan/edwardstock/scatter
       - run: conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan
       - run: conan remote add minter https://api.bintray.com/conan/minterteam/minter
