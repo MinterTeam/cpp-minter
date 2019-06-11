@@ -31,16 +31,16 @@ jobs:
       - run: mkdir -p _build
       - run: export CC=/usr/bin/gcc
       - run: export CXX=/usr/bin/g++
-      - restore_cache:
-          keys:
-            - conan-dir-{{ checksum "conanfile.txt" }}
+#      - restore_cache:
+#          keys:
+#            - conan-dir-{{ checksum "conanfile.txt" }}
       - run:
           name: Configuring
           command: conan remove --locks && cd _build && cmake .. -DCMAKE_BUILD_TYPE=Debug -DWITH_TEST=ON
-      - save_cache:
-          key: conan-dir-{{ checksum "conanfile.txt" }}
-          paths:
-            - /root/.conan
+#      - save_cache:
+#          key: conan-dir-{{ checksum "conanfile.txt" }}
+#          paths:
+#            - /root/.conan
       - run: cmake --build ./_build --target minter-test
       - run:
           name: Testing
