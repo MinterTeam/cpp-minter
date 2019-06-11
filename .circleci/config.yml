@@ -1,0 +1,50 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: debian:jessie
+        environment:
+          CXX: /usr/bin/g++
+          CC: /usr/bin/gcc
+    steps:
+      - run: apt-get update
+      - run: apt-get install -y git
+      - run:
+          name: Cloning repo
+          command: git clone --recursive https://github.com/MinterTeam/cpp-minter .
+      - restore_cache:
+          keys:
+            - custom-pkgs-{{ checksum ".circleci/setup.sh" }}
+      - run:
+          name: Preparing
+          command: $(which bash) .circleci/setup.sh
+      - save_cache:
+          key: custom-pkgs-{{ checksum ".circleci/setup.sh" }}
+          paths:
+            - /tmp/pkgs
+      - run: pip3 install setuptools -U
+      - run: pip3 install conan
+      - run: conan remote add scatter https://api.bintray.com/conan/edwardstock/scatter
+      - run: conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan
+      - run: conan remote add minter https://api.bintray.com/conan/minterteam/minter
+      - run: conan user -p $BINTRAY_API_KEY -r minter edwardstock
+      - run: mkdir -p _build
+      - run: export CC=/usr/bin/gcc
+      - run: export CXX=/usr/bin/g++
+      - restore_cache:
+          keys:
+            - conan-dir-{{ checksum "conanfile.txt" }}
+      - run:
+          name: Configuring
+          command: cd _build && cmake .. -DCMAKE_BUILD_TYPE=Debug -DWITH_TEST=ON
+      - save_cache:
+          key: conan-dir-{{ checksum "conanfile.txt" }}
+          paths:
+            - /root/.conan
+      - run: cmake --build ./_build --target minter-test
+      - run:
+          name: Testing
+          command: $(which bash) .circleci/test.sh
+      - run:
+          name: Deploy
+          command: $(which bash) .circleci/deploy.sh

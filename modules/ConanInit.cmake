@@ -37,7 +37,7 @@ function (add_conan_remote NAME URL)
 		OUTPUT_VARIABLE CONAN_ADD_REMOTE_OUT
 		RESULT_VARIABLE CONAN_ADD_REMOTE_RES
 	)
-	message(STATUS "Conan: ${CONAN_BIN} remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan")
+	message(STATUS "Conan: ${CONAN_BIN} remote add bincrafters ${URL}")
 
 	if (CONAN_ADD_REMOTE_ERR)
 		message(STATUS "Conan: Add remote error: ${CONAN_ADD_REMOTE_ERR}")

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(minter_tx
+project(minter
         VERSION 0.1.0
         DESCRIPTION "Minter Transaction Maker"
         LANGUAGES CXX
@@ -16,6 +16,7 @@ include(ConanInit)
 
 add_conan_remote(bincrafters https://api.bintray.com/conan/bincrafters/public-conan)
 add_conan_remote(scatter https://api.bintray.com/conan/edwardstock/scatter)
+add_conan_remote(minter https://api.bintray.com/conan/minterteam/minter)
 conan_init()
 
 set(ENABLE_SHARED OFF CACHE BOOL "Build shared lib instead of static")
@@ -24,7 +25,7 @@ set(DISABLE_JNI ON)
 option(ENABLE_JNI OFF)
 option(ENABLE_GO OFF)
 
-set(RP_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+set(CMAKE_CURRENT_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 
 set(ETH_HEADERS
     include/minter/eth/RLP.h
@@ -122,14 +123,14 @@ target_compile_options(${PROJECT_NAME} PUBLIC -Wno-shift-count-overflow -fPIC) #
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 #uint256
-add_subdirectory(${RP_DIR}/libs/uint256 ${CMAKE_BINARY_DIR}/uint256)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/libs/uint256 ${CMAKE_BINARY_DIR}/uint256)
 
 # bip39
-add_subdirectory(${RP_DIR}/libs/bip39 ${CMAKE_BINARY_DIR}/bip39)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/libs/bip39 ${CMAKE_BINARY_DIR}/bip39)
 
 #secp256k1
-add_subdirectory(${RP_DIR}/libs/secp256k1 ${CMAKE_BINARY_DIR}/secp256k1)
-target_include_directories(secp256k1_core PRIVATE ${RP_DIR}/libs/secp256k1)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/libs/secp256k1 ${CMAKE_BINARY_DIR}/secp256k1)
+target_include_directories(secp256k1_core PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/libs/secp256k1)
 
 
 target_link_libraries(${PROJECT_NAME} ethcore)
@@ -139,11 +140,11 @@ target_link_libraries(${PROJECT_NAME} secp256k1_core)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/libs)
 
-target_include_directories(${PROJECT_NAME} PUBLIC ${RP_DIR}/libs)
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/libs)
 
 
 add_custom_target(mintex_tx_merge
-                  COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/merge_libs.sh ${CMAKE_BINARY_DIR}/lib ${CMAKE_PROJECT_NAME}m
+                  COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/merge_libs.sh ${CMAKE_BINARY_DIR}/lib minter_tx
                   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
                   DEPENDS ${CMAKE_PROJECT_NAME})
 
@@ -180,7 +181,7 @@ if (WITH_TEST)
 	target_compile_options(${PROJECT_NAME_TEST} PUBLIC -Wno-unused-parameter)
 
 	#	target_include_directories(${PROJECT_NAME_TEST} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
-	#	target_include_directories(${PROJECT_NAME_TEST} PUBLIC ${RP_DIR}/src)
+	#	target_include_directories(${PROJECT_NAME_TEST} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
 	target_link_libraries(${PROJECT_NAME_TEST} PRIVATE CONAN_PKG::gtest)
 	target_link_libraries(${PROJECT_NAME_TEST} PUBLIC ${PROJECT_NAME})
