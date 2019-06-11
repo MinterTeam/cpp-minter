@@ -12,10 +12,10 @@ then
 fi
 
 # fetching cmake
-CMAKE_VERS="3.14.5"
+
 if [ ! -f "/tmp/pkgs/cmake.sh" ]
 then
-    wget -O /tmp/pkgs/cmake.sh https://cmake.org/files/v${CMAKE_VERS}/cmake-${CMAKE_VERS}-Linux-x86_64.sh
+    wget -O /tmp/pkgs/cmake.sh https://github.com/Kitware/CMake/releases/download/v3.14.5/cmake-3.14.5-Linux-x86_64.sh
 fi
 
 if [ ! -f "/usr/bin/cmake" ]
