@@ -18,6 +18,6 @@ then
 fi
 
 ## Deploy in latest channel
-conan create . minter/latest
-conan export-pkg . minter_tx/${VERS}@minter/latest -f
-conan upload minter_tx/${VERS}@minter/latest --all -r=minter
+CONAN_LOCAL=1 conan create . minter/latest
+CONAN_LOCAL=1 conan export-pkg . minter_tx/${VERS}@minter/latest -f
+CONAN_LOCAL=1 conan upload minter_tx/${VERS}@minter/latest --all -r=minter
