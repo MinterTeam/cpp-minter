@@ -122,9 +122,6 @@ endif ()
 target_compile_options(${PROJECT_NAME} PUBLIC -Wno-shift-count-overflow -fPIC) #-static-libstdc++
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
-#uint256
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/libs/uint256 ${CMAKE_BINARY_DIR}/uint256)
-
 # bip39
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/libs/bip39 ${CMAKE_BINARY_DIR}/bip39)
 
