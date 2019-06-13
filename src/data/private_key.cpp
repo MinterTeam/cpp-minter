@@ -9,7 +9,9 @@
 
 #include <sstream>
 #include "minter/private_key.h"
-
+minter::data::private_key minter::data::private_key::from_mnemonic(const std::string &mnem, uint32_t derive_index) {
+    return from_mnemonic(mnem.c_str(), derive_index);
+}
 minter::data::private_key minter::data::private_key::from_mnemonic(const char *mnemonic,
                                                                                  uint32_t derive_index) {
     private_key out;

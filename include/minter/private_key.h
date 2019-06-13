@@ -24,6 +24,7 @@ namespace data {
 
 class private_key : public minter::FixedData<32> {
 public:
+    static private_key from_mnemonic(const std::string &mnem, uint32_t derive_index = 0);
     static private_key from_mnemonic(const char *mnemonic, uint32_t derive_index = 0);
 
     private_key();

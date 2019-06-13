@@ -148,6 +148,10 @@ add_custom_target(mintex_tx_merge
                   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
                   DEPENDS ${CMAKE_PROJECT_NAME})
 
+add_library(minter_tx STATIC IMPORTED)
+set_target_properties(minter_tx PROPERTIES
+                      IMPORTED_LOCATION "${CMAKE_BINARY_DIR}/lib/libminter_tx.a")
+
 
 if (WITH_TEST)
 	add_definitions(-DTEST_ROOT="${CMAKE_CURRENT_SOURCE_DIR}/tests")
@@ -205,3 +209,7 @@ if (WITH_TEST)
 		)
 	endif ()
 endif ()
+
+#add_executable(main main.cpp)
+#target_link_libraries(main ${CMAKE_PROJECT_NAME})
+#target_link_libraries(main CONAN_PKG::toolboxpp)

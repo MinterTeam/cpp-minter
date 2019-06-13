@@ -88,4 +88,14 @@ create_tx_type(tx_edit_candidate);
 
 }
 
+namespace std {
+template <>
+struct hash<minter::tx_type_val >
+{
+  std::size_t operator()(const minter::tx_type_val& k) const {
+      return std::hash<uint8_t>()(k);
+  }
+};
+}
+
 #endif //MINTER_TX_TYPE_H
