@@ -15,7 +15,7 @@
     along with cpp-ethereum.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "../../include/minter/eth/RLP.h"
+#include "minter/eth/RLP.h"
 using namespace std;
 using namespace dev;
 

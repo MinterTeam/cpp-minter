@@ -15,7 +15,7 @@
 	along with cpp-ethereum.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "../../include/minter/eth/FixedHash.h"
+#include "minter/eth/FixedHash.h"
 #include <boost/algorithm/string.hpp>
 
 namespace dev

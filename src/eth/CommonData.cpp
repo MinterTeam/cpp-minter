@@ -19,7 +19,7 @@
  * @date 2014
  */
 
-#include "../../include/minter/eth/CommonData.h"
+#include "minter/eth/CommonData.h"
 #include <random>
 
 //#include "Exceptions.h"

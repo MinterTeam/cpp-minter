@@ -44,12 +44,13 @@ class MinterTxConan(ConanFile):
     default_user = "minter"
     default_channel = "latest"
 
+    requires = (
+        'bip39/1.0.0@edwardstock/latest',
+        'toolboxpp/2.2.0@scatter/latest',
+        'boost_multiprecision/1.69.0@bincrafters/stable'
+    )
+
     build_requires = (
-        "toolboxpp/2.2.0@scatter/latest",
-        "boost_multiprecision/1.69.0@bincrafters/stable",
-        "boost_system/1.69.0@bincrafters/stable",
-        "boost_filesystem/1.69.0@bincrafters/stable",
-        "boost_thread/1.69.0@bincrafters/stable",
         "gtest/1.8.1@bincrafters/stable",
     )
 

@@ -10,7 +10,7 @@
 #ifndef MINTER_MINTER_HASH_H
 #define MINTER_MINTER_HASH_H
 
-#include <bip39/utils.h>
+#include <minter/bip39/utils.h>
 #include "minter/eth/Common.h"
 
 namespace minter {

@@ -15,8 +15,8 @@
     along with cpp-ethereum.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "../../include/minter/eth/Common.h"
-#include "../../include/minter/eth/Exceptions.h"
+#include "minter/eth/Common.h"
+#include "minter/eth/Exceptions.h"
 
 #if defined(_WIN32)
 #include <windows.h>

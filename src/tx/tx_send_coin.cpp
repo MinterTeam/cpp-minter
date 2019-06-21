@@ -7,10 +7,10 @@
  * \link   https://github.com/edwardstock
  */
 
-#include <bip39/utils.h>
-#include "minter/tx/utils.h"
-#include "minter/tx/tx_send_coin.h"
-#include "minter/tx/tx_type.h"
+#include <minter/bip39/utils.h>
+#include <minter/tx/utils.h>
+#include <minter/tx/tx_send_coin.h>
+#include <minter/tx/tx_type.h>
 
 minter::tx_send_coin::tx_send_coin(std::shared_ptr<minter::tx> tx) : tx_data(std::move(tx)) {
 }

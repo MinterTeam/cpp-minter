@@ -6,12 +6,10 @@
  * \author Eduard Maximovich (edward.vstock@gmail.com)
  * \link   https://github.com/edwardstock
  */
-
-#include <algorithm>
-#include <bip39/libs/trezor-crypto/sha3.h>
 #include <sstream>
-#include "minter/tx/utils.h"
-
+#include <algorithm>
+#include <minter/crypto/sha3.h>
+#include <minter/tx/utils.h>
 
 dev::bytes minter::utils::to_bytes(std::string &&input) {
     if(!input.size()) {

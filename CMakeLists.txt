@@ -13,10 +13,12 @@ execute_process(
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/modules)
 include(ConanInit)
+include(modules/FindLinuxPlatform.cmake)
 
 add_conan_remote(bincrafters https://api.bintray.com/conan/bincrafters/public-conan)
 add_conan_remote(scatter https://api.bintray.com/conan/edwardstock/scatter)
 add_conan_remote(minter https://api.bintray.com/conan/minterteam/minter)
+add_conan_remote(edwardstock https://api.bintray.com/conan/edwardstock/conan-public)
 conan_init()
 
 set(ENABLE_SHARED OFF CACHE BOOL "Build shared lib instead of static")
@@ -25,7 +27,41 @@ set(DISABLE_JNI ON)
 option(ENABLE_JNI OFF)
 option(ENABLE_GO OFF)
 
-set(CMAKE_CURRENT_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+if(APPLE)
+	set(CMAKE_MACOSX_RPATH OFF)
+endif(APPLE)
+
+# ARCH
+if (WITH_ARCH)
+	set(PROJECT_ARCH ${WITH_ARCH})
+else ()
+	include(modules/FindLinuxPlatform.cmake)
+	if (IS_DEBIAN)
+		if (CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
+			set(PROJECT_ARCH "amd64")
+			set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -m64")
+		elseif (CMAKE_SYSTEM_PROCESSOR STREQUAL "unknown")
+			set(PROJECT_ARCH "i386")
+			set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -m32")
+		else ()
+			set(PROJECT_ARCH ${CMAKE_SYSTEM_PROCESSOR})
+
+			if (CMAKE_SYSTEM_PROCESSOR STREQUAL "amd64" OR CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
+				set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -m64")
+			else ()
+				set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -m32")
+			endif ()
+		endif ()
+	else ()
+		set(PROJECT_ARCH ${CMAKE_SYSTEM_PROCESSOR})
+		if (CMAKE_SYSTEM_PROCESSOR STREQUAL "amd64" OR CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
+			set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -m64")
+		else ()
+			set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -m32")
+		endif ()
+	endif ()
+endif ()
+message(STATUS "Build arch: ${PROJECT_ARCH}")
 
 set(ETH_HEADERS
     include/minter/eth/RLP.h
@@ -49,13 +85,10 @@ else ()
 	add_library(ethcore STATIC ${ETH_SOURCES})
 endif ()
 target_compile_options(ethcore PUBLIC -fPIC)
-find_package(Threads REQUIRED)
+target_include_directories(ethcore PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+
 target_link_libraries(ethcore PUBLIC
-                      CONAN_PKG::boost_filesystem
-                      CONAN_PKG::boost_system
-                      CONAN_PKG::boost_thread
                       CONAN_PKG::boost_multiprecision
-                      Threads::Threads
                       )
 
 set(HEADERS
@@ -118,20 +151,20 @@ if (ENABLE_SHARED)
 else ()
 	add_library(${PROJECT_NAME} STATIC ${SOURCES})
 endif ()
+set_target_properties(${CMAKE_PROJECT_NAME} PROPERTIES
+                      PUBLIC_HEADER "${HEADERS}")
 
 target_compile_options(${PROJECT_NAME} PUBLIC -Wno-shift-count-overflow -fPIC) #-static-libstdc++
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
-# bip39
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/libs/bip39 ${CMAKE_BINARY_DIR}/bip39)
-
 #secp256k1
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/libs/secp256k1 ${CMAKE_BINARY_DIR}/secp256k1)
-target_include_directories(secp256k1_core PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/libs/secp256k1)
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/libs/secp256k1/include)
+target_include_directories(secp256k1_core PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/libs/secp256k1/include)
 
 
 target_link_libraries(${PROJECT_NAME} ethcore)
-target_link_libraries(${PROJECT_NAME} bip39_core)
+target_link_libraries(${PROJECT_NAME} CONAN_PKG::bip39)
 target_link_libraries(${PROJECT_NAME} secp256k1_core)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
@@ -140,14 +173,15 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/libs)
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/libs)
 
 
-add_custom_target(mintex_tx_merge
+add_custom_target(minter_tx_merge
                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/merge_libs.sh ${CMAKE_BINARY_DIR}/lib minter_tx
                   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
                   DEPENDS ${CMAKE_PROJECT_NAME})
 
 add_library(minter_tx STATIC IMPORTED)
 set_target_properties(minter_tx PROPERTIES
-                      IMPORTED_LOCATION "${CMAKE_BINARY_DIR}/lib/libminter_tx.a")
+                      IMPORTED_LOCATION "${CMAKE_BINARY_DIR}/lib/libminter_tx.a"
+                      PUBLIC_HEADER "${HEADERS}")
 
 
 if (WITH_TEST)
@@ -207,6 +241,11 @@ if (WITH_TEST)
 	endif ()
 endif ()
 
-#add_executable(main main.cpp)
-#target_link_libraries(main ${CMAKE_PROJECT_NAME})
-#target_link_libraries(main CONAN_PKG::toolboxpp)
+
+#add_executable(minter_pretty main.cpp)
+#add_dependencies(minter_pretty ${CMAKE_PROJECT_NAME})
+#target_link_libraries(minter_pretty ${CMAKE_PROJECT_NAME})
+#target_link_libraries(minter_pretty CONAN_PKG::toolboxpp)
+#target_link_libraries(minter_pretty CONAN_PKG::boost_program_options)
+
+include(modules/packaging.cmake)

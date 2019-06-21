@@ -7,11 +7,11 @@
  * \link   https://github.com/edwardstock
  */
 
-#include <bip39/utils.h>
-#include <bip39/HDKeyEncoder.h>
-#include <secp256k1/include/secp256k1.h>
-#include <secp256k1/include/secp256k1_recovery.h>
-#include <secp256k1/include/secp256k1_ecdh.h>
+#include <minter/bip39/utils.h>
+#include <minter/bip39/HDKeyEncoder.h>
+#include <secp256k1.h>
+#include <secp256k1_recovery.h>
+#include <secp256k1_ecdh.h>
 
 #include "public_key.h"
 #include "minter/tx/secp256k1_raii.h"

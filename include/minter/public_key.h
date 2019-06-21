@@ -10,7 +10,7 @@
 #ifndef MINTER_MINTER_PUBLIC_KEY_H
 #define MINTER_MINTER_PUBLIC_KEY_H
 
-#include <bip39/utils.h>
+#include <minter/bip39/utils.h>
 #include <vector>
 #include "minter/eth/Common.h"
 #include "minter/hash.h"

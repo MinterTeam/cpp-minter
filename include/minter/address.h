@@ -10,7 +10,7 @@
 #ifndef MINTER_MINTER_ADDRESS_H
 #define MINTER_MINTER_ADDRESS_H
 
-#include <bip39/utils.h>
+#include <minter/bip39/utils.h>
 #include <vector>
 #include <utility>
 #include <cstdint>

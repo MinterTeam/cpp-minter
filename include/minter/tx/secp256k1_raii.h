@@ -11,9 +11,9 @@
 #define MINTER_SECP256K1_RAII_H
 
 #include <memory>
-#include <secp256k1/include/secp256k1.h>
-#include <secp256k1/include/secp256k1_ecdh.h>
-#include <secp256k1/include/secp256k1_recovery.h>
+#include <secp256k1.h>
+#include <secp256k1_ecdh.h>
+#include <secp256k1_recovery.h>
 
 namespace minter {
 

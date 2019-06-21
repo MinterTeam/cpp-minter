@@ -10,13 +10,12 @@
 #ifndef MINTER_TX_H
 #define MINTER_TX_H
 
-//#include <uint256/uint256.h>
 #include <memory>
 #include <unordered_map>
-#include <secp256k1/include/secp256k1.h>
-#include <secp256k1/include/secp256k1_ecdh.h>
-#include <secp256k1/include/secp256k1_recovery.h>
-#include <bip39/utils.h>
+#include <secp256k1.h>
+#include <secp256k1_ecdh.h>
+#include <secp256k1_recovery.h>
+#include <minter/bip39/utils.h>
 #include <boost/multiprecision/cpp_int.hpp>
 #include "minter/eth/RLP.h"
 #include "minter/eth/vector_ref.h"
