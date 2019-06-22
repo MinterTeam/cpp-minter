@@ -10,6 +10,9 @@ jobs:
       - run: apt-get update
       - run: apt-get install -y git
       - run:
+          name: Avoid hosts unknown for github
+          command: mkdir -p ~/.ssh/ && echo -e "Host github.com\n\tStrictHostKeyChecking no\n" > ~/.ssh/config
+      - run:
           name: Cloning repo
           command: git clone --recursive https://github.com/MinterTeam/cpp-minter .
       - restore_cache:
