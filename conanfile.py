@@ -58,7 +58,7 @@ class MinterTxConan(ConanFile):
             self.run("git clone --recursive https://github.com/MinterTeam/cpp-minter.git .")
 
     def build(self):
-        cmake = CMake(self, parallel=False)
+        cmake = CMake(self)
         cmake.configure(defs={'WITH_TEST': 'Off', 'CMAKE_BUILD_TYPE': self.options["build_type"]})
         cmake.build()
 
