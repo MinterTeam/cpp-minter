@@ -39,7 +39,7 @@ jobs:
             - conan-dir-{{ checksum "conanfile.txt" }}-{{ checksum "conanfile.py" }}
       - run: conan install gtest/1.8.1@bincrafters/stable
       - run: conan install toolboxpp/2.2.0@scatter/latest
-      - run: conan install boost_multiprecision/1.69.0@bincrafters/stable
+      - run: conan install boost/1.70.0@conan/stable
       - run:
           name: Configuring
           command: conan remove --locks && cd _build && cmake .. -DCMAKE_BUILD_TYPE=Debug -DWITH_TEST=ON

@@ -4,10 +4,11 @@ cmake
 [requires]
 bip39/1.0.0@edwardstock/latest
 toolboxpp/2.2.0@scatter/latest
-boost_multiprecision/1.69.0@bincrafters/stable
+boost/1.70.0@conan/stable
 
 [build_requires]
 gtest/1.8.1@bincrafters/stable
 
 [options]
 bip39:shared=False
+boost:shared=False

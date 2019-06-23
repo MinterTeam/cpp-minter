@@ -23,9 +23,7 @@ class MinterTxConan(ConanFile):
     options = {"shared": [True, False]}
     default_options = {
         "shared": False,
-        "boost_system:shared": False,
-        "boost_filesystem:shared": False,
-        "boost_thread:shared": False
+        "boost:shared": False,
     }
     exports = "version"
     exports_sources = (
@@ -47,7 +45,7 @@ class MinterTxConan(ConanFile):
     requires = (
         'bip39/1.0.0@edwardstock/latest',
         'toolboxpp/2.2.0@scatter/latest',
-        'boost_multiprecision/1.69.0@bincrafters/stable'
+        'boost/1.70.0@conan/stable'
     )
 
     build_requires = (

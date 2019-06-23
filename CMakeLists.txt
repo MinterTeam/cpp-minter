@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 project(minter
-        VERSION 0.1.0
+        VERSION 0.1.1
         DESCRIPTION "Minter Transaction Maker"
         LANGUAGES CXX
         )
@@ -87,9 +87,7 @@ endif ()
 target_compile_options(ethcore PUBLIC -fPIC)
 target_include_directories(ethcore PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
-target_link_libraries(ethcore PUBLIC
-                      CONAN_PKG::boost_multiprecision
-                      )
+target_link_libraries(ethcore PUBLIC CONAN_PKG::boost)
 
 set(HEADERS
     include/minter/tx/tx.h
@@ -208,10 +206,6 @@ if (WITH_TEST)
 
 	add_executable(${PROJECT_NAME_TEST} ${TEST_SOURCES})
 	target_compile_options(${PROJECT_NAME_TEST} PUBLIC -Wno-unused-parameter)
-
-	#	target_include_directories(${PROJECT_NAME_TEST} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
-	#	target_include_directories(${PROJECT_NAME_TEST} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
-
 	target_link_libraries(${PROJECT_NAME_TEST} PRIVATE CONAN_PKG::gtest)
 	target_link_libraries(${PROJECT_NAME_TEST} PUBLIC ${PROJECT_NAME})
 
