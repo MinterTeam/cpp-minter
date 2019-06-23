@@ -6,6 +6,7 @@ jobs:
         environment:
           CXX: /usr/bin/g++
           CC: /usr/bin/gcc
+          CONAN_CPU_COUNT: 4
     steps:
       - run: apt-get update
       - run: apt-get install -y git
