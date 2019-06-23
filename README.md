@@ -11,22 +11,46 @@ Minter C++ SDK: build and sign any transaction, generate mnemonic with private a
  * Generating mnemonic (with low-predictable [PCG](http://www.pcg-random.org/) random generator)
 
 ## Requirements:
- * GCC 4.9+/CLang/AppleClang
- * Boost (Multiprecision) 1.69.0 (if using raw library without **Conan**)
+ * GCC 4.9+/Clang/AppleClang
  * CMake 3.10+
  * Python with PIP
  * Conan
  
-## Conan setup:
+## Install Conan (dependency manager for C++)
+
+**Debian**
+```bash
+apt-get install python3 python3-pip
+pip3 install setuptools -U
+pip3 install conan
+```
+
+**Centos**
+```bash
+yum install python pip
+pip install --upgrade pip
+pip install setuptools -U
+pip install conan
+```
+
+**Fedora (or like)**
+```bash
+dnf install python3 python3-pip
+pip3 install setuptools -U
+pip3 install conan
+```
+
+**Setup repositories**
+
 ```bash
 conan remote add scatter https://api.bintray.com/conan/edwardstock/scatter
 conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan
 conan remote add minter https://api.bintray.com/conan/minterteam/minter
 ```
 
-See conan [docs](https://docs.conan.io/en/latest/getting_started.html)
+For more information, see official [docs](https://docs.conan.io/en/latest/getting_started.html)
 
-## Build with conan
+## Use as conan dependency
 You can just add to your conanfile.txt dependency:
 
 `minter_tx/0.1.0@minter/latest`
@@ -37,7 +61,9 @@ add_executable(my_program my_program.cpp)
 target_link_libraries(my_program CONAN_PKG::minter_tx)
 ```
 
-## Build system-wide:
+See [guide](https://docs.conan.io/en/latest/howtos/cmake_launch.html) how to use conan with cmake
+
+## Build library:
 ```bash
 git clone --recursive https://github.com/MinterTeam/cpp-minter.git
 mkdir build && cd build
@@ -53,4 +79,10 @@ g++ my_program.cpp -lminter_tx
 
 ## Examples:
 See here [link](examples)
+
+## License
+[MIT License](LICENSE)
+
+Copyright (c) 2019 Minter
+Author: [Eduard Maximovich](https://github.com/edwardstock)
 
