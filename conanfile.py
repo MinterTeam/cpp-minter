@@ -37,6 +37,7 @@ class MinterTxConan(ConanFile):
         "conanfile.txt",
         "LICENSE",
         "README.md",
+        "merge_libs.sh"
     )
     generators = "cmake"
     default_user = "minter"
