@@ -60,10 +60,11 @@ class MinterTxConan(ConanFile):
     def build(self):
         cmake = CMake(self)
         cmake.configure(defs={'WITH_TEST': 'Off', 'CMAKE_BUILD_TYPE': self.options["build_type"]})
-        cmake.build()
+        cmake.build(target="minter_tx_merge")
 
     def package(self):
         self.copy("*", dst="include", src="include", keep_path=True)
+        self.copy("*", dst="include", src="libs/secp256k1/include", keep_path=True)
         self.copy("*minter_tx.lib", dst="lib", keep_path=False)
         self.copy("*minter_tx.so", dst="lib", keep_path=False)
         self.copy("*minter_tx.dylib", dst="lib", keep_path=False)
