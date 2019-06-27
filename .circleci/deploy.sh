@@ -39,4 +39,4 @@ CONAN_LOCAL=1 conan create . minter/latest -s compiler.libcxx=${stdlibname} -s b
 CONAN_LOCAL=1 conan export-pkg . minter/latest -s compiler.libcxx=${stdlibname} -s build_type=Debug -f
 CONAN_LOCAL=1 conan create . minter/latest -s compiler.libcxx=${stdlibname} -s build_type=Release --build=missing
 CONAN_LOCAL=1 conan export-pkg . minter/latest -s compiler.libcxx=${stdlibname} -s build_type=Release -f
-#CONAN_LOCAL=1 conan upload minter_tx/${VERS}@minter/latest --all -r=minter
+CONAN_LOCAL=1 conan upload minter_tx/${VERS}@minter/latest --all -r=minter
