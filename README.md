@@ -85,8 +85,8 @@ See here [link](examples)
 git clone --recursive https://github.com/MinterTeam/cpp-minter.git
 cd examples/generate
 mkdir build && cd build
-cmake .. -DCMAKE_BUILD_TYPE=Debug
-cmake --build . -- -j4
+CONAN_LOCAL=1 cmake .. -DCMAKE_BUILD_TYPE=Debug
+CONAN_LOCAL=1 cmake --build . -- -j4
 ```
 
 Run:

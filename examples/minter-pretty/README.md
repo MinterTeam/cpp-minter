@@ -63,6 +63,14 @@ args:
 ./bin/minter-pretty --word 9165556677 --nodict
 ```
 
+## Build
+```bash
+git clone --recursive https://github.com/MinterTeam/cpp-minter.git
+cd examples/minter-pretty
+mkdir build && cd build
+CONAN_LOCAL=1 cmake .. -DCMAKE_BUILD_TYPE=Debug
+CONAN_LOCAL=1 cmake --build . -- -j4
+```
 
 ## Limitations
 
