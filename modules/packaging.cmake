@@ -1,5 +1,5 @@
 install(
-	FILES ${CMAKE_BINARY_DIR}/lib/libminter_tx.a
+	FILES ${CMAKE_BINARY_DIR}/lib/libminter_tx.a ${CMAKE_BINARY_DIR}/lib/libethcore.a ${CMAKE_BINARY_DIR}/lib/libsecp256k1_core.a
 	DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
 	COMPONENT minter-sdk
 )

@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
-project(minter
-        VERSION 0.1.2
+project(minter_tx
+        VERSION 0.1.3
         DESCRIPTION "Minter Transaction Maker"
         LANGUAGES CXX
         )
@@ -149,7 +149,7 @@ if (ENABLE_SHARED)
 else ()
 	add_library(${PROJECT_NAME} STATIC ${SOURCES})
 endif ()
-set_target_properties(${CMAKE_PROJECT_NAME} PROPERTIES
+set_target_properties(${PROJECT_NAME} PROPERTIES
                       PUBLIC_HEADER "${HEADERS}")
 
 target_compile_options(${PROJECT_NAME} PUBLIC -Wno-shift-count-overflow -fPIC) #-static-libstdc++
@@ -165,18 +165,7 @@ target_link_libraries(${PROJECT_NAME} secp256k1_core)
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/libs)
 
 
-add_custom_target(minter_tx_merge
-                  COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/merge_libs.sh ${CMAKE_BINARY_DIR}/lib minter_tx
-                  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-                  DEPENDS ${CMAKE_PROJECT_NAME})
-
-add_library(minter_tx STATIC IMPORTED)
-set_target_properties(minter_tx PROPERTIES
-                      IMPORTED_LOCATION "${CMAKE_BINARY_DIR}/lib/libminter_tx.a"
-                      PUBLIC_HEADER "${HEADERS}")
-
-
-if (WITH_TEST)
+if (MINTER_TX_TEST)
 	add_definitions(-DTEST_ROOT="${CMAKE_CURRENT_SOURCE_DIR}/tests")
 	set(PROJECT_NAME_TEST ${PROJECT_NAME}-test)
 
@@ -208,25 +197,6 @@ if (WITH_TEST)
 	target_compile_options(${PROJECT_NAME_TEST} PUBLIC -Wno-unused-parameter)
 	target_link_libraries(${PROJECT_NAME_TEST} PRIVATE CONAN_PKG::gtest)
 	target_link_libraries(${PROJECT_NAME_TEST} PUBLIC ${PROJECT_NAME})
-
-	if (WITH_COVERAGE)
-		set(COVERAGE_LCOV_EXCLUDES
-		    '${CMAKE_CURRENT_SOURCE_DIR}/libs/*'
-		    '${CMAKE_CURRENT_SOURCE_DIR}/tests/*'
-		    'boost/*'
-		    '/usr/include/*'
-		    '/usr/local/*'
-		    'v1'
-		    )
-		set(COVERAGE_TARGET_PATH ${CMAKE_CURRENT_SOURCE_DIR}/src/)
-		include(cmake-modules/CodeCoverage.cmake)
-		append_coverage_compiler_flags()
-		setup_target_for_coverage_lcov(
-			NAME ${PROJECT_NAME}-coverage
-			EXECUTABLE ${PROJECT_NAME_TEST}
-			DEPENDENCIES ${PROJECT_NAME_TEST}
-		)
-	endif ()
 endif ()
 
 

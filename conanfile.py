@@ -11,6 +11,7 @@ def get_version():
             pass
         return content.strip()
 
+
 class MinterTxConan(ConanFile):
     name = "minter_tx"
     version = get_version()
@@ -60,16 +61,16 @@ class MinterTxConan(ConanFile):
 
     def build(self):
         cmake = CMake(self)
-        cmake.configure(defs={'WITH_TEST': 'Off', 'CMAKE_BUILD_TYPE': self.options["build_type"]})
-        cmake.build(target="minter_tx_merge")
+        cmake.configure(defs={'CMAKE_BUILD_TYPE': self.options["build_type"]})
+        cmake.build(target="minter_tx")
 
     def package(self):
         self.copy("*", dst="include", src="include", keep_path=True)
         self.copy("*", dst="include", src="libs/secp256k1/include", keep_path=True)
-        self.copy("*minter_tx.lib", dst="lib", keep_path=False)
-        self.copy("*minter_tx.so", dst="lib", keep_path=False)
-        self.copy("*minter_tx.dylib", dst="lib", keep_path=False)
-        self.copy("*minter_tx.a", dst="lib", keep_path=False)
+        self.copy("*.lib", dst="lib", keep_path=False)
+        self.copy("*.so", dst="lib", keep_path=False)
+        self.copy("*.dylib", dst="lib", keep_path=False)
+        self.copy("*.a", dst="lib", keep_path=False)
 
     def package_info(self):
-        self.cpp_info.libs = ["minter_tx"]
+        self.cpp_info.libs = self.collect_libs(folder="lib")

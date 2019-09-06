@@ -5,7 +5,8 @@ cmake-build-debug-*
 *.o
 .idea
 
+output
 build
-_build
+_build*
 .vscode
 privs.txt

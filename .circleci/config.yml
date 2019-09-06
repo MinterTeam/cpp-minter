@@ -43,7 +43,7 @@ jobs:
       - run: conan install boost/1.70.0@conan/stable
       - run:
           name: Configuring
-          command: conan remove --locks && cd _build && cmake .. -DCMAKE_BUILD_TYPE=Debug -DWITH_TEST=ON
+          command: conan remove --locks && cd _build && cmake .. -DCMAKE_BUILD_TYPE=Debug -DMINTER_TX_TEST=ON
       - save_cache:
           key: conan-dir-{{ checksum "conanfile.txt" }}-{{ checksum "conanfile.py" }}
           paths:

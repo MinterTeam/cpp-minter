@@ -53,7 +53,7 @@ For more information, see official [docs](https://docs.conan.io/en/latest/gettin
 ## Use as conan dependency
 You can just add to your conanfile.txt dependency:
 
-`minter_tx/0.1.0@minter/latest`
+`minter_tx/0.1.3@minter/latest`
 
 CMakeLists.txt
 ```cmake
@@ -67,7 +67,7 @@ See [guide](https://docs.conan.io/en/latest/howtos/cmake_launch.html) how to use
 ```bash
 git clone --recursive https://github.com/MinterTeam/cpp-minter.git
 mkdir build && cd build
-cmake .. -DCMAKE_BUILD_TYPE=Debug -DWITH_TEST=On -DCMAKE_INSTALL_PREFIX=/usr
+cmake .. -DCMAKE_BUILD_TYPE=Debug -DMINTER_TX_TEST=On -DCMAKE_INSTALL_PREFIX=/usr
 cmake --build . -- -j4
 cmake --build . --target install
 ```
