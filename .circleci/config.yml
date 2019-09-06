@@ -33,8 +33,6 @@ jobs:
       - run: conan remote add minter https://api.bintray.com/conan/minterteam/minter
       - run: conan user -p $BINTRAY_API_KEY -r minter edwardstock
       - run: mkdir -p _build
-      - run: export CC=/usr/bin/gcc
-      - run: export CXX=/usr/bin/g++
       - restore_cache:
           keys:
             - conan-dir-{{ checksum "conanfile.txt" }}-{{ checksum "conanfile.py" }}
@@ -48,7 +46,6 @@ jobs:
           key: conan-dir-{{ checksum "conanfile.txt" }}-{{ checksum "conanfile.py" }}
           paths:
             - /root/.conan
-      - run: cmake --build ./_build --target minter-test
       - run:
           name: Testing
           command: $(which bash) .circleci/test.sh
