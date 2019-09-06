@@ -100,6 +100,9 @@ Or run with simple argument:
 ```
 Generates 300 mnemonics and print it to stdout
 
+#### Pretty address generator
+[link](examples/minter-pretty/README.md)
+
 ## License
 [MIT License](LICENSE)
 
