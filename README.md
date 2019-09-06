@@ -80,6 +80,26 @@ g++ my_program.cpp -lminter_tx
 ## Examples:
 See here [link](examples)
 
+#### Build mnemonic generator
+```bash
+git clone --recursive https://github.com/MinterTeam/cpp-minter.git
+cd examples/generate
+mkdir build && cd build
+cmake .. -DCMAKE_BUILD_TYPE=Debug
+cmake --build . -- -j4
+```
+
+Run:
+```bash
+./bin/minter-gen
+```
+
+Or run with simple argument:
+```bash
+./bin/minter-gen 300
+```
+Generates 300 mnemonics and print it to stdout
+
 ## License
 [MIT License](LICENSE)
 

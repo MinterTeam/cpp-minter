@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 project(minter_tx
-        VERSION 0.1.3
+        VERSION 0.1.4
         DESCRIPTION "Minter Transaction Maker"
         LANGUAGES CXX
         )
@@ -198,12 +198,5 @@ if (MINTER_TX_TEST)
 	target_link_libraries(${PROJECT_NAME_TEST} PRIVATE CONAN_PKG::gtest)
 	target_link_libraries(${PROJECT_NAME_TEST} PUBLIC ${PROJECT_NAME})
 endif ()
-
-
-#add_executable(minter_pretty main.cpp)
-#add_dependencies(minter_pretty ${CMAKE_PROJECT_NAME})
-#target_link_libraries(minter_pretty ${CMAKE_PROJECT_NAME})
-#target_link_libraries(minter_pretty CONAN_PKG::toolboxpp)
-#target_link_libraries(minter_pretty CONAN_PKG::boost_program_options)
 
 include(modules/packaging.cmake)

@@ -35,8 +35,11 @@ public:
     private_key(const uint8_t *data, size_t len);
     minter::pubkey_t get_public_key(bool compressed = false) const;
 
+    std::string to_string() const;
+
     bool operator==(const private_key& other) const noexcept;
     bool operator!=(const private_key& other) const noexcept;
+    explicit operator std::string() const;
 };
 
 } // data

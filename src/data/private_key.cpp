@@ -70,7 +70,7 @@ minter::pubkey_t minter::data::private_key::get_public_key(bool compressed) cons
     dev::bytes tmp(output_ser, output_ser + output_len);
     minter::pubkey_t out(tmp);
 
-    return out;
+return out;
 }
 
 bool minter::data::private_key::operator==(const minter::data::private_key &other) const noexcept {
@@ -78,4 +78,11 @@ bool minter::data::private_key::operator==(const minter::data::private_key &othe
 }
 bool minter::data::private_key::operator!=(const minter::data::private_key &other) const noexcept {
     return !(operator==(other));
+}
+
+std::string minter::data::private_key::to_string() const {
+    return toHex();
+}
+minter::data::private_key::operator std::string() const {
+    return to_string();
 }
