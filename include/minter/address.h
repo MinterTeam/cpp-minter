@@ -14,6 +14,8 @@
 #include <vector>
 #include <utility>
 #include <cstdint>
+#include <string>
+#include "minter_tx_core.h"
 #include "minter/public_key.h"
 #include "minter/private_key.h"
 
@@ -22,7 +24,7 @@ namespace minter {
 namespace data {
 using address_data = minter::FixedData<20>;
 
-class address {
+class MINTER_TX_API address {
 public:
     address() = default;
     address(const char *hex);
@@ -77,6 +79,6 @@ struct hash<minter::address_t>
 };
 }
 
-std::ostream &operator << (std::ostream &out, const minter::address_t &address);
+MINTER_TX_API std::ostream &operator << (std::ostream &out, const minter::address_t &address);
 
 #endif //MINTER_MINTER_ADDRESS_H

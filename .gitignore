@@ -4,9 +4,11 @@ cmake-build-debug-*
 *.so
 *.o
 .idea
-
+msvc
 output
 build
 _build*
+build_*
 .vscode
 privs.txt
+include/minter/minter_tx_core.h

@@ -26,7 +26,7 @@ namespace minter {
         }
     };
 
-class tx_multisend: public virtual minter::tx_data {
+class MINTER_TX_API tx_multisend: public virtual minter::tx_data {
 public:
     explicit tx_multisend(std::shared_ptr<minter::tx> tx);
     uint16_t type() const override;

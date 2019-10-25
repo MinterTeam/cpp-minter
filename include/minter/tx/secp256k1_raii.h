@@ -14,10 +14,11 @@
 #include <secp256k1.h>
 #include <secp256k1_ecdh.h>
 #include <secp256k1_recovery.h>
+#include "minter/minter_tx_core.h"
 
 namespace minter {
 
-class secp256k1_raii {
+class MINTER_TX_API secp256k1_raii {
 public:
     struct secp256k1_deleter {
       void operator()(secp256k1_context *ctx) {

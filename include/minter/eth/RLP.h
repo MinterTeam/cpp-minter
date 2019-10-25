@@ -48,7 +48,7 @@ template <class T> struct Converter { static T convert(RLP const&, int) { BOOST_
 /**
  * Class for interpreting Recursive Linear-Prefix Data.
  */
-class RLP
+class MINTER_TX_API RLP
 {
 public:
     /// Conversion flags
@@ -131,7 +131,7 @@ public:
     using element_type = RLP;
 
     /// @brief Iterator class for iterating through items of RLP list.
-    class iterator
+    class MINTER_TX_API iterator
     {
         friend class RLP;
 
@@ -373,7 +373,7 @@ template <class T> inline T RLP::convert(int _flags) const { return Converter<T>
 /**
  * @brief Class for writing to an RLP bytestream.
  */
-class RLPStream
+class MINTER_TX_API RLPStream
 {
 public:
     /// Initializes empty RLPStream.
@@ -469,12 +469,12 @@ template <class ... _Ts> bytes rlpList(_Ts ... _ts)
 }
 
 /// The empty string in RLP format.
-extern bytes RLPNull;
+MINTER_TX_API extern bytes RLPNull;
 
 /// The empty list in RLP format.
-extern bytes RLPEmptyList;
+MINTER_TX_API extern bytes RLPEmptyList;
 
 /// Human readable version of RLP.
-std::ostream& operator<<(std::ostream& _out, dev::RLP const& _d);
+MINTER_TX_API std::ostream& operator<<(std::ostream& _out, dev::RLP const& _d);
 
 }

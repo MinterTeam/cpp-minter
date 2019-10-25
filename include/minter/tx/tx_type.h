@@ -39,7 +39,7 @@ enum tx_type_val {
   edit_candidate
 };
 
-extern const std::unordered_map<tx_type_val, std::string> tx_type_names;
+MINTER_TX_API extern const std::unordered_map<tx_type_val, std::string> tx_type_names;
 
 template<class ref_type>
 struct tx_type;
@@ -48,7 +48,7 @@ struct tx_type;
 template<> struct tx_type<minter::_T> { \
   typedef minter::_T ref_type; \
 \
-  static const uint16_t type(); \
+  static uint16_t type(); \
   static dev::bigdec18 get_fee(); \
   static dev::bigdec18 get_fee(const dev::bigint &gas); \
   static std::shared_ptr<minter::_T> create(std::shared_ptr<minter::tx> ptr, const std::vector<uint8_t>& encodedData); \
@@ -67,7 +67,7 @@ using _T##_type = tx_type<minter::_T>
     dev::bigdec18 minter::tx_type<minter::_T>::get_fee(const dev::bigint &gas) { \
         return dev::bigdec18(gas) * get_fee(); \
     } \
-    const uint16_t minter::tx_type<minter::_T>::type() { \
+    uint16_t minter::tx_type<minter::_T>::type() { \
         return static_cast<uint16_t>(type_byte); \
     }
 

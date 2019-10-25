@@ -53,7 +53,7 @@ For more information, see official [docs](https://docs.conan.io/en/latest/gettin
 ## Use as conan dependency
 You can just add to your conanfile.txt dependency:
 
-`minter_tx/0.1.3@minter/latest`
+`minter_tx/0.2.0@minter/latest`
 
 CMakeLists.txt
 ```cmake
@@ -76,6 +76,39 @@ Then in your build script add lib:
 ```bash
 g++ my_program.cpp -lminter_tx
 ```
+
+## Build WITHOUT Conan
+```bash
+git clone --recursive https://github.com/MinterTeam/cpp-minter.git
+mkdir build && cd build
+cmake .. -DCMAKE_BUILD_TYPE=Debug -DENABLE_CONAN=Off -DMINTER_TX_TEST=On -DCMAKE_INSTALL_PREFIX=/usr
+cmake --build . -- -j4
+cmake --build . --target install
+```
+
+## Build with Microsoft compiler (without Conan)
+Before build, you should install Visual Studio 2019, at least Community version
+
+**Attention**! For now, it's pretty recommended to build static Windows library, because DLL have some unresolved issues.
+
+Step 2:
+- **Git** for Windows
+- **CMake** for Windows
+- **Boost 1.70.0+** library. You can build it by yourself, download from official repo or download my [pre-built archive](https://drive.google.com/file/d/1u8bXeNayY_9ARtsqQKgLqqxRV0BPhrCf/view?usp=sharing)
+
+Step 3:
+- Add binaries to system PATH
+
+```cmd
+git clone --recursive https://github.com/MinterTeam/cpp-minter.git
+mkdir build
+cd build
+cmake .. -DBOOST_ROOT="C:\boost" -DCMAKE_BUILD_TYPE=Debug -DENABLE_CONAN=Off -DENABLE_SHARED=Off
+cmake --build . --config Debug
+```
+Then find **minter_tx.lib** and **minter_tx.pdb** in **Debug** folder
+
+To build other configurations, just change `--config Debug` to one of: Release, RelWithDebInfo, MinSizeRel
 
 ## Examples:
 See here [link](examples)

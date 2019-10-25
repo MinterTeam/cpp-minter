@@ -80,7 +80,7 @@ template <class T> std::string toHexPrefixed(T const& _data)
 //bytes fromHex(std::string const& _s, WhenError _throw = WhenError::DontThrow);
 
 /// @returns true if @a _s is a hex string.
-bool isHex(std::string const& _s) noexcept;
+MINTER_TX_API bool isHex(std::string const& _s) noexcept;
 
 /// @returns true if @a _hash is a hash conforming to FixedHash type @a T.
 template <class T> static bool isHash(std::string const& _hash)
@@ -110,7 +110,7 @@ inline bytes asBytes(std::string const& _b)
 
 /// Converts a string into the big-endian base-16 stream of integers (NOT ASCII).
 /// @example asNibbles("A")[0] == 4 && asNibbles("A")[1] == 1
-bytes asNibbles(bytesConstRef const& _s);
+MINTER_TX_API bytes asNibbles(bytesConstRef const& _s);
 
 
 // Big-endian to/from host endian conversion functions.
@@ -193,7 +193,7 @@ inline std::string toCompactHexPrefixed(u256 _val, unsigned _min = 0)
 
 /// Escapes a string into the C-string representation.
 /// @p _all if true will escape all characters, not just the unprintable ones.
-std::string escaped(std::string const& _s, bool _all = true);
+MINTER_TX_API std::string escaped(std::string const& _s, bool _all = true);
 
 /// Determines the length of the common prefix of the two collections given.
 /// @returns the number of elements both @a _t and @a _u share, in order, at the beginning.

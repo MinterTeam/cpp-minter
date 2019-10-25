@@ -14,17 +14,18 @@
 #include "minter/eth/RLP.h"
 #include "minter/address.h"
 #include "minter/tx/signature.h"
+#include "minter/minter_tx_core.h"
 
 namespace minter {
 
-class signature_data {
+class MINTER_TX_API signature_data {
 public:
     virtual dev::bytes encode() = 0;
     virtual void decode(const dev::RLP &data) = 0;
     virtual ~signature_data() = default;
 };
 
-class signature_single_data: public virtual minter::signature_data {
+class MINTER_TX_API signature_single_data: public virtual minter::signature_data {
 public:
     void set_signature(const minter::signature &sig);
     void set_signature(minter::signature &&sig);
@@ -43,7 +44,7 @@ private:
     dev::bytes m_v, m_r, m_s;
 };
 
-class signature_multi_data: public virtual minter::signature_data {
+class MINTER_TX_API signature_multi_data: public virtual minter::signature_data {
 public:
     signature_multi_data &set_signatures(const minter::data::address &address, std::vector<minter::signature_single_data> &&signs);
     dev::bytes encode() override;

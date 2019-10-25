@@ -32,7 +32,7 @@
 
 namespace minter {
 
-class tx_builder {
+class MINTER_TX_API tx_builder {
 public:
     tx_builder(std::shared_ptr<minter::tx> tx) : m_tx(std::move(tx)) { }
     ~tx_builder() = default;
@@ -76,7 +76,7 @@ private:
 };
 
 
-std::shared_ptr<minter::tx_builder> new_tx();
+MINTER_TX_API std::shared_ptr<minter::tx_builder> new_tx();
 
 }
 

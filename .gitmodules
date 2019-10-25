@@ -1,3 +1,12 @@
 [submodule "libs/secp256k1"]
 	path = libs/secp256k1
 	url = https://github.com/edwardstock/native-secp256k1-java.git
+[submodule "libs/bip39"]
+	path = libs/bip39
+	url = https://github.com/edwardstock/native-bip39.git
+[submodule "libs/gtest"]
+	path = libs/gtest
+	url = https://github.com/google/googletest.git
+[submodule "libs/toolboxpp"]
+	path = libs/toolboxpp
+	url = https://github.com/edwardstock/toolboxpp.git

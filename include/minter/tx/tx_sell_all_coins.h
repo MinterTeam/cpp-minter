@@ -14,7 +14,7 @@
 
 namespace minter {
 
-class tx_sell_all_coins: public virtual minter::tx_data {
+class MINTER_TX_API tx_sell_all_coins: public virtual minter::tx_data {
 public:
     explicit tx_sell_all_coins(std::shared_ptr<minter::tx> tx);
     uint16_t type() const override;

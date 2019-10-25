@@ -11,12 +11,13 @@
 #define MINTER_MINTER_HASH_H
 
 #include <minter/bip39/utils.h>
+#include "minter_tx_core.h"
 #include "minter/eth/Common.h"
 
 namespace minter {
 namespace data {
 
-class minter_hash {
+class MINTER_TX_API minter_hash {
 private:
     using data_t = minter::Data;
 public:
@@ -54,6 +55,6 @@ using hash_t = minter::data::minter_hash;
 
 }
 
-std::ostream& operator << (std::ostream &os, const minter::hash_t &hash);
+MINTER_TX_API std::ostream& operator << (std::ostream &os, const minter::hash_t &hash);
 
 #endif //MINTER_MINTER_HASH_H

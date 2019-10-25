@@ -15,7 +15,7 @@
 
 namespace minter {
 
-class tx_declare_candidacy: public virtual minter::tx_data {
+class MINTER_TX_API tx_declare_candidacy: public virtual minter::tx_data {
 public:
     explicit tx_declare_candidacy(std::shared_ptr<minter::tx> tx);
     uint16_t type() const override;

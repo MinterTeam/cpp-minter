@@ -25,6 +25,9 @@ class MinterTxConan(ConanFile):
     default_options = {
         "shared": False,
         "boost:shared": False,
+        "bip39:shared": False,
+        "bip39:enableC": False,
+        "bip39:enableJNI": False,
     }
     exports = "version"
     exports_sources = (
@@ -45,8 +48,8 @@ class MinterTxConan(ConanFile):
     default_channel = "latest"
 
     requires = (
-        'bip39/1.0.0@edwardstock/latest',
-        'toolboxpp/2.2.0@scatter/latest',
+        'bip39/1.2.5@edwardstock/latest',
+        'toolboxpp/2.2.2@scatter/latest',
         'boost/1.70.0@conan/stable'
     )
 
@@ -68,6 +71,11 @@ class MinterTxConan(ConanFile):
         self.copy("*", dst="include", src="include", keep_path=True)
         self.copy("*", dst="include", src="libs/secp256k1/include", keep_path=True)
         self.copy("*.lib", dst="lib", keep_path=False)
+        self.copy("*.dll", dst="lib", keep_path=False)
+        self.copy("*.dll.a", dst="lib", keep_path=False)
+        self.copy("*.exp", dst="lib", keep_path=False)
+        self.copy("*.ilk", dst="lib", keep_path=False)
+        self.copy("*.pdb", dst="lib", keep_path=False)
         self.copy("*.so", dst="lib", keep_path=False)
         self.copy("*.dylib", dst="lib", keep_path=False)
         self.copy("*.a", dst="lib", keep_path=False)

@@ -15,7 +15,7 @@ namespace minter {
 
 static const uint32_t PROOF_LEN = 65;
 
-class tx_redeem_check: public virtual minter::tx_data {
+class MINTER_TX_API tx_redeem_check: public virtual minter::tx_data {
 public:
     explicit tx_redeem_check(std::shared_ptr<minter::tx> tx);
     uint16_t type() const override;

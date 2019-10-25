@@ -15,7 +15,7 @@
 #include "tx_data.h"
 namespace minter {
 
-class tx_delegate: public virtual minter::tx_data {
+class MINTER_TX_API tx_delegate: public virtual minter::tx_data {
 public:
     explicit tx_delegate(std::shared_ptr<minter::tx> tx);
     uint16_t type() const override;

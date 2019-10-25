@@ -14,11 +14,12 @@
 #include <vector>
 #include "minter/eth/Common.h"
 #include "minter/hash.h"
+#include "minter_tx_core.h"
 
 namespace minter {
 namespace data {
 
-class public_key {
+class MINTER_TX_API public_key {
 private:
     using data_t = minter::Data;
 public:

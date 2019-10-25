@@ -13,6 +13,7 @@
 #include <secp256k1_recovery.h>
 #include <secp256k1_ecdh.h>
 
+#include "minter_tx_core.h"
 #include "public_key.h"
 #include "minter/tx/secp256k1_raii.h"
 
@@ -22,7 +23,7 @@
 namespace minter {
 namespace data {
 
-class private_key : public minter::FixedData<32> {
+class MINTER_TX_API private_key : public minter::FixedData<32> {
 public:
     static private_key from_mnemonic(const std::string &mnem, uint32_t derive_index = 0);
     static private_key from_mnemonic(const char *mnemonic, uint32_t derive_index = 0);

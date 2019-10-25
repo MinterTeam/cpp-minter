@@ -12,11 +12,12 @@
 
 #include <memory>
 #include "tx.h"
+#include "minter/minter_tx_core.h"
 
 namespace minter {
 
 // Data for concrete transaction
-class tx_data: public std::enable_shared_from_this<minter::tx_data> {
+class MINTER_TX_API tx_data: public std::enable_shared_from_this<minter::tx_data> {
 public:
     tx_data() = default;
     explicit tx_data(std::shared_ptr<minter::tx> tx) : m_tx(std::move(tx)) { }

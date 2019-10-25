@@ -53,6 +53,7 @@
 #pragma warning(pop)
 #pragma GCC diagnostic pop
 #include "vector_ref.h"
+#include "minter/minter_tx_core.h"
 
 // CryptoPP defines byte in the global namespace, so must we.
 using byte = uint8_t;
@@ -65,9 +66,9 @@ namespace dev
 {
 using namespace boost::multiprecision::literals;
 
-extern char const* Version;
+MINTER_TX_API extern char const* Version;
 
-extern std::string const EmptyString;
+MINTER_TX_API extern std::string const EmptyString;
 
 // Binary data types.
 using bytes = std::vector<byte>;
@@ -145,7 +146,7 @@ using u256HashMap = std::unordered_map<u256, u256>;
 using strings = std::vector<std::string>;
 
 // Null/Invalid values for convenience.
-extern bytes const NullBytes;
+MINTER_TX_API extern bytes const NullBytes;
 u256 constexpr Invalid256 =
     0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff_cppui256;
 
@@ -209,7 +210,7 @@ private:
 };
 
 /// Inheritable for classes that have invariants.
-class HasInvariants
+class MINTER_TX_API HasInvariants
 {
 public:
     /// Reimplement to specify the invariants.
@@ -226,7 +227,7 @@ public:
 #endif
 
 /// Simple scope-based timer helper.
-class TimerHelper
+class MINTER_TX_API TimerHelper
 {
 public:
     TimerHelper(std::string const& _id, unsigned _msReportWhenGreater = 0): m_t(std::chrono::high_resolution_clock::now()), m_id(_id), m_ms(_msReportWhenGreater) {}
@@ -283,9 +284,9 @@ enum class WithExisting: int
 };
 
 /// Get the current time in seconds since the epoch in UTC
-int64_t utcTime();
+MINTER_TX_API int64_t utcTime();
 
-void setDefaultOrCLocale();
+MINTER_TX_API void setDefaultOrCLocale();
 
 static constexpr unsigned c_lineWidth = 160;
 
@@ -301,6 +302,6 @@ private:
     static bool s_shouldExit;
 };
 
-bool isTrue(std::string const& _m);
-bool isFalse(std::string const& _m);
+MINTER_TX_API bool isTrue(std::string const& _m);
+MINTER_TX_API bool isFalse(std::string const& _m);
 }  // namespace dev

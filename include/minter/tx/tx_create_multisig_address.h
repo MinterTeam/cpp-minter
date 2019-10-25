@@ -14,7 +14,7 @@
 #include "tx_data.h"
 namespace minter {
 
-class tx_create_multisig_address: public minter::tx_data {
+class MINTER_TX_API tx_create_multisig_address: public minter::tx_data {
 public:
     explicit tx_create_multisig_address(std::shared_ptr<minter::tx> tx);
     uint16_t type() const override;

@@ -49,7 +49,6 @@ minter::data::private_key::private_key(const uint8_t *data, size_t len) : FixedD
 minter::pubkey_t minter::data::private_key::get_public_key(bool compressed) const {
     secp256k1_raii secp;
     secp256k1_pubkey pubkey;
-    uint8_t ints_array[2];
 
     auto ret = secp256k1_ec_pubkey_create(secp.get(), &pubkey, cdata());
 
@@ -62,10 +61,8 @@ minter::pubkey_t minter::data::private_key::get_public_key(bool compressed) cons
 
     if (ret) {
         int ret2 = secp256k1_ec_pubkey_serialize(secp.get(), output_ser, &output_len, &pubkey, compFlag);
+        (void)ret2;
     }
-
-    ints_array[0] = output_len;
-    ints_array[1] = ret;
 
     dev::bytes tmp(output_ser, output_ser + output_len);
     minter::pubkey_t out(tmp);

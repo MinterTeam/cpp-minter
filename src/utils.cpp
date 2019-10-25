@@ -29,7 +29,7 @@ dev::bytes minter::utils::to_bytes(const std::string &input) {
 
     dev::bytes output;
     output.resize(input.length());
-    for (auto i = 0; i < input.size(); i++) {
+    for (std::string::size_type i = 0; i < input.size(); i++) {
         output[i] = (uint8_t) input[i];
     }
 
@@ -41,7 +41,7 @@ dev::bytes minter::utils::to_bytes_fixed(const std::string &input, size_t fixed_
     output.resize(fixed_size);
     size_t left = fixed_size;
     size_t fill_from = 0;
-    for (auto i = 0; i < input.size() && i < fixed_size; i++, left--, fill_from++) {
+    for (std::string::size_type i = 0; i < input.size() && i < fixed_size; i++, left--, fill_from++) {
         output[i] = (uint8_t) input[i];
     }
 

@@ -25,6 +25,7 @@
 #include "signature.h"
 #include "tx_fwd.h"
 #include "minter/tx/secp256k1_raii.h"
+#include "minter/minter_tx_core.h"
 
 namespace minter {
 
@@ -33,11 +34,11 @@ typedef enum {
   testnet = (uint8_t) 0x02,
 } chain_id;
 
-extern const std::unordered_map<std::string, chain_id> chain_id_str_map;
+MINTER_TX_API extern const std::unordered_map<std::string, chain_id> chain_id_str_map;
 
-class tx_builder;
+class MINTER_TX_API tx_builder;
 
-class tx : public std::enable_shared_from_this<minter::tx> {
+class MINTER_TX_API tx : public std::enable_shared_from_this<minter::tx> {
     friend class tx_builder;
     friend class tx_data;
 public:

@@ -15,7 +15,7 @@
 
 namespace minter {
 
-class tx_set_candidate_on_off: public virtual minter::tx_data {
+class MINTER_TX_API tx_set_candidate_on_off: public virtual minter::tx_data {
 public:
     explicit tx_set_candidate_on_off(std::shared_ptr<minter::tx> tx);
 

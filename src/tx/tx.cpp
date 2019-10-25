@@ -78,12 +78,14 @@ std::shared_ptr<minter::tx> minter::tx::decode(const dev::bytes &tx) {
         const dev::bytes b = (dev::bytes) s[9];
         dev::RLP inn(b);
         dev::RLP sdata = s[9];
+        (void)sdata;
         out->m_signature->decode(inn);
     } else if (out->m_signature_type == minter::signature_type::multi) {
         out->m_signature = std::make_shared<minter::signature_multi_data>();
         const dev::bytes b = (dev::bytes) s[9];
         dev::RLP inn(b);
         dev::RLP sdata = s[9];
+        (void)sdata;
         out->m_signature->decode(inn);
     }
 
@@ -167,6 +169,7 @@ minter::signature minter::tx::sign_with_private(const minter::secp256k1_raii &ct
             outputSer,
             &recoveryId,
             &sig);
+        (void)serializeRet;
         outputSer[64] = ((uint8_t) recoveryId) + (uint8_t) 27;
     } else {
         return outSig;
