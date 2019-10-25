@@ -33,6 +33,7 @@ class MinterTxConan(ConanFile):
     exports_sources = (
         "modules/*",
         "include/*",
+        "cfg/*",
         "tests/*",
         "src/*",
         "libs/*",
