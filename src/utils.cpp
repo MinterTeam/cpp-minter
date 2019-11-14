@@ -180,18 +180,18 @@ dev::bigdec18 minter::utils::humanize_value(const dev::bigint &value) {
 }
 
 std::ostream &operator << (std::ostream &out, const minter::Data &d) {
-    out << d.toHex();
+    out << d.to_hex();
     return out;
 }
 
 std::ostream &operator << (std::ostream &out, const dev::bytes &d) {
     minter::Data tmp(d);
-    out << tmp.toHex();
+    out << tmp.to_hex();
     return out;
 }
 
 std::ostream &operator << (std::ostream &out, const dev::RLPStream &rlp) {
     minter::Data tmp(rlp.out());
-    out << tmp.toHex();
+    out << tmp.to_hex();
     return out;
 }

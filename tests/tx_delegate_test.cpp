@@ -31,7 +31,7 @@ TEST(TxDelegate, TestEncode) {
 
     auto signature = tx->sign_single(pk);
 
-    ASSERT_STREQ(expected, signature.toHex().c_str());
+    ASSERT_STREQ(expected, signature.to_hex().c_str());
 }
 
 TEST(TxDelegate, TestDecode) {
@@ -81,12 +81,12 @@ TEST(TxUnbond, TestEncode) {
         minter::Data r = sign_data->get_r();
         minter::Data s = sign_data->get_s();
         minter::Data v = sign_data->get_v();
-        ASSERT_STREQ(R, r.toHex().c_str());
-        ASSERT_STREQ(S, s.toHex().c_str());
-        ASSERT_STREQ(V, v.toHex().c_str());
+        ASSERT_STREQ(R, r.to_hex().c_str());
+        ASSERT_STREQ(S, s.to_hex().c_str());
+        ASSERT_STREQ(V, v.to_hex().c_str());
     }
 
-    ASSERT_STREQ(expected, signature.toHex().c_str());
+    ASSERT_STREQ(expected, signature.to_hex().c_str());
 }
 
 TEST(TxUnbond, TestDecode) {
@@ -116,7 +116,7 @@ TEST(TxUnbond, TestDecode) {
     minter::Data r = sign_data->get_r();
     minter::Data s = sign_data->get_s();
     minter::Data v = sign_data->get_v();
-    ASSERT_STREQ(R, r.toHex().c_str());
-    ASSERT_STREQ(S, s.toHex().c_str());
-    ASSERT_STREQ(V, v.toHex().c_str());
+    ASSERT_STREQ(R, r.to_hex().c_str());
+    ASSERT_STREQ(S, s.to_hex().c_str());
+    ASSERT_STREQ(V, v.to_hex().c_str());
 }

@@ -59,10 +59,10 @@ minter::data::minter_hash::operator std::string() const {
     return to_string();
 }
 std::string minter::data::minter_hash::to_string() const {
-    return "Mt" + m_data.toHex();
+    return "Mt" + m_data.to_hex();
 }
 std::string minter::data::minter_hash::to_string_no_prefix() const {
-    return m_data.toHex();
+    return m_data.to_hex();
 }
 
 std::ostream& operator << (std::ostream &os, const minter::hash_t &hash) {

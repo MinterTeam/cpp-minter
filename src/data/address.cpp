@@ -41,10 +41,6 @@ minter::data::address::address(std::vector<uint8_t> &&data) {
 }
 
 minter::data::address::address(const minter::pubkey_t &pub_key) {
-    //new BytesData(data.dropFirst())
-    //                        .sha3Mutable()
-    //                        .takeLastMutable(20)
-
     minter::Data d = pub_key.get();
     dev::bytes dropped_first(pub_key.get().size()-1);
     std::copy(pub_key.get().begin()+1, pub_key.get().end(), dropped_first.begin());
@@ -57,6 +53,12 @@ minter::data::address::address(const minter::pubkey_t &pub_key) {
 
 minter::data::address::address(const minter::privkey_t &priv_key): address(priv_key.get_public_key()) {
 
+}
+
+minter::data::address::address(const toolboxpp::data::bytes_data &data) {
+    if(data.size() == 20) {
+        m_data.write(0, data);
+    }
 }
 
 const uint8_t *minter::data::address::data() const {
@@ -76,11 +78,11 @@ std::vector<uint8_t> &minter::data::address::get() {
 }
 
 const std::string minter::data::address::to_string() const {
-    return "Mx" + m_data.toHex();
+    return "Mx" + m_data.to_hex();
 }
 
 const std::string minter::data::address::to_string_no_prefix() const {
-    return m_data.toHex();
+    return m_data.to_hex();
 }
 
 bool minter::data::address::operator==(const minter::data::address &other) const noexcept {

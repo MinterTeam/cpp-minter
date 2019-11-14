@@ -30,7 +30,7 @@ TEST(TxCreateCoin, TestEncode) {
 
     auto signature = tx->sign_single(pk);
 
-    ASSERT_STREQ(expected, signature.toHex().c_str());
+    ASSERT_STREQ(expected, signature.to_hex().c_str());
 }
 
 TEST(TxCreateCoin, TestDecode) {

@@ -15,7 +15,7 @@
 
 #include "minter_tx_core.h"
 #include "public_key.h"
-#include "minter/tx/secp256k1_raii.h"
+#include "minter/crypto/secp256k1_raii.h"
 
 #ifndef MINTER_MINTER_PRIVATE_KEY_H
 #define MINTER_MINTER_PRIVATE_KEY_H
@@ -36,7 +36,7 @@ public:
     private_key(const uint8_t *data, size_t len);
     minter::pubkey_t get_public_key(bool compressed = false) const;
 
-    std::string to_string() const;
+    std::string to_string()  const;
 
     bool operator==(const private_key& other) const noexcept;
     bool operator!=(const private_key& other) const noexcept;

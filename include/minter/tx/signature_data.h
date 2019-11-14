@@ -27,6 +27,10 @@ public:
 
 class MINTER_TX_API signature_single_data: public virtual minter::signature_data {
 public:
+    signature_single_data() = default;
+    explicit signature_single_data(const minter::signature &sig);
+    explicit signature_single_data(minter::signature &&sig);
+
     void set_signature(const minter::signature &sig);
     void set_signature(minter::signature &&sig);
     void set_signature(const uint8_t *data);
@@ -46,9 +50,14 @@ private:
 
 class MINTER_TX_API signature_multi_data: public virtual minter::signature_data {
 public:
+    signature_multi_data() = default;
+    signature_multi_data(const minter::data::address &address, std::vector<minter::signature_single_data> &&signs);
     signature_multi_data &set_signatures(const minter::data::address &address, std::vector<minter::signature_single_data> &&signs);
     dev::bytes encode() override;
     void decode(const dev::RLP &data) override;
+
+    const minter::address_t& get_address() const;
+    const std::vector<minter::signature_single_data> & get_signs() const;
 
 private:
     minter::data::address m_address;

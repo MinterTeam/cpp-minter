@@ -72,9 +72,9 @@ uint8_t minter::data::public_key::at(size_t idx) const {
 }
 
 std::string minter::data::public_key::to_string() const {
-    return "Mp" + m_data.toHex();
+    return "Mp" + m_data.to_hex();
 }
 
 std::string minter::data::public_key::to_string_no_prefix() const {
-    return m_data.toHex();
+    return m_data.to_hex();
 }

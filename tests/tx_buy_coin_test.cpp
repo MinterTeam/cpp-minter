@@ -27,7 +27,7 @@ TEST(TxBuy, TestEncode) {
 
 
 
-    ASSERT_STREQ(expected, signature.toHex().c_str());
+    ASSERT_STREQ(expected, signature.to_hex().c_str());
 
 }
 

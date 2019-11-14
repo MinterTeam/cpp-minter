@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 project(minter_tx
-        VERSION 0.2.0
+        VERSION 0.3.0
         DESCRIPTION "Minter Transaction Maker"
         LANGUAGES CXX
         )
@@ -192,7 +192,7 @@ set(HEADERS
     include/minter/tx/signature_data.h
     include/minter/tx/signature.h
     include/minter/tx/utils.h
-    include/minter/tx/secp256k1_raii.h
+    include/minter/crypto/secp256k1_raii.h
     include/minter/tx/tx_builder.h
     include/minter/public_key.h
     include/minter/hash.h
@@ -292,6 +292,7 @@ if (MINTER_TX_TEST)
 	if (NOT MSVC)
 		target_compile_options(${PROJECT_NAME_TEST} PUBLIC -Wno-unused-parameter)
 	endif ()
+	target_include_directories(${PROJECT_NAME_TEST} PRIVATE tests)
 	target_link_libraries(${PROJECT_NAME_TEST} PRIVATE CONAN_PKG::gtest)
 	target_link_libraries(${PROJECT_NAME_TEST} PUBLIC ${PROJECT_NAME})
 endif ()

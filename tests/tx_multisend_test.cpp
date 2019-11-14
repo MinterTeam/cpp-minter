@@ -28,7 +28,7 @@ TEST(TxMultisend, TestEncode) {
 
     auto signature = tx->sign_single(priv_key);
 
-    ASSERT_STREQ(expected, signature.toHex().c_str());
+    ASSERT_STREQ(expected, signature.to_hex().c_str());
 }
 
 TEST(TxMultisend, RealSend) {

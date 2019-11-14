@@ -32,7 +32,7 @@ minter::data::private_key minter::data::private_key::from_mnemonic(const char *m
 minter::data::private_key::private_key() : FixedData() {
 }
 minter::data::private_key::private_key(const char *hexString) : FixedData() {
-    m_data = std::move(minter::hexToBytes(hexString));
+    m_data = std::move(toolboxpp::data::hexToBytes(hexString));
 }
 minter::data::private_key::private_key(const uint8_t *data) : FixedData(data) {
 
@@ -78,7 +78,7 @@ bool minter::data::private_key::operator!=(const minter::data::private_key &othe
 }
 
 std::string minter::data::private_key::to_string() const {
-    return toHex();
+    return to_hex();
 }
 minter::data::private_key::operator std::string() const {
     return to_string();

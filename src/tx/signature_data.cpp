@@ -13,6 +13,14 @@
 #include "minter/tx/signature_data.h"
 #include "minter/tx/utils.h"
 
+minter::signature_single_data::signature_single_data(const minter::signature &sig) {
+    set_signature(sig);
+}
+
+minter::signature_single_data::signature_single_data(minter::signature &&sig) {
+    set_signature(std::move(sig));
+}
+
 dev::bytes minter::signature_single_data::encode() {
     dev::RLPStream out;
     dev::RLPStream lst;
@@ -27,9 +35,9 @@ dev::bytes minter::signature_single_data::encode() {
 }
 
 void minter::signature_single_data::decode(const dev::RLP &data) {
-    m_v = (dev::bytes)data[0];
-    m_r = (dev::bytes)data[1];
-    m_s = (dev::bytes)data[2];
+    m_v = (dev::bytes) data[0];
+    m_r = (dev::bytes) data[1];
+    m_s = (dev::bytes) data[2];
 }
 
 void minter::signature_single_data::set_signature(const minter::signature &sig) {
@@ -108,6 +116,10 @@ const dev::bytes &minter::signature_single_data::get_s() const {
     return m_s;
 }
 
+minter::signature_multi_data::signature_multi_data(const minter::data::address &address,
+                                                   std::vector<minter::signature_single_data> &&signs) {
+    set_signatures(address, std::move(signs));
+}
 
 dev::bytes minter::signature_multi_data::encode() {
     dev::RLPStream signList;
@@ -127,6 +139,21 @@ dev::bytes minter::signature_multi_data::encode() {
     return out.out();
 }
 
+void minter::signature_multi_data::decode(const dev::RLP &data) {
+    dev::RLPStream out;
+
+    m_address = minter::address_t((dev::bytes) data[0]);
+    size_t signsLen = data[1].itemCount();
+    m_signs.resize(signsLen);
+
+    for (size_t c = 0; c < signsLen; c++) {
+        dev::RLP els = data[1][c];
+        signature_single_data sd;
+        sd.decode(els);
+        m_signs[c] = std::move(sd);
+    }
+}
+
 minter::signature_multi_data &minter::signature_multi_data::set_signatures(const minter::data::address &address,
                                                                            std::vector<minter::signature_single_data> &&signs) {
     m_address = address;
@@ -135,7 +162,12 @@ minter::signature_multi_data &minter::signature_multi_data::set_signatures(const
     return *this;
 }
 
-void minter::signature_multi_data::decode(const dev::RLP &data) {
-    dev::RLPStream out;
-//    m_address = (dev::b)
+const minter::address_t &minter::signature_multi_data::get_address() const {
+    return m_address;
 }
+
+const std::vector<minter::signature_single_data> &minter::signature_multi_data::get_signs() const {
+    return m_signs;
+}
+
+

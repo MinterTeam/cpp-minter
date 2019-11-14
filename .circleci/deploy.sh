@@ -35,4 +35,8 @@ fi
 ## Deploy in latest channel
 CONAN_LOCAL=1 conan create . minter/latest -s compiler.libcxx=${stdlibname} -s build_type=Debug --build=missing
 CONAN_LOCAL=1 conan create . minter/latest -s compiler.libcxx=${stdlibname} -s build_type=Release --build=missing -s build_type=Release
-CONAN_LOCAL=1 conan upload minter_tx/${VERS}@minter/latest --all -r=minter
+
+if [ "${NOUPLOAD}" != "1" ]
+then
+	CONAN_LOCAL=1 conan upload minter_tx/${VERS}@minter/latest --all -r=minter
+fi

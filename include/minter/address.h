@@ -33,6 +33,8 @@ public:
     address(std::vector<uint8_t> &&data);
     address(const minter::pubkey_t &pub_key);
     address(const minter::privkey_t &priv_key);
+    address(const toolboxpp::data::bytes_data &data);
+    address(toolboxpp::data::bytes_data &&data);
     const std::string to_string() const;
     const std::string to_string_no_prefix() const;
 

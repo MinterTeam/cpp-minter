@@ -50,7 +50,7 @@ int main() {
     // now u can use signed as you wish
 
     // print
-    std::cout << signedTx.toHex() << std::endl;
+    std::cout << signedTx.to_hex() << std::endl;
     // or do smthng
     const uint8_t* signed_tx_data = signedTx.cdata();
 

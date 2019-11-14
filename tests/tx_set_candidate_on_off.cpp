@@ -22,7 +22,7 @@ TEST(SetCandidateOn, TestEncode) {
 
     auto signature = tx->sign_single(privkey);
 
-    ASSERT_STREQ(expected, signature.toHex().c_str());
+    ASSERT_STREQ(expected, signature.to_hex().c_str());
 }
 
 TEST(SetCandidateOn, TestDecode) {
@@ -47,7 +47,7 @@ TEST(SetCandidateOff, TestEncode) {
 
     auto signature = tx->sign_single(privkey);
 
-    ASSERT_STREQ(expected, signature.toHex().c_str());
+    ASSERT_STREQ(expected, signature.to_hex().c_str());
 }
 
 TEST(SetCandidateOff, TestDecode) {

@@ -24,7 +24,7 @@
 #include "signature_data.h"
 #include "signature.h"
 #include "tx_fwd.h"
-#include "minter/tx/secp256k1_raii.h"
+#include "minter/crypto/secp256k1_raii.h"
 #include "minter/minter_tx_core.h"
 
 namespace minter {
@@ -42,6 +42,9 @@ class MINTER_TX_API tx : public std::enable_shared_from_this<minter::tx> {
     friend class tx_builder;
     friend class tx_data;
 public:
+    using signer_func_t = std::function<minter::signature(minter::Data32)>;
+    typedef minter::signature (*signer_func_c_t)(minter::Data32);
+
     static std::shared_ptr<minter::tx> create();
     static std::shared_ptr<minter::tx> decode(const char *encodedHex);
     static std::shared_ptr<minter::tx> decode(const dev::bytes &tx);
@@ -67,11 +70,46 @@ public:
         return std::dynamic_pointer_cast<T>(m_signature);
     }
 
+    /// \brief Returns keccak transaction hash, that must be signed with secp256k1 private key
+    /// \param signType single or multiple signatures required (default - single sig)
+    /// \return 32 bytes keccak hash
+    minter::Data32 get_unsigned_hash(minter::signature_type signType = minter::signature_type::single);
+
+    /// \brief Make transaction from external signature
+    /// \param sign external signature
+    /// \return rlp encoded transaction data with signature info
+    minter::Data sign_external(const minter::signature &sign);
+
+    /// \brief Make transaction from external signature
+    /// \param sign external signature
+    /// \return rlp encoded transaction data with signature info
+    minter::Data sign_external(minter::signature &&sign);
+
+    /// \brief Sign transaction with function callback
+    /// \see minter::tx::signer_func_c_t - it's a C-style callback, you can assign it to static function
+    /// \param func C-style callback function. Signature of callback: minter::signature(minter::Data32 hash)
+    /// \return rlp encoded transaction data with signature info
+    minter::Data sign_external(signer_func_c_t func);
+
+    /// \brief Sign transaction with function callback
+    /// \see minter::tx::signer_func_c_t - it's a C++-style std::function callback
+    /// \param func C++ - style callback std::function. Signature of callback: minter::signature(minter::Data32 hash)
+    /// \return rlp encoded transaction data with signature info
+    minter::Data sign_external(signer_func_t func);
+
+    /// \brief Sign transaction with passed private key
+    /// \param pk private key data
+    /// \return rlp encoded transaction data with signature info
     minter::Data sign_single(const minter::data::private_key &pk);
-    minter::Data sign_multiple(const minter::data::address &address, const minter::data::private_key &pk);
+
+    /// \brief Sign multisig transaction with passed private keys and owner signatureAddress
+    /// \param signatureAddress owner address
+    /// \param pks list of private keys
+    /// \return rlp encoded transaction data with multisig signature info
+    minter::Data sign_multiple(const minter::data::address &signatureAddress, const std::vector<minter::data::private_key> &pks);
 
 protected:
-    dev::bytes encode(bool include_signature);
+    dev::bytes encode(bool exclude_signature);
     minter::signature sign_with_private(const minter::secp256k1_raii &ctx,
                                         const dev::bytes &hash,
                                         const dev::bytes &pk);

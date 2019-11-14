@@ -11,9 +11,9 @@
 #include <minter/tx/tx_builder.h>
 
 TEST(TxMultisig, TestEncode) {
-
+//TODO
 }
 
 TEST(TxMultisig, TestDecode) {
-
+//TODO
 }

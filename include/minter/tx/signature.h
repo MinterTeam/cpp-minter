@@ -24,6 +24,17 @@ typedef struct {
   bool success = false;
 } signature;
 
+inline minter::signature signature_from_data(minter::Data &&input65) {
+    if(input65.size() != 65) {
+        throw std::out_of_range("Signature data must contains exact 65 bytes, where 65th byte is an recovery id");
+    }
+    return minter::signature{
+        input65.take_range(0, 32),
+        input65.take_range(32, 64),
+        input65.take_last(1)
+    };
+}
+
 }
 
 #endif //MINTER_SIGNATURE_H

@@ -60,7 +60,7 @@ int main(int argc, char** argv) {
         minter::address_t address2 = minter::address_t(priv_key);
 
         out_buff << "Mnemonic: " << mnemonic_phrase << '\n';
-        out_buff << "Priv Key: " << priv_key.toHex() << '\n';
+        out_buff << "Priv Key: " << priv_key.to_hex() << '\n';
         out_buff << "Address : " << address.to_string() << '\n';
         out_buff << "|----------------------------------------------------|" << std::endl;
     }

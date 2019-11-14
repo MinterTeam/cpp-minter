@@ -37,8 +37,8 @@ TEST(RLP, EncodeBigInt128) {
     minter::Data d = data;
     minter::Data numd = num;
 
-    std::cout << d.toHex() << std::endl;
-    std::cout << numd.toHex() << std::endl;
+    std::cout << d.to_hex() << std::endl;
+    std::cout << numd.to_hex() << std::endl;
 
 }
 

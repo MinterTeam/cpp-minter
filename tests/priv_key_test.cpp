@@ -17,7 +17,7 @@ TEST(PrivateKey, CreateFromMnemonic) {
     const char* mnem = "original expand list pencil blade ivory express achieve inside stool apple truck";
     minter::privkey_t pk = minter::privkey_t::from_mnemonic(mnem);
 
-    ASSERT_STREQ(expected, pk.toHex().c_str());
+    ASSERT_STREQ(expected, pk.to_hex().c_str());
 }
 
 TEST(PrivateKey, GetPubKeyUncompressed) {
@@ -31,7 +31,7 @@ TEST(PrivateKey, GetPubKeyUncompressed) {
 
     minter::Data pubkey_data = pub_key.get();
 
-    ASSERT_STREQ(expected, pubkey_data.toHex().c_str());
+    ASSERT_STREQ(expected, pubkey_data.to_hex().c_str());
 }
 
 TEST(PrivateKey, GetPubKeyCompressed) {
@@ -42,7 +42,7 @@ TEST(PrivateKey, GetPubKeyCompressed) {
     auto pub_key = pk.get_public_key(true);
     minter::Data pubkey_data = pub_key.get();
 
-    ASSERT_STREQ(expected, pubkey_data.toHex().c_str());
+    ASSERT_STREQ(expected, pubkey_data.to_hex().c_str());
 }
 
 TEST(PrivateKey, GetMinterAddress) {
