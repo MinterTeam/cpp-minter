@@ -61,6 +61,13 @@ minter::data::address::address(const toolboxpp::data::bytes_data &data) {
     }
 }
 
+minter::data::address::address(toolboxpp::data::bytes_data &&data) {
+    if(data.size() == 20) {
+        m_data.write(0, data);
+        data.clear();
+    }
+}
+
 const uint8_t *minter::data::address::data() const {
     return m_data.cdata();
 }

@@ -61,10 +61,10 @@ uint16_t minter::tx_send_coin::type() const {
 }
 
 std::string minter::tx_send_coin::get_coin() const {
-    return minter::utils::strip_null_bytes(m_coin.c_str());
+    return minter::utils::strip_null_bytes(m_coin.c_str(), m_coin.size());
 }
 
-minter::data::address minter::tx_send_coin::get_to() const {
+const minter::data::address& minter::tx_send_coin::get_to() const {
     return m_to;
 }
 

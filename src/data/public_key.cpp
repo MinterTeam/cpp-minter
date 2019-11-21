@@ -51,10 +51,6 @@ minter::data::public_key::operator std::string() const {
     return to_string();
 }
 
-minter::data::public_key::operator const std::vector<uint8_t> &() const {
-    return m_data.get();
-}
-
 const dev::bytes &minter::data::public_key::get() const {
     return m_data.get();
 }

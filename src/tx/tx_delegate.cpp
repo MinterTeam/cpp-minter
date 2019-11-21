@@ -20,7 +20,7 @@ dev::bytes minter::tx_delegate::encode() {
     dev::RLPStream out;
     dev::RLPStream lst;
     {
-        lst.append((dev::bytes)m_pub_key);
+        lst.append(m_pub_key.get());
         lst.append(minter::utils::to_bytes_fixed(m_coin));
         lst.append(m_stake);
 

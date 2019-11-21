@@ -106,7 +106,7 @@ minter::tx_builder &minter::tx_builder::set_service_data(dev::bytes &&payload) {
 }
 
 minter::tx_builder &minter::tx_builder::set_service_data(const std::string &payload) {
-    m_tx->m_service_data = std::move(minter::utils::to_bytes(payload));
+    m_tx->m_service_data = minter::utils::to_bytes(payload);
     return *this;
 }
 
@@ -119,6 +119,10 @@ minter::tx_builder &minter::tx_builder::set_service_data(const char *payload) {
     return set_service_data(std::string(payload));
 }
 
+minter::tx_builder &minter::tx_builder::set_signature_type(minter::signature_type type) {
+    m_tx->m_signature_type = type;
+    return *this;
+}
 
 
 // Detailed data builders

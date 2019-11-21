@@ -116,6 +116,20 @@ const dev::bytes &minter::signature_single_data::get_s() const {
     return m_s;
 }
 
+std::string minter::signature_single_data::to_hex() const {
+    std::stringstream ss;
+    ss << toolboxpp::data::bytesToHex(get_r().data(), 32);
+    ss << toolboxpp::data::bytesToHex(get_s().data(), 32);
+    ss << toolboxpp::data::bytesToHex(get_v().data(), 1);
+    return ss.str();
+}
+
+bool minter::signature_single_data::operator==(const class minter::signature_single_data & other) const noexcept {
+    return get_r() == other.get_r()
+        && get_s() == other.get_s()
+        && get_v() == other.get_v();
+}
+
 minter::signature_multi_data::signature_multi_data(const minter::data::address &address,
                                                    std::vector<minter::signature_single_data> &&signs) {
     set_signatures(address, std::move(signs));
@@ -168,6 +182,14 @@ const minter::address_t &minter::signature_multi_data::get_address() const {
 
 const std::vector<minter::signature_single_data> &minter::signature_multi_data::get_signs() const {
     return m_signs;
+}
+
+bool minter::signature_multi_data::operator==(const class minter::signature_multi_data & other) const noexcept {
+    if(get_signs().size() != other.get_signs().size()) {
+        return false;
+    }
+
+    return std::equal(get_signs().begin(), get_signs().end(), other.get_signs().begin());
 }
 
 

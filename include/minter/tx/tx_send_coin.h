@@ -33,7 +33,7 @@ public:
     tx_send_coin& set_value(const dev::bigint &raw);
     std::string get_coin() const;
 
-    minter::data::address get_to() const;
+    const minter::data::address& get_to() const;
     dev::bigdec18 get_value() const;
 
 protected:

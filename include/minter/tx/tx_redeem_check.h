@@ -24,8 +24,8 @@ public:
     tx_redeem_check& set_check(const dev::bytes &data);
     tx_redeem_check& set_proof(const dev::bytes &data);
 
-    const dev::bytes get_check() const;
-    const dev::bytes get_proof() const;
+    const dev::bytes& get_check() const;
+    const dev::bytes& get_proof() const;
 
 protected:
     void decode_internal(dev::RLP rlp) override;

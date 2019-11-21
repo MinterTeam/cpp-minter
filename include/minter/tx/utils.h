@@ -13,7 +13,7 @@
 #include <stack>
 #include <string>
 #include <iostream>
-#include <minter/eth/vector_ref.h>
+#include "minter/eth/common.h"
 #include <toolboxpp.hpp>
 #include <boost/multiprecision/cpp_int.hpp>
 #include <minter/eth/RLP.h>
@@ -37,7 +37,7 @@ MINTER_TX_API dev::bigint to_bigint(const dev::bytes &bytes);
 MINTER_TX_API dev::bigint to_bigint(const uint8_t *bytes, size_t len);
 MINTER_TX_API dev::bytes sha3k(const dev::bytes &message);
 MINTER_TX_API dev::bytes sha3k(const minter::Data &message);
-MINTER_TX_API std::string strip_null_bytes(const char* input);
+MINTER_TX_API std::string strip_null_bytes(const char* input, size_t len);
 MINTER_TX_API std::string to_string(const dev::bytes &src);
 MINTER_TX_API std::string to_string(const std::vector<char> &src);
 MINTER_TX_API std::string to_string(const dev::bigdec18 &src);

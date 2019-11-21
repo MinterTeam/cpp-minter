@@ -42,10 +42,10 @@ minter::tx_redeem_check& minter::tx_redeem_check::set_proof(const dev::bytes& da
     m_proof = data;
     return *this;
 }
-const dev::bytes minter::tx_redeem_check::get_check() const {
+const dev::bytes& minter::tx_redeem_check::get_check() const {
     return m_check;
 }
-const dev::bytes minter::tx_redeem_check::get_proof() const {
+const dev::bytes& minter::tx_redeem_check::get_proof() const {
     return m_proof;
 }
 

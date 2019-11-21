@@ -82,7 +82,7 @@ dev::bytes minter::utils::sha3k(const dev::bytes &message) {
     dev::bytes output(32);
     keccak_256_Init(&hash_ctx);
     keccak_Update(&hash_ctx, message.data(), message.size());
-    keccak_Final(&hash_ctx, &output[0]);
+    keccak_Final(&hash_ctx, output.data());
 
     return output;
 }
@@ -142,17 +142,17 @@ std::string minter::utils::to_string(const std::vector<char> &data) {
 std::string minter::utils::to_string_clear(const dev::bytes &src) {
     const std::string tmp(to_string(src));
     const char* tmp2 = tmp.c_str();
-    return strip_null_bytes(tmp2);
+    return strip_null_bytes(tmp2, tmp.size());
 }
 
 
-std::string minter::utils::strip_null_bytes(const char* input) {
-    if(input == nullptr || strlen(input) == 0) {
+std::string minter::utils::strip_null_bytes(const char* input, size_t len) {
+    if(input == nullptr || len == 0) {
         return std::string();
     }
 
     std::stringstream ss;
-    for(size_t i = 0; i < strlen(input); i++) {
+    for(size_t i = 0; i < len; i++) {
         if(input[i] == 0x00) {
             continue;
         }

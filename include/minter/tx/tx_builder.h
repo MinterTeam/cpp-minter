@@ -12,7 +12,7 @@
 
 #include <memory>
 #include <string>
-#include <minter/eth/Common.h>
+#include <minter/eth/common.h>
 #include "minter/tx/tx_fwd.h"
 #include "minter/tx/tx.h"
 
@@ -54,7 +54,7 @@ public:
     tx_builder &set_service_data(const std::string &payload);
     tx_builder &set_service_data(std::string &&payload);
     tx_builder &set_service_data(const char *payload);
-    tx_builder &set_signature_type(uint8_t type);
+    tx_builder &set_signature_type(minter::signature_type type);
 
     std::shared_ptr<minter::tx_send_coin> tx_send_coin();
     std::shared_ptr<minter::tx_sell_coin> tx_sell_coin();

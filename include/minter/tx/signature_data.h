@@ -42,6 +42,10 @@ public:
     const dev::bytes & get_r() const;
     const dev::bytes & get_s() const;
 
+    std::string to_hex() const;
+
+    bool operator==(const signature_single_data& other) const noexcept;
+
     dev::bytes encode() override;
     void decode(const dev::RLP &data) override;
 private:
@@ -58,6 +62,8 @@ public:
 
     const minter::address_t& get_address() const;
     const std::vector<minter::signature_single_data> & get_signs() const;
+
+    bool operator==(const signature_multi_data &other) const noexcept;
 
 private:
     minter::data::address m_address;

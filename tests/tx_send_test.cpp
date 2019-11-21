@@ -21,7 +21,7 @@ static minter::signature test_signer_func(minter::Data32 hash) {
     secp256k1_ecdsa_recoverable_signature sig;
 
     int ret = secp256k1_ecdsa_sign_recoverable(ctx.get(), &sig, hash.cdata(), pk.cdata(), NULL, NULL);
-    std::cout << "Unserialized sign: " << toolboxpp::data::bytesToHex(sig.data, 65) << std::endl;
+//    std::cout << "Unserialized sign: " << toolboxpp::data::bytesToHex(sig.data, 65) << std::endl;
 
     uint8_t outputSer[65];
     minter::signature outSig;
@@ -58,7 +58,7 @@ TEST(TxSend, SerializeSign) {
 }
 
 TEST(TxSend, TestEncodeSignExternal) {
-    const char* expectedTx = "f8840102018a4d4e540000000000000001aae98a4d4e5400000000000000940000000000000000000000000000000000000000888ac7230489e80000808001b845f8431ba05f3346bef4bc527e177a8d74ae6b9a746a20949e80771fa3538caae4cfc45579a0790b23eef2537fd262079e918ed4625eebdb45600fb3e8d8340d59f655bda6a5";
+    const char* expectedTx = "f8840102018a4d4e540000000000000001aae98a4d4e540000000000000094bf5c2fec34cfe73e7178b3ab96deaf9ca6d9a592880de0b6b3a7640000808001b845f8431ca04090688ae6f0e989d99440a80dce1133deed569edb73c29e22611a9e614d2817a0215cb8614f410d4bb26927dd6d32efe9a7f1fe066f88603842d99b6ea37f57cb";
 
     auto signer_func = [](const minter::Data32 &hash){
       return test_signer_func(hash);
@@ -70,14 +70,14 @@ TEST(TxSend, TestEncodeSignExternal) {
     tx_builder->set_gas_coin("MNT");
     tx_builder->set_chain_id(minter::testnet);
     auto data = tx_builder->tx_send_coin();
-    data->set_to("Mx0000000000000000000000000000000000000000");
-    data->set_value("10");
+    data->set_to("Mxbf5c2fec34cfe73e7178b3ab96deaf9ca6d9a592");
+    data->set_value("1");
     data->set_coin("MNT");
     auto tx = data->build();
 
     minter::privkey_t pk("33671c8f2363dffb45e166f1cadced9aa5f86ad32509e5c4f0b39257c30b4110");
 
-    auto signedTx0 = tx->sign_single(pk);
+
 
     auto sign1 = signer_func(tx->get_unsigned_hash());
     std::cout << "Unsigned hash:\n";
@@ -89,9 +89,15 @@ TEST(TxSend, TestEncodeSignExternal) {
     std::cout << std::endl;
 
 
+
+    auto signedTx0 = tx->sign_single(pk);
+    std::cout << "TX 0: " << tx->get_signature_data<minter::signature_single_data>()->to_hex() << std::endl;
     auto signedTx1 = tx->sign_external(sign1);
+    std::cout << "TX 1: " << tx->get_signature_data<minter::signature_single_data>()->to_hex() << std::endl;
     auto signedTx2 = tx->sign_external(signer_func);
+    std::cout << "TX 2: " << tx->get_signature_data<minter::signature_single_data>()->to_hex() << std::endl;
     auto signedTx3 = tx->sign_external(&test_signer_func);
+    std::cout << "TX 3: " << tx->get_signature_data<minter::signature_single_data>()->to_hex() << std::endl;
 
     ASSERT_TRUE(signedTx1 == signedTx0);
     ASSERT_TRUE(signedTx2 == signedTx1);
@@ -109,8 +115,8 @@ TEST(TxSend, TestEncodeSignExternal) {
         ASSERT_EQ(dev::bytes(0), decoded->get_payload());
         ASSERT_EQ(minter::signature_type::single, decoded->get_signature_type());
         std::shared_ptr<minter::tx_send_coin> data = decoded->get_data<minter::tx_send_coin>();
-        ASSERT_EQ(minter::address_t("Mx0000000000000000000000000000000000000000"), data->get_to());
-        ASSERT_EQ(dev::bigdec18("10"), data->get_value());
+        ASSERT_EQ(minter::address_t("Mxbf5c2fec34cfe73e7178b3ab96deaf9ca6d9a592"), data->get_to());
+        ASSERT_EQ(dev::bigdec18("1"), data->get_value());
         ASSERT_STREQ("MNT", data->get_coin().c_str());
 
         ASSERT_STREQ(expectedTx, signedTx1.to_hex().c_str());

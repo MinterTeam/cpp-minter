@@ -27,8 +27,8 @@ public:
     tx_edit_candidate& set_owner_address(const minter::data::address &address);
 
     const minter::pubkey_t& get_pub_key() const;
-    const minter::data::address get_reward_address() const;
-    const minter::data::address get_owner_address() const;
+    const minter::data::address& get_reward_address() const;
+    const minter::data::address& get_owner_address() const;
 
 protected:
     void decode_internal(dev::RLP rlp) override;

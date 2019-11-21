@@ -21,7 +21,7 @@ dev::bytes minter::tx_edit_candidate::encode() {
     dev::RLPStream out;
     dev::RLPStream lst;
     {
-        lst.append((dev::bytes)m_pub_key);
+        lst.append(m_pub_key.get());
         lst.append(m_reward_address.get());
         lst.append(m_owner_address.get());
 
@@ -61,11 +61,11 @@ const minter::pubkey_t& minter::tx_edit_candidate::get_pub_key() const {
     return m_pub_key;
 }
 
-const minter::data::address minter::tx_edit_candidate::get_reward_address() const {
+const minter::data::address& minter::tx_edit_candidate::get_reward_address() const {
     return m_reward_address;
 }
 
-const minter::data::address minter::tx_edit_candidate::get_owner_address() const {
+const minter::data::address& minter::tx_edit_candidate::get_owner_address() const {
     return m_owner_address;
 }
 

@@ -10,7 +10,7 @@
 #ifndef MINTER_SIGNATURE_H
 #define MINTER_SIGNATURE_H
 
-#include <minter/eth/Common.h>
+#include <minter/eth/common.h>
 
 namespace minter {
 

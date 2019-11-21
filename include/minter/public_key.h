@@ -12,7 +12,7 @@
 
 #include <minter/bip39/utils.h>
 #include <vector>
-#include "minter/eth/Common.h"
+#include "minter/eth/common.h"
 #include "minter/hash.h"
 #include "minter_tx_core.h"
 
@@ -40,7 +40,6 @@ public:
     const dev::bytes& get() const;
     dev::bytes& get();
 
-    explicit operator const std::vector<uint8_t>&() const;
     explicit operator std::string() const;
 
     std::string to_string() const;

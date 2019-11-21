@@ -20,7 +20,7 @@ dev::bytes minter::tx_set_candidate_on_off::encode() {
     dev::RLPStream out;
     dev::RLPStream lst;
     {
-        lst.append((dev::bytes) m_pub_key);
+        lst.append(m_pub_key.get());
         out.appendList(lst);
     }
 

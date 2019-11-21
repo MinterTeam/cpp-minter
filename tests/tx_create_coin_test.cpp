@@ -9,6 +9,7 @@
 
 #include <gtest/gtest.h>
 #include <minter/tx.hpp>
+#include <minter/tx/tx_create_coin.h>
 
 TEST(TxCreateCoin, TestEncode) {
     const char* expected = "f8850102018a4d4e540000000000000005abea8a535550455220544553548a5350525445535400000089056bc75e2d63100000888ac7230489e800000a808001b845f8431ca0a0b58787e19d8ef3cbd887936617af5cf069a25a568f838c3d04daf5ad2f6f8ea07660c13ab5017edb87f5b52be4574c8a33a893bac178adec9c262a1408e4f1fe";

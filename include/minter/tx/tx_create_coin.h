@@ -21,7 +21,9 @@ public:
     dev::bytes encode() override;
 
     tx_create_coin& set_name(const char* coin_name);
+    tx_create_coin& set_name(const std::string &coin_name);
     tx_create_coin& set_ticker(const char* coin_symbol);
+    tx_create_coin& set_ticker(const std::string& coin_symbol);
     tx_create_coin& set_initial_amount(const char* amount);
     tx_create_coin& set_initial_amount(const dev::bigdec18 &amount);
     tx_create_coin& set_initial_amount(const dev::bigint &amount);

@@ -52,9 +52,6 @@ const dev::bytes &minter::data::minter_hash::get() const {
 dev::bytes &minter::data::minter_hash::get() {
     return m_data.get();
 }
-minter::data::minter_hash::operator const std::vector<uint8_t> &() const {
-    return get();
-}
 minter::data::minter_hash::operator std::string() const {
     return to_string();
 }

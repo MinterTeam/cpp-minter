@@ -9,7 +9,7 @@
 
 #include <gtest/gtest.h>
 #include <minter/eth/RLP.h>
-#include <minter/eth/Common.h>
+#include <minter/eth/common.h>
 #include <minter/bip39/utils.h>
 
 TEST(RLP, EncodeBigInt128) {

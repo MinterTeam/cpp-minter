@@ -8,12 +8,15 @@
  */
 
 #include <sstream>
+#include <atomic>
+#include <cstring>
 #include "minter/private_key.h"
+
 minter::data::private_key minter::data::private_key::from_mnemonic(const std::string &mnem, uint32_t derive_index) {
     return from_mnemonic(mnem.c_str(), derive_index);
 }
 minter::data::private_key minter::data::private_key::from_mnemonic(const char *mnemonic,
-                                                                                 uint32_t derive_index) {
+                                                                   uint32_t derive_index) {
     private_key out;
 
     minter::Data64 seed = minter::HDKeyEncoder::makeBip39Seed(std::string(mnemonic));
@@ -32,7 +35,7 @@ minter::data::private_key minter::data::private_key::from_mnemonic(const char *m
 minter::data::private_key::private_key() : FixedData() {
 }
 minter::data::private_key::private_key(const char *hexString) : FixedData() {
-    m_data = std::move(toolboxpp::data::hexToBytes(hexString));
+    m_data = toolboxpp::data::hexToBytes(hexString);
 }
 minter::data::private_key::private_key(const uint8_t *data) : FixedData(data) {
 
@@ -56,18 +59,17 @@ minter::pubkey_t minter::data::private_key::get_public_key(bool compressed) cons
     memset(output_ser, 0, 65);
     size_t output_len = 65;
 
-    unsigned int compFlag =
-        compressed == ((uint8_t) 1) ? SECP256K1_EC_COMPRESSED : SECP256K1_EC_UNCOMPRESSED;
+    uint32_t compFlag = compressed == ((uint8_t) 1) ? SECP256K1_EC_COMPRESSED : SECP256K1_EC_UNCOMPRESSED; // NOLINT(hicpp-signed-bitwise)
 
     if (ret) {
         int ret2 = secp256k1_ec_pubkey_serialize(secp.get(), output_ser, &output_len, &pubkey, compFlag);
-        (void)ret2;
+        (void) ret2;
     }
 
     dev::bytes tmp(output_ser, output_ser + output_len);
     minter::pubkey_t out(tmp);
 
-return out;
+    return out;
 }
 
 bool minter::data::private_key::operator==(const minter::data::private_key &other) const noexcept {
@@ -82,4 +84,23 @@ std::string minter::data::private_key::to_string() const {
 }
 minter::data::private_key::operator std::string() const {
     return to_string();
+}
+
+void minter::data::private_key::clear() {
+    static std::atomic<uint8_t> s_cleanseCounter{0u};
+    auto *p = data();
+    size_t const len = (uint8_t *) (data() + size()) - p;
+    size_t loop = len;
+    size_t count = s_cleanseCounter;
+    while (loop--) {
+        *(p++) = (uint8_t) count;
+        count += (17u + ((size_t) p & 0x0Fu));
+    }
+    p = (uint8_t *) memchr((uint8_t *) data(), (uint8_t) count, len);
+    if (p) {
+        count += (63u + (size_t) p);
+    }
+
+    s_cleanseCounter = (uint8_t) count;
+    memset((uint8_t *) data(), 0, len);
 }

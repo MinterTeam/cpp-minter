@@ -12,7 +12,7 @@
 
 #include <minter/bip39/utils.h>
 #include "minter_tx_core.h"
-#include "minter/eth/Common.h"
+#include "minter/eth/common.h"
 
 namespace minter {
 namespace data {
@@ -33,14 +33,12 @@ public:
     bool operator!=(const minter::data::minter_hash& other) const noexcept ;
     bool operator!=(const minter::Data& other) const noexcept ;
     uint8_t operator[](size_t element) const noexcept;
+    explicit operator std::string() const;
 
     uint8_t at(size_t idx) const;
 
     const dev::bytes& get() const;
     dev::bytes& get();
-
-    explicit operator const std::vector<uint8_t>&() const;
-    explicit operator std::string() const;
 
     std::string to_string() const;
     std::string to_string_no_prefix() const;

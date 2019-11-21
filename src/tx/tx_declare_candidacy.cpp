@@ -21,7 +21,7 @@ dev::bytes minter::tx_declare_candidacy::encode() {
     dev::RLPStream lst;
     {
         lst.append(m_address.get());
-        lst.append((dev::bytes)m_pub_key);
+        lst.append(m_pub_key.get());
         lst.append(m_commission);
         lst.append(minter::utils::to_bytes_fixed(m_coin, 10));
         lst.append(m_stake);

@@ -21,7 +21,6 @@
 
 #pragma once
 
-#include "FixedHash.h"
 #include <boost/exception/diagnostic_information.hpp>
 #include <boost/exception/errinfo_api_function.hpp>
 #include <boost/exception/exception.hpp>
@@ -77,8 +76,6 @@ DEV_SIMPLE_EXCEPTION(ExternalFunctionFailure);
 DEV_SIMPLE_EXCEPTION(WaitTimeout);
 
 // error information to be added to exceptions
-using errinfo_invalidSymbol = boost::error_info<struct tag_invalidSymbol, char>;
-using errinfo_wrongAddress = boost::error_info<struct tag_address, std::string>;
 using errinfo_comment = boost::error_info<struct tag_comment, std::string>;
 using errinfo_required = boost::error_info<struct tag_required, bigint>;
 using errinfo_got = boost::error_info<struct tag_got, bigint>;
@@ -86,13 +83,4 @@ using errinfo_min = boost::error_info<struct tag_min, bigint>;
 using errinfo_max = boost::error_info<struct tag_max, bigint>;
 using RequirementError = boost::tuple<errinfo_required, errinfo_got>;
 using RequirementErrorComment = boost::tuple<errinfo_required, errinfo_got, errinfo_comment>;
-using errinfo_hash256 = boost::error_info<struct tag_hash, h256>;
-using errinfo_required_h256 = boost::error_info<struct tag_required_h256, h256>;
-using errinfo_got_h256 = boost::error_info<struct tag_get_h256, h256>;
-using Hash256RequirementError = boost::tuple<errinfo_required_h256, errinfo_got_h256>;
-using errinfo_extraData = boost::error_info<struct tag_extraData, bytes>;
-using errinfo_externalFunction = boost::errinfo_api_function;
-using errinfo_interface = boost::error_info<struct tag_interface, std::string>;
-using errinfo_path = boost::error_info<struct tag_path, std::string>;
-using errinfo_nodeID = boost::error_info<struct tag_nodeID, h512>;
 }

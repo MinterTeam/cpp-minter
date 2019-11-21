@@ -16,9 +16,7 @@
 #include <secp256k1_ecdh.h>
 #include <secp256k1_recovery.h>
 #include <minter/bip39/utils.h>
-#include <boost/multiprecision/cpp_int.hpp>
-#include "minter/eth/RLP.h"
-#include "minter/eth/vector_ref.h"
+#include "minter/eth/common.h"
 #include "minter/address.h"
 #include "minter/private_key.h"
 #include "signature_data.h"

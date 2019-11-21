@@ -40,6 +40,17 @@ if (MSVC)
 		endforeach (flag_var)
 	endif ()
 
+	foreach (flag_var
+	         CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
+	         CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO)
+		if (${flag_var} MATCHES "/MD")
+			string(REGEX REPLACE "MD" "MDd" ${flag_var} "${${flag_var}}")
+		endif (${flag_var} MATCHES "/MD")
+		if (${flag_var} MATCHES "/MT")
+			string(REGEX REPLACE "MT" "MTd" ${flag_var} "${${flag_var}}")
+		endif (${flag_var} MATCHES "/MT")
+	endforeach (flag_var)
+
 	message(STATUS ${CMAKE_CXX_FLAGS})
 	message(STATUS ${CMAKE_CXX_FLAGS_DEBUG})
 	message(STATUS ${CMAKE_CXX_FLAGS_RELEASE})
@@ -157,19 +168,14 @@ message(STATUS "Build arch: ${PROJECT_ARCH}")
 
 set(ETH_HEADERS
     include/minter/eth/RLP.h
-    include/minter/eth/Common.h
-    include/minter/eth/CommonData.h
-    include/minter/eth/FixedHash.h
+    include/minter/eth/common.h
     include/minter/eth/vector_ref.h
     )
 
 set(ETH_SOURCES
     ${ETH_HEADERS}
     src/eth/RLP.cpp
-    src/eth/Common.cpp
-    src/eth/CommonData.cpp
-    src/eth/FixedHash.cpp
-    )
+    src/eth/common.cpp)
 
 set(HEADERS
     include/minter/tx/tx.h
@@ -256,6 +262,12 @@ target_link_libraries(${PROJECT_NAME} CONAN_PKG::bip39)
 target_link_libraries(${PROJECT_NAME} CONAN_PKG::toolboxpp)
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/libs)
+
+include(PVS-Studio)
+pvs_studio_add_target(TARGET ${PROJECT_NAME}.analyze ALL
+                      OUTPUT FORMAT errorfile
+                      ANALYZE ${PROJECT_NAME}
+                      LOG target.err)
 
 if (MINTER_TX_TEST)
 	set(gtest_force_shared_crt ${ENABLE_SHARED} CACHE BOOL "" FORCE)

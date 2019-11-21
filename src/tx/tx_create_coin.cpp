@@ -45,8 +45,18 @@ minter::tx_create_coin& minter::tx_create_coin::set_name(const char* name) {
     return *this;
 }
 
+minter::tx_create_coin& minter::tx_create_coin::set_name(const std::string& name) {
+    m_name = name;
+    return *this;
+}
+
 minter::tx_create_coin& minter::tx_create_coin::set_ticker(const char *coin_symbol) {
     m_ticker = std::string(coin_symbol);
+    return *this;
+}
+
+minter::tx_create_coin& minter::tx_create_coin::set_ticker(const std::string &coin_symbol) {
+    m_ticker = coin_symbol;
     return *this;
 }
 

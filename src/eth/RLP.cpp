@@ -16,6 +16,8 @@
 */
 
 #include "minter/eth/RLP.h"
+#include "minter/eth/exceptions.h"
+
 using namespace std;
 using namespace dev;
 
