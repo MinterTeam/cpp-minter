@@ -12,7 +12,7 @@
 #include <minter/tx/utils.h>
 
 dev::bytes minter::utils::to_bytes(std::string &&input) {
-    if(!input.size()) {
+    if (!input.size()) {
         return dev::bytes(0);
     }
 
@@ -99,7 +99,7 @@ dev::bigint minter::utils::to_bigint(const uint8_t *bytes, size_t len) {
 
 std::string minter::utils::to_string(const dev::bytes &src) {
     std::stringstream ss;
-    for(const auto& item: src) {
+    for (const auto &item: src) {
         ss << item;
     }
 
@@ -141,19 +141,18 @@ std::string minter::utils::to_string(const std::vector<char> &data) {
 
 std::string minter::utils::to_string_clear(const dev::bytes &src) {
     const std::string tmp(to_string(src));
-    const char* tmp2 = tmp.c_str();
+    const char *tmp2 = tmp.c_str();
     return strip_null_bytes(tmp2, tmp.size());
 }
 
-
-std::string minter::utils::strip_null_bytes(const char* input, size_t len) {
-    if(input == nullptr || len == 0) {
+std::string minter::utils::strip_null_bytes(const char *input, size_t len) {
+    if (input == nullptr || len == 0) {
         return std::string();
     }
 
     std::stringstream ss;
-    for(size_t i = 0; i < len; i++) {
-        if(input[i] == 0x00) {
+    for (size_t i = 0; i < len; i++) {
+        if (input[i] == 0x00) {
             continue;
         }
 
@@ -163,7 +162,7 @@ std::string minter::utils::strip_null_bytes(const char* input, size_t len) {
     return ss.str();
 }
 
-dev::bigint minter::utils::normalize_value(const char* input) {
+dev::bigint minter::utils::normalize_value(const char *input) {
     return dev::bigint(dev::bigdec18(input) * minter::utils::normalized_value_dec);
 }
 
@@ -179,19 +178,29 @@ dev::bigdec18 minter::utils::humanize_value(const dev::bigint &value) {
     return dev::bigdec18(value) / minter::utils::normalized_value_dec;
 }
 
-std::ostream &operator << (std::ostream &out, const minter::Data &d) {
+std::ostream &operator<<(std::ostream &out, const minter::Data &d) {
     out << d.to_hex();
     return out;
 }
 
-std::ostream &operator << (std::ostream &out, const dev::bytes &d) {
+std::ostream &operator<<(std::ostream &out, const dev::bytes &d) {
     minter::Data tmp(d);
     out << tmp.to_hex();
     return out;
 }
 
-std::ostream &operator << (std::ostream &out, const dev::RLPStream &rlp) {
+std::ostream &operator<<(std::ostream &out, const dev::RLPStream &rlp) {
     minter::Data tmp(rlp.out());
     out << tmp.to_hex();
     return out;
+}
+
+error_t minter::utils::memset_s(uint8_t *dst, uint8_t val, size_t n) {
+    if (dst == NULL) return EINVAL;
+    volatile unsigned char *p = dst;
+    while (n--) {
+        *p++ = val;
+    }
+    return 0;
+
 }

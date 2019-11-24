@@ -7,9 +7,7 @@
  * \link   https://github.com/edwardstock
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cstring>
 #include <boost/multiprecision/cpp_int.hpp>
 #include <secp256k1/include/secp256k1.h>
 #include <secp256k1/include/secp256k1_recovery.h>
@@ -134,7 +132,7 @@ void minter::tx::create_data_from_type() {
 minter::Data32 minter::tx::get_unsigned_hash(minter::signature_type signType) {
     m_signature_type = signType;
     minter::Data raw_tx_data = minter::Data(encode(true));
-    return minter::utils::sha3k(raw_tx_data);
+    return Data32(minter::utils::sha3k(raw_tx_data));
 }
 
 minter::Data minter::tx::sign_external(const minter::signature &sig) {
@@ -275,7 +273,7 @@ minter::signature minter::tx::sign_with_private(const minter::secp256k1_raii &ct
     memcpy(r, outputSer + 0, 32);
     memcpy(s, outputSer + 32, 32);
     v[0] = outputSer[64];
-    memset(outputSer, 0, 65);
+    minter::utils::memset_s(outputSer, 0, 65);
 
     outSig.r = dev::bytes(r, r + 32);
     outSig.s = dev::bytes(s, s + 32);

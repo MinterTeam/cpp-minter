@@ -19,34 +19,23 @@
 namespace minter {
 namespace data {
 
-class MINTER_TX_API public_key {
-private:
-    using data_t = minter::Data;
-public:
-    public_key() = default;
-    public_key(const char* hex);
-    public_key(const std::string& hex);
+class MINTER_TX_API public_key : public toolboxpp::data::bytes_data {
+ public:
+    public_key();
+    public_key(std::size_t size);
     public_key(const std::vector<uint8_t> &data);
     public_key(std::vector<uint8_t> &&data);
+    public_key(const uint8_t *data, size_t len);
+    public_key(const char *hexString);
+    public_key(const std::string &hexString);
 
-    bool operator==(const minter::data::public_key& other) const noexcept ;
-    bool operator==(const minter::Data& other) const noexcept ;
-    bool operator!=(const minter::data::public_key& other) const noexcept ;
-    bool operator!=(const minter::Data& other) const noexcept ;
-    uint8_t operator[](size_t element) const noexcept;
-
-    uint8_t at(size_t idx) const;
-
-    const dev::bytes& get() const;
-    dev::bytes& get();
+    bool operator==(const minter::data::public_key &other) const noexcept;
+    bool operator!=(const minter::data::public_key &other) const noexcept;
 
     explicit operator std::string() const;
 
     std::string to_string() const;
     std::string to_string_no_prefix() const;
-
-private:
-    data_t m_data;
 };
 
 }

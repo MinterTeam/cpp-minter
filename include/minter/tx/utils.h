@@ -37,7 +37,7 @@ MINTER_TX_API dev::bigint to_bigint(const dev::bytes &bytes);
 MINTER_TX_API dev::bigint to_bigint(const uint8_t *bytes, size_t len);
 MINTER_TX_API dev::bytes sha3k(const dev::bytes &message);
 MINTER_TX_API dev::bytes sha3k(const minter::Data &message);
-MINTER_TX_API std::string strip_null_bytes(const char* input, size_t len);
+MINTER_TX_API std::string strip_null_bytes(const char *input, size_t len);
 MINTER_TX_API std::string to_string(const dev::bytes &src);
 MINTER_TX_API std::string to_string(const std::vector<char> &src);
 MINTER_TX_API std::string to_string(const dev::bigdec18 &src);
@@ -46,14 +46,12 @@ MINTER_TX_API std::string to_string(const dev::bigint &src);
 MINTER_TX_API std::string to_string_clear(const dev::bytes &src);
 MINTER_TX_API std::string to_string(uint64_t src);
 
-MINTER_TX_API dev::bigint normalize_value(const char* input);
+MINTER_TX_API error_t memset_s(uint8_t *dst, uint8_t val, size_t n);
+
+MINTER_TX_API dev::bigint normalize_value(const char *input);
 MINTER_TX_API dev::bigint normalize_value(const std::string &input);
 MINTER_TX_API dev::bigint normalize_value(const dev::bigdec18 &value);
 MINTER_TX_API dev::bigdec18 humanize_value(const dev::bigint &value);
-
-
-
-
 } // utils
 } // minter
 

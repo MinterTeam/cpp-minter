@@ -17,26 +17,26 @@ minter::data::private_key minter::data::private_key::from_mnemonic(const std::st
 }
 minter::data::private_key minter::data::private_key::from_mnemonic(const char *mnemonic,
                                                                    uint32_t derive_index) {
-    private_key out;
-
     minter::Data64 seed = minter::HDKeyEncoder::makeBip39Seed(std::string(mnemonic));
-    minter::HDKey root_key = minter::HDKeyEncoder::makeBip32RootKey(seed);
+    minter::HDKey hdkey = minter::HDKeyEncoder::makeBip32RootKey(seed);
 
     std::stringstream derivation_path;
     derivation_path << "m/44'/60'/0'/0/";
     derivation_path << derive_index;
 
-    minter::HDKey ext_key = minter::HDKeyEncoder::makeExtendedKey(root_key, derivation_path.str());
+    minter::HDKeyEncoder::makeExtendedKey(hdkey, derivation_path.str());
 
-    std::copy(ext_key.privateKey.get().begin(), ext_key.privateKey.get().end(), out.get().begin());
-
+    auto out = private_key(std::move(hdkey.privateKey.get()));
+    hdkey.clear();
     return out;
 }
 minter::data::private_key::private_key() : FixedData() {
 }
-minter::data::private_key::private_key(const char *hexString) : FixedData() {
-    m_data = toolboxpp::data::hexToBytes(hexString);
+minter::data::private_key::private_key(const char *hexString) : FixedData(std::string(hexString)) {
 }
+minter::data::private_key::private_key(const std::string &hexString) : FixedData(hexString) {
+}
+
 minter::data::private_key::private_key(const uint8_t *data) : FixedData(data) {
 
 }
@@ -86,21 +86,7 @@ minter::data::private_key::operator std::string() const {
     return to_string();
 }
 
-void minter::data::private_key::clear() {
-    static std::atomic<uint8_t> s_cleanseCounter{0u};
-    auto *p = data();
-    size_t const len = (uint8_t *) (data() + size()) - p;
-    size_t loop = len;
-    size_t count = s_cleanseCounter;
-    while (loop--) {
-        *(p++) = (uint8_t) count;
-        count += (17u + ((size_t) p & 0x0Fu));
-    }
-    p = (uint8_t *) memchr((uint8_t *) data(), (uint8_t) count, len);
-    if (p) {
-        count += (63u + (size_t) p);
-    }
-
-    s_cleanseCounter = (uint8_t) count;
-    memset((uint8_t *) data(), 0, len);
+std::ostream &operator<<(std::ostream &os, const minter::privkey_t &privkey) {
+    os << privkey.to_string();
+    return os;
 }

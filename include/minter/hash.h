@@ -17,34 +17,21 @@
 namespace minter {
 namespace data {
 
-class MINTER_TX_API minter_hash {
-private:
-    using data_t = minter::Data;
-public:
-public:
-    minter_hash() = default;
-    minter_hash(const char* hex);
-    minter_hash(const std::string& hex);
-    minter_hash(const std::vector<uint8_t> &data);
-    minter_hash(std::vector<uint8_t> &&data);
+class MINTER_TX_API minter_hash : public toolboxpp::data::bytes_data {
+ public:
+    minter_hash();
+    ~minter_hash() override = default;
+    minter_hash(const bytes_data &other);
+    minter_hash(bytes_data &&other);
+    explicit minter_hash(std::size_t size);
+    minter_hash(const char *hexString);
+    minter_hash(const std::string &hexString);
+    minter_hash(std::vector<uint8_t> data);
+    minter_hash(const uint8_t *data, size_t len);
 
-    bool operator==(const minter::data::minter_hash& other) const noexcept ;
-    bool operator==(const minter::Data& other) const noexcept ;
-    bool operator!=(const minter::data::minter_hash& other) const noexcept ;
-    bool operator!=(const minter::Data& other) const noexcept ;
-    uint8_t operator[](size_t element) const noexcept;
-    explicit operator std::string() const;
-
-    uint8_t at(size_t idx) const;
-
-    const dev::bytes& get() const;
-    dev::bytes& get();
-
+    explicit operator std::string() const noexcept;
     std::string to_string() const;
     std::string to_string_no_prefix() const;
-
-private:
-    data_t m_data;
 };
 
 }
@@ -53,6 +40,6 @@ using hash_t = minter::data::minter_hash;
 
 }
 
-MINTER_TX_API std::ostream& operator << (std::ostream &os, const minter::hash_t &hash);
+MINTER_TX_API std::ostream &operator<<(std::ostream &os, const minter::hash_t &hash);
 
 #endif //MINTER_MINTER_HASH_H

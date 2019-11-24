@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 project(minter_tx
-        VERSION 0.3.0
+        VERSION 0.4.0
         DESCRIPTION "Minter Transaction Maker"
         LANGUAGES CXX
         )
@@ -263,11 +263,15 @@ target_link_libraries(${PROJECT_NAME} CONAN_PKG::toolboxpp)
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/libs)
 
-include(PVS-Studio)
-pvs_studio_add_target(TARGET ${PROJECT_NAME}.analyze ALL
-                      OUTPUT FORMAT errorfile
-                      ANALYZE ${PROJECT_NAME}
-                      LOG target.err)
+if (ENABLE_PVS)
+	include(PVS-Studio)
+	pvs_studio_add_target(TARGET ${PROJECT_NAME}.analyze ALL
+	                      OUTPUT FORMAT errorfile
+	                      CONFIG ${CMAKE_CURRENT_SOURCE_DIR}/pvs.cfg
+	                      ANALYZE ${PROJECT_NAME}
+	                      SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src ${CMAKE_CURRENT_SOURCE_DIR}/include
+	                      LOG target.err)
+endif ()
 
 if (MINTER_TX_TEST)
 	set(gtest_force_shared_crt ${ENABLE_SHARED} CACHE BOOL "" FORCE)
@@ -298,7 +302,7 @@ if (MINTER_TX_TEST)
 	    tests/tx_multisig_test.cpp
 	    tests/tx_check_test.cpp
 	    tests/rlp_test.cpp
-	    )
+	    tests/address_test.cpp tests/pub_key_test.cpp)
 
 	add_executable(${PROJECT_NAME_TEST} ${TEST_SOURCES})
 	if (NOT MSVC)
@@ -307,6 +311,27 @@ if (MINTER_TX_TEST)
 	target_include_directories(${PROJECT_NAME_TEST} PRIVATE tests)
 	target_link_libraries(${PROJECT_NAME_TEST} PRIVATE CONAN_PKG::gtest)
 	target_link_libraries(${PROJECT_NAME_TEST} PUBLIC ${PROJECT_NAME})
+
+
+	if (WITH_COVERAGE)
+		set(COVERAGE_LCOV_EXCLUDES
+		    'libs/*'
+		    '/usr/include/*'
+		    'tests/*'
+		    'boost/*'
+		    '/usr/include/*'
+		    '/usr/local/*'
+		    'v1'
+		    '4.9'
+		    )
+		include(modules/CodeCoverage.cmake)
+		append_coverage_compiler_flags()
+		setup_target_for_coverage_lcov(
+			NAME ${PROJECT_NAME_TEST}-coverage
+			EXECUTABLE ${PROJECT_NAME_TEST}
+			DEPENDENCIES ${PROJECT_NAME}
+		)
+	endif ()
 endif ()
 
 include(modules/packaging.cmake)

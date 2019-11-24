@@ -8,61 +8,59 @@
  */
 
 #include <toolboxpp.hpp>
+#include <utility>
 #include "minter/hash.h"
 
-minter::data::minter_hash::minter_hash(const char *hex) {
-    std::string pk = toolboxpp::strings::substringReplaceAll(
+minter::data::minter_hash::minter_hash() : bytes_data() {
+
+}
+minter::data::minter_hash::minter_hash(const toolboxpp::data::bytes_data &other) : bytes_data(other) {
+
+}
+minter::data::minter_hash::minter_hash(toolboxpp::data::bytes_data &&other) : bytes_data(other) {
+
+}
+
+minter::data::minter_hash::minter_hash(std::size_t size) : bytes_data(size) {
+
+}
+minter::data::minter_hash::minter_hash(const char *hexString) {
+    std::string mh = toolboxpp::strings::substringReplaceAll(
         std::vector<std::string>{"Mt", "mt"},
         std::vector<std::string>{"", ""},
-        hex
+        hexString
     );
 
-    m_data = data_t(pk.c_str());
+    m_data = toolboxpp::data::hexToBytes(mh);
 }
-minter::data::minter_hash::minter_hash(const std::string &hex): minter_hash(hex.c_str()) {
+minter::data::minter_hash::minter_hash(const std::string &hexString) {
+    std::string mh = toolboxpp::strings::substringReplaceAll(
+        std::vector<std::string>{"Mt", "mt"},
+        std::vector<std::string>{"", ""},
+        hexString
+    );
+
+    m_data = toolboxpp::data::hexToBytes(mh);
+}
+minter::data::minter_hash::minter_hash(std::vector<uint8_t> data) : bytes_data(std::move(data)) {
 
 }
-minter::data::minter_hash::minter_hash(const std::vector<uint8_t> &data) {
-    m_data = data;
+minter::data::minter_hash::minter_hash(const uint8_t *data, size_t len) : bytes_data(data, len) {
+
 }
-minter::data::minter_hash::minter_hash(std::vector<uint8_t> &&data) {
-    m_data = std::move(data);
-}
-bool minter::data::minter_hash::operator==(const minter::data::minter_hash &other) const noexcept {
-    return m_data == other.m_data;
-}
-bool minter::data::minter_hash::operator==(const minter::Data &other) const noexcept {
-    return m_data == other.get();
-}
-bool minter::data::minter_hash::operator!=(const minter::data::minter_hash &other) const noexcept {
-    return m_data == other.m_data;
-}
-bool minter::data::minter_hash::operator!=(const minter::Data &other) const noexcept {
-    return m_data == other.get();
-}
-uint8_t minter::data::minter_hash::operator[](size_t element) const noexcept {
-    return at(element);
-}
-uint8_t minter::data::minter_hash::at(size_t idx) const {
-    return m_data.get().at(idx);
-}
-const dev::bytes &minter::data::minter_hash::get() const {
-    return m_data.get();
-}
-dev::bytes &minter::data::minter_hash::get() {
-    return m_data.get();
-}
-minter::data::minter_hash::operator std::string() const {
-    return to_string();
-}
+
 std::string minter::data::minter_hash::to_string() const {
-    return "Mt" + m_data.to_hex();
+    return "Mt" + to_hex();
 }
 std::string minter::data::minter_hash::to_string_no_prefix() const {
-    return m_data.to_hex();
+    return to_hex();
 }
 
-std::ostream& operator << (std::ostream &os, const minter::hash_t &hash) {
+minter::data::minter_hash::operator std::string() const noexcept {
+    return to_string();
+}
+
+std::ostream &operator<<(std::ostream &os, const minter::hash_t &hash) {
     os << hash.to_string();
     return os;
 }

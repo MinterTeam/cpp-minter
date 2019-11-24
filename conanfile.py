@@ -49,8 +49,8 @@ class MinterTxConan(ConanFile):
     default_channel = "latest"
 
     requires = (
-        'bip39/1.3.0@edwardstock/latest',
-        'toolboxpp/2.3.1@scatter/latest',
+        'bip39/1.4.1@edwardstock/latest',
+        'toolboxpp/2.3.2@edwardstock/latest',
         'boost/1.70.0@conan/stable'
     )
 

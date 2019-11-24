@@ -30,6 +30,7 @@ public:
 
     private_key();
     private_key(const char *hexString);
+    private_key(const std::string &hexString);
     private_key(const uint8_t *data);
     private_key(std::vector<uint8_t> &&data);
     private_key(const std::vector<uint8_t> &data);
@@ -37,10 +38,9 @@ public:
     minter::pubkey_t get_public_key(bool compressed = false) const;
 
     std::string to_string() const;
-    void clear() ;
 
-    bool operator==(const private_key& other) const noexcept;
-    bool operator!=(const private_key& other) const noexcept;
+    bool operator==(const private_key &other) const noexcept;
+    bool operator!=(const private_key &other) const noexcept;
     explicit operator std::string() const;
 };
 
@@ -48,5 +48,7 @@ public:
 
 using privkey_t = minter::data::private_key;
 } // minter
+
+MINTER_TX_API std::ostream &operator<<(std::ostream &os, const minter::privkey_t &privkey);
 
 #endif //MINTER_MINTER_PRIVATE_KEY_H

@@ -182,7 +182,7 @@ size_t RLP::length() const
         if (!m_data[1])
             BOOST_THROW_EXCEPTION(BadRLP());
         for (unsigned i = 0; i < lengthSize; ++i)
-            ret = (ret << 8) | m_data[i + 1];
+            ret = (ret << 8u) | m_data[i + 1];
         // Must be greater than the limit.
         if (ret < c_rlpListStart - c_rlpDataImmLenStart - c_rlpMaxLengthBytes)
             BOOST_THROW_EXCEPTION(BadRLP());
@@ -191,7 +191,7 @@ size_t RLP::length() const
         return n - c_rlpListStart;
     else
     {
-        unsigned lengthSize = n - c_rlpListIndLenZero;
+        size_t lengthSize = n - c_rlpListIndLenZero;
         if (m_data.size() <= lengthSize)
             BOOST_THROW_EXCEPTION(BadRLP());
         if (m_data.size() > 1)
@@ -220,7 +220,7 @@ size_t RLP::items() const
     {
         bytesConstRef d = payload();
         size_t i = 0;
-        for (; d.size(); ++i)
+        for (; !d.empty(); ++i)
             d = d.cropped(sizeAsEncoded(d));
         return i;
     }

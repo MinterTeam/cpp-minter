@@ -37,7 +37,8 @@ jobs:
           keys:
             - conan-dir-{{ checksum "conanfile.txt" }}-{{ checksum "conanfile.py" }}
       - run: conan install gtest/1.8.1@bincrafters/stable
-      - run: conan install toolboxpp/2.2.0@scatter/latest
+      - run: conan install toolboxpp/2.3.2@edwardstock/latest
+      - run: conan install bip39/1.4.1@edwardstock/latest
       - run: conan install boost/1.70.0@conan/stable
       - run:
           name: Configuring

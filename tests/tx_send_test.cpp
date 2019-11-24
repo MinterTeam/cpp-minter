@@ -21,7 +21,6 @@ static minter::signature test_signer_func(minter::Data32 hash) {
     secp256k1_ecdsa_recoverable_signature sig;
 
     int ret = secp256k1_ecdsa_sign_recoverable(ctx.get(), &sig, hash.cdata(), pk.cdata(), NULL, NULL);
-//    std::cout << "Unserialized sign: " << toolboxpp::data::bytesToHex(sig.data, 65) << std::endl;
 
     uint8_t outputSer[65];
     minter::signature outSig;
@@ -76,8 +75,6 @@ TEST(TxSend, TestEncodeSignExternal) {
     auto tx = data->build();
 
     minter::privkey_t pk("33671c8f2363dffb45e166f1cadced9aa5f86ad32509e5c4f0b39257c30b4110");
-
-
 
     auto sign1 = signer_func(tx->get_unsigned_hash());
     std::cout << "Unsigned hash:\n";
