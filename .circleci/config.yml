@@ -35,7 +35,7 @@ jobs:
       - run: mkdir -p _build
       - restore_cache:
           keys:
-            - conan-dir-{{ checksum "conanfile.txt" }}-{{ checksum "conanfile.py" }}
+            - conan-dir-{{ checksum "conanfile.py" }}
       - run: conan install gtest/1.8.1@bincrafters/stable
       - run: conan install toolboxpp/2.3.2@edwardstock/latest
       - run: conan install bip39/1.4.1@edwardstock/latest
@@ -44,7 +44,7 @@ jobs:
           name: Configuring
           command: conan remove --locks && cd _build && cmake .. -DCMAKE_BUILD_TYPE=Debug -DMINTER_TX_TEST=ON
       - save_cache:
-          key: conan-dir-{{ checksum "conanfile.txt" }}-{{ checksum "conanfile.py" }}
+          key: conan-dir-{{ checksum "conanfile.py" }}
           paths:
             - /root/.conan
       - run:
