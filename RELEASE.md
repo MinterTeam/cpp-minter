@@ -1,5 +1,8 @@
 # Release notes
 
+## 0.4.1
+ - Added ostream operator to pubkey_t
+
 ## 0.4.0
  - Added 100% code coverage for data types
  - Refactored data containers using improved byte-buffer api

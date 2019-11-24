@@ -43,6 +43,6 @@ class MINTER_TX_API public_key : public toolboxpp::data::bytes_data {
 using pubkey_t = minter::data::public_key;
 }
 
-
+MINTER_TX_API std::ostream &operator<<(std::ostream &os, const minter::pubkey_t &pubkey);
 
 #endif //MINTER_MINTER_PUBLIC_KEY_H

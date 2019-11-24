@@ -61,6 +61,10 @@ std::string minter::data::public_key::to_string_no_prefix() const {
     return to_hex();
 }
 
+std::ostream &operator<<(std::ostream &os, const minter::pubkey_t &pubkey) {
+    os << pubkey.to_string();
+    return os;
+}
 
 
 
