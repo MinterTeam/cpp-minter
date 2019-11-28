@@ -7,8 +7,10 @@
  * \link   https://github.com/edwardstock
  */
 
+#include <sstream>
 #include <gtest/gtest.h>
 #include <minter/address.h>
+#include <minter/private_key.h>
 
 static const char *NULL_ADDRESS_NO_PREFIX = "0000000000000000000000000000000000000000";
 static const char *NULL_ADDRESS = "Mx0000000000000000000000000000000000000000";
@@ -29,14 +31,6 @@ static const std::vector<uint8_t> TEST_ADDRESS_VECT = {
     0xbb, 0xbc, 0xed, 0x23
 };
 
-//address();
-//    address(const char *hexString);
-//    address(const std::string &hexString);
-//    address(const minter::pubkey_t &pub_key);
-//    address(const minter::privkey_t &priv_key);
-//    address(const std::vector<uint8_t> &data);
-//    address(std::vector<uint8_t> &&data);
-//    address(const uint8_t *data, size_t len);
 
 TEST(Address, DefaultCtr) {
     minter::address_t address;
@@ -124,8 +118,6 @@ TEST(Address, ToString) {
 
     ASSERT_STREQ(TEST_ADDRESS, address.c_str());
 }
-
-#include <sstream>
 
 TEST(Address, StreamWrite) {
     minter::address_t a(TEST_ADDRESS);

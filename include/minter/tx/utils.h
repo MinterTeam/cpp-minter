@@ -46,7 +46,7 @@ MINTER_TX_API std::string to_string(const dev::bigint &src);
 MINTER_TX_API std::string to_string_clear(const dev::bytes &src);
 MINTER_TX_API std::string to_string(uint64_t src);
 
-MINTER_TX_API error_t memset_s(uint8_t *dst, uint8_t val, size_t n);
+MINTER_TX_API void memset_s(uint8_t *dst, uint8_t val, size_t n);
 
 MINTER_TX_API dev::bigint normalize_value(const char *input);
 MINTER_TX_API dev::bigint normalize_value(const std::string &input);

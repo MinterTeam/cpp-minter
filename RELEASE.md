@@ -1,5 +1,8 @@
 # Release notes
 
+## 0.4.2
+ - Fixes for MacOS
+
 ## 0.4.1
  - Added ostream operator to pubkey_t
 

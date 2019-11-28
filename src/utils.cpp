@@ -195,12 +195,10 @@ std::ostream &operator<<(std::ostream &out, const dev::RLPStream &rlp) {
     return out;
 }
 
-error_t minter::utils::memset_s(uint8_t *dst, uint8_t val, size_t n) {
-    if (dst == NULL) return EINVAL;
+void minter::utils::memset_s(uint8_t *dst, uint8_t val, size_t n) {
+    if (dst == NULL) return;
     volatile unsigned char *p = dst;
     while (n--) {
         *p++ = val;
     }
-    return 0;
-
 }
