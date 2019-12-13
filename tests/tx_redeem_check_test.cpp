@@ -10,6 +10,8 @@
 #include <gtest/gtest.h>
 #include <minter/tx/tx_builder.h>
 
-TEST(TxCheck, TestSign) {
+TEST(TxRedeemCheck, TestEncode) {
+}
 
+TEST(TxRedeemCheck, TestDecode) {
 }

@@ -14,22 +14,23 @@
 
 namespace minter {
 
-class MINTER_TX_API tx_create_coin: public virtual minter::tx_data {
+class MINTER_TX_API tx_create_coin : public virtual minter::tx_data {
 public:
     explicit tx_create_coin(std::shared_ptr<minter::tx> tx);
     uint16_t type() const override;
     dev::bytes encode() override;
+    void decode(const dev::bytes& data) override;
 
     tx_create_coin& set_name(const char* coin_name);
-    tx_create_coin& set_name(const std::string &coin_name);
+    tx_create_coin& set_name(const std::string& coin_name);
     tx_create_coin& set_ticker(const char* coin_symbol);
     tx_create_coin& set_ticker(const std::string& coin_symbol);
     tx_create_coin& set_initial_amount(const char* amount);
-    tx_create_coin& set_initial_amount(const dev::bigdec18 &amount);
-    tx_create_coin& set_initial_amount(const dev::bigint &amount);
+    tx_create_coin& set_initial_amount(const dev::bigdec18& amount);
+    tx_create_coin& set_initial_amount(const dev::bigint& amount);
     tx_create_coin& set_initial_reserve(const char* amount);
-    tx_create_coin& set_initial_reserve(const dev::bigdec18 &amount);
-    tx_create_coin& set_initial_reserve(const dev::bigint &amount);
+    tx_create_coin& set_initial_reserve(const dev::bigdec18& amount);
+    tx_create_coin& set_initial_reserve(const dev::bigint& amount);
     /// \brief
     /// \param crr Min value: 10, max = 100
     /// \return
@@ -41,9 +42,6 @@ public:
     dev::bigdec18 get_initial_reserve() const;
     unsigned get_crr() const;
 
-protected:
-    void decode_internal(dev::RLP rlp) override;
-
 private:
     std::string m_name;
     std::string m_ticker;
@@ -52,6 +50,6 @@ private:
     dev::bigint m_crr;
 };
 
-}
+} // namespace minter
 
 #endif //MINTER_TX_CREATE_COIN_H

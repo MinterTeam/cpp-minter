@@ -13,13 +13,13 @@
 
 template<typename _CharT>
 class sodium_s_alloc {
- public:
+public:
     typedef size_t size_type;
     typedef ptrdiff_t difference_type;
-    typedef _CharT *pointer;
-    typedef const _CharT *const_pointer;
-    typedef _CharT &reference;
-    typedef const _CharT &const_reference;
+    typedef _CharT* pointer;
+    typedef const _CharT* const_pointer;
+    typedef _CharT& reference;
+    typedef const _CharT& const_reference;
     typedef _CharT value_type;
 
     typedef bool propagate_on_container_move_assignment;
@@ -27,7 +27,7 @@ class sodium_s_alloc {
 
     template<class _Up>
     struct rebind {
-      typedef sodium_s_alloc<_Up> other;
+        typedef sodium_s_alloc<_Up> other;
     };
 
     // return address of values
@@ -41,14 +41,16 @@ class sodium_s_alloc {
     sodium_s_alloc() {
         std::cout << "Alloc init\n";
     }
-    inline sodium_s_alloc(const sodium_s_alloc &) {
+    inline sodium_s_alloc(const sodium_s_alloc&) {
         std::cout << "Alloc copy\n";
     }
 
     template<class _Up>
-    sodium_s_alloc(const sodium_s_alloc<_Up> &up) throw() { }
+    sodium_s_alloc(const sodium_s_alloc<_Up>& up) throw() {
+    }
 
-    ~sodium_s_alloc() throw() { }
+    ~sodium_s_alloc() throw() {
+    }
 
     // return maximum number of elements that can be allocated
     size_type max_size() const throw() {
@@ -56,10 +58,10 @@ class sodium_s_alloc {
     }
 
     // initialize elements of allocated storage p with value value
-    void construct(pointer p, const _CharT &value) {
+    void construct(pointer p, const _CharT& value) {
         // initialize memory with placement new
         std::cout << "Construct \n";
-        new((void *) p)_CharT(value);
+        new ((void*) p) _CharT(value);
     }
 
     pointer allocate(size_type __n, std::allocator<void>::const_pointer = 0) {
@@ -82,24 +84,24 @@ class sodium_s_alloc {
     void deallocate(pointer p, size_type num) {
         std::cout << "munlock sodium...\n";
         sodium_munlock(p, num);
-        std::cout << "Dealloc: " << num << " elements " << "\n";
-        sodium_free((void *) p);
+        std::cout << "Dealloc: " << num << " elements "
+                  << "\n";
+        sodium_free((void*) p);
     }
 };
 
 template<class T1, class T2>
-bool operator!=(const sodium_s_alloc<T1> &a,
-                const sodium_s_alloc<T2> &b) throw() {
+bool operator!=(const sodium_s_alloc<T1>& a,
+                const sodium_s_alloc<T2>& b) throw() {
     return a != b;
 }
 
 // return that all specializations of this allocator are interchangeable
 template<class T1, class T2>
-bool operator==(const sodium_s_alloc<T1> &a,
-                const sodium_s_alloc<T2> &b) throw() {
+bool operator==(const sodium_s_alloc<T1>& a,
+                const sodium_s_alloc<T2>& b) throw() {
     return a == b;
 }
-
 
 using sec_string = std::basic_string<char, std::char_traits<char>, sodium_s_alloc<char>>;
 
@@ -111,19 +113,13 @@ TEST(SodiumAllocator, InitString) {
     sec_string pass = "password";
     sec_string s = std::move(pass);
 
-
-
-
     std::cout << s << "\n";
-//    std::vector<std::string, sodium_s_alloc<std::string>> sec_strings;
-//    sec_strings.push_back("a");
-//    sec_strings.push_back("b");
-//    sec_strings.push_back("c");
+    //    std::vector<std::string, sodium_s_alloc<std::string>> sec_strings;
+    //    sec_strings.push_back("a");
+    //    sec_strings.push_back("b");
+    //    sec_strings.push_back("c");
 
-//    for(auto &item: sec_strings) {
-//        std::cout << item << "\n";
-//    }
-
+    //    for(auto &item: sec_strings) {
+    //        std::cout << item << "\n";
+    //    }
 }
-
- 

@@ -7,46 +7,45 @@
  * \link   https://github.com/edwardstock
  */
 
-#include <toolboxpp.hpp>
-#include <utility>
 #include "minter/hash.h"
 
-minter::data::minter_hash::minter_hash() : bytes_data() {
+#include <toolbox/strings.hpp>
+#include <utility>
 
+minter::data::minter_hash::minter_hash()
+    : bytes_data() {
 }
-minter::data::minter_hash::minter_hash(const toolboxpp::data::bytes_data &other) : bytes_data(other) {
-
+minter::data::minter_hash::minter_hash(const toolbox::data::bytes_data& other)
+    : bytes_data(other) {
 }
-minter::data::minter_hash::minter_hash(toolboxpp::data::bytes_data &&other) : bytes_data(other) {
-
+minter::data::minter_hash::minter_hash(toolbox::data::bytes_data&& other)
+    : bytes_data(other) {
 }
 
-minter::data::minter_hash::minter_hash(std::size_t size) : bytes_data(size) {
-
+minter::data::minter_hash::minter_hash(std::size_t size)
+    : bytes_data(size) {
 }
-minter::data::minter_hash::minter_hash(const char *hexString) {
-    std::string mh = toolboxpp::strings::substringReplaceAll(
+minter::data::minter_hash::minter_hash(const char* hexString) {
+    std::string mh = toolbox::strings::substr_replace_all_ret(
         std::vector<std::string>{"Mt", "mt"},
         std::vector<std::string>{"", ""},
-        hexString
-    );
+        hexString);
 
-    m_data = toolboxpp::data::hexToBytes(mh);
+    m_data = toolbox::data::hex_to_bytes(mh);
 }
-minter::data::minter_hash::minter_hash(const std::string &hexString) {
-    std::string mh = toolboxpp::strings::substringReplaceAll(
+minter::data::minter_hash::minter_hash(const std::string& hexString) {
+    std::string mh = toolbox::strings::substr_replace_all_ret(
         std::vector<std::string>{"Mt", "mt"},
         std::vector<std::string>{"", ""},
-        hexString
-    );
+        hexString);
 
-    m_data = toolboxpp::data::hexToBytes(mh);
+    m_data = toolbox::data::hex_to_bytes(mh);
 }
-minter::data::minter_hash::minter_hash(std::vector<uint8_t> data) : bytes_data(std::move(data)) {
-
+minter::data::minter_hash::minter_hash(std::vector<uint8_t> data)
+    : bytes_data(std::move(data)) {
 }
-minter::data::minter_hash::minter_hash(const uint8_t *data, size_t len) : bytes_data(data, len) {
-
+minter::data::minter_hash::minter_hash(const uint8_t* data, size_t len)
+    : bytes_data(data, len) {
 }
 
 std::string minter::data::minter_hash::to_string() const {
@@ -60,9 +59,7 @@ minter::data::minter_hash::operator std::string() const noexcept {
     return to_string();
 }
 
-std::ostream &operator<<(std::ostream &os, const minter::hash_t &hash) {
+std::ostream& operator<<(std::ostream& os, const minter::hash_t& hash) {
     os << hash.to_string();
     return os;
 }
- 
- 

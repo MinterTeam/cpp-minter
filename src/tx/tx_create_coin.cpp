@@ -7,18 +7,20 @@
  * \link   https://github.com/edwardstock
  */
 
-#include "minter/tx/utils.h"
 #include "minter/tx/tx_create_coin.h"
+
 #include "minter/tx/tx_type.h"
-minter::tx_create_coin::tx_create_coin(std::shared_ptr<minter::tx> tx) : tx_data(std::move(tx)) {
+#include "minter/tx/utils.h"
+minter::tx_create_coin::tx_create_coin(std::shared_ptr<minter::tx> tx)
+    : tx_data(std::move(tx)) {
 }
 
 uint16_t minter::tx_create_coin::type() const {
-    return minter::tx_create_coin_type::type();
+    return minter::tx_create_coin_type.type();
 }
 dev::bytes minter::tx_create_coin::encode() {
-    dev::RLPStream out;
-    dev::RLPStream lst;
+    eth::RLPStream out;
+    eth::RLPStream lst;
     {
         lst.append(minter::utils::to_bytes(m_name));
         lst.append(minter::utils::to_bytes_fixed(m_ticker));
@@ -32,12 +34,13 @@ dev::bytes minter::tx_create_coin::encode() {
     return out.out();
 }
 
-void minter::tx_create_coin::decode_internal(dev::RLP rlp) {
-    m_name = minter::utils::to_string((dev::bytes)rlp[0]);
-    m_ticker = minter::utils::to_string_clear((dev::bytes)rlp[1]);
-    m_initial_amount = (dev::bigint)rlp[2];
-    m_initial_reserve = (dev::bigint)rlp[3];
-    m_crr = (dev::bigint)rlp[4];
+void minter::tx_create_coin::decode(const dev::bytes& data) {
+    eth::RLP rlp(data);
+    m_name = minter::utils::to_string((dev::bytes) rlp[0]);
+    m_ticker = minter::utils::to_string_clear((dev::bytes) rlp[1]);
+    m_initial_amount = (dev::bigint) rlp[2];
+    m_initial_reserve = (dev::bigint) rlp[3];
+    m_crr = (dev::bigint) rlp[4];
 }
 
 minter::tx_create_coin& minter::tx_create_coin::set_name(const char* name) {
@@ -50,12 +53,12 @@ minter::tx_create_coin& minter::tx_create_coin::set_name(const std::string& name
     return *this;
 }
 
-minter::tx_create_coin& minter::tx_create_coin::set_ticker(const char *coin_symbol) {
+minter::tx_create_coin& minter::tx_create_coin::set_ticker(const char* coin_symbol) {
     m_ticker = std::string(coin_symbol);
     return *this;
 }
 
-minter::tx_create_coin& minter::tx_create_coin::set_ticker(const std::string &coin_symbol) {
+minter::tx_create_coin& minter::tx_create_coin::set_ticker(const std::string& coin_symbol) {
     m_ticker = coin_symbol;
     return *this;
 }
@@ -65,12 +68,12 @@ minter::tx_create_coin& minter::tx_create_coin::set_initial_amount(const char* a
     return *this;
 }
 
-minter::tx_create_coin& minter::tx_create_coin::set_initial_amount(const dev::bigdec18 &amount) {
+minter::tx_create_coin& minter::tx_create_coin::set_initial_amount(const dev::bigdec18& amount) {
     m_initial_amount = minter::utils::normalize_value(amount);
     return *this;
 }
 
-minter::tx_create_coin& minter::tx_create_coin::set_initial_amount(const dev::bigint &amount) {
+minter::tx_create_coin& minter::tx_create_coin::set_initial_amount(const dev::bigint& amount) {
     m_initial_amount = amount;
     return *this;
 }
@@ -80,12 +83,12 @@ minter::tx_create_coin& minter::tx_create_coin::set_initial_reserve(const char* 
     return *this;
 }
 
-minter::tx_create_coin& minter::tx_create_coin::set_initial_reserve(const dev::bigdec18 &amount) {
+minter::tx_create_coin& minter::tx_create_coin::set_initial_reserve(const dev::bigdec18& amount) {
     m_initial_reserve = minter::utils::normalize_value(amount);
     return *this;
 }
 
-minter::tx_create_coin& minter::tx_create_coin::set_initial_reserve(const dev::bigint &amount) {
+minter::tx_create_coin& minter::tx_create_coin::set_initial_reserve(const dev::bigint& amount) {
     m_initial_reserve = amount;
     return *this;
 }

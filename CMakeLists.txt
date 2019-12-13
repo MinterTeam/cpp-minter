@@ -1,24 +1,23 @@
 cmake_minimum_required(VERSION 3.10)
 project(minter_tx
-        VERSION 0.4.2
+        VERSION 0.5.0
         DESCRIPTION "Minter Transaction Maker"
         LANGUAGES CXX
         )
 
-if (WIN32)
-	execute_process(
-		COMMAND cmd /C "echo ${CMAKE_PROJECT_VERSION} > ${CMAKE_CURRENT_SOURCE_DIR}/version"
-	)
-else ()
-	execute_process(
-		COMMAND bash -c "echo ${CMAKE_PROJECT_VERSION} > ${CMAKE_CURRENT_SOURCE_DIR}/version"
-	)
-endif ()
+file(WRITE ${CMAKE_CURRENT_SOURCE_DIR}/version ${CMAKE_PROJECT_VERSION})
 
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(ENABLE_SHARED OFF CACHE BOOL "Build shared lib instead of static")
 set(ENABLE_CONAN ON CACHE BOOL "Enable conan dep manager")
+
+set(DISABLE_JNI ON)
+
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY bin)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY lib)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY lib)
+set(CMAKE_PDB_OUTPUT_DIRECTORY lib)
 
 if (MSVC)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W2 /MP")
@@ -29,47 +28,20 @@ if (MSVC)
 	add_compile_options(/wd4319)
 	add_compile_options(/wd4251)
 	add_compile_options(/wd4275)
-
-	if (NOT ENABLE_SHARED)
-		foreach (flag_var
-		         CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
-		         CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO)
-			if (${flag_var} MATCHES "/MD")
-				string(REGEX REPLACE "MD" "MT" ${flag_var} "${${flag_var}}")
-			endif (${flag_var} MATCHES "/MD")
-		endforeach (flag_var)
-	endif ()
-
-	foreach (flag_var
-	         CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
-	         CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO)
-		if (${flag_var} MATCHES "/MD")
-			string(REGEX REPLACE "MD" "MDd" ${flag_var} "${${flag_var}}")
-		endif (${flag_var} MATCHES "/MD")
-		if (${flag_var} MATCHES "/MT")
-			string(REGEX REPLACE "MT" "MTd" ${flag_var} "${${flag_var}}")
-		endif (${flag_var} MATCHES "/MT")
-	endforeach (flag_var)
-
-	message(STATUS ${CMAKE_CXX_FLAGS})
-	message(STATUS ${CMAKE_CXX_FLAGS_DEBUG})
-	message(STATUS ${CMAKE_CXX_FLAGS_RELEASE})
-	message(STATUS ${CMAKE_CXX_FLAGS_MINSIZEREL})
-	message(STATUS ${CMAKE_CXX_FLAGS_RELWITHDEBINFO})
-
 elseif (MINGW)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -fPIC -Wno-unknown-pragmas -Wno-shift-count-overflow")
 	set(CMAKE_CXX_FLAGS_DEBUG "-g -O0")
 	set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 else ()
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -fPIC -Wextra -pedantic -Wno-unknown-pragmas -Wno-unused-parameter -Wno-shift-count-overflow")
-	set(CMAKE_CXX_FLAGS_DEBUG "-g -O0")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -fvisibility=hidden -fPIC -Wextra -pedantic -Wno-unknown-pragmas -Wno-unused-parameter -Wno-shift-count-overflow")
+	set(CMAKE_CXX_FLAGS_DEBUG "-g -O0 -D_LIBCPP_DEBUG=1")
 	set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 endif ()
 
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/modules)
 include(modules/FindLinuxPlatform.cmake)
+include(conan_fallback)
 
 
 if (ENABLE_CONAN)
@@ -78,11 +50,6 @@ if (ENABLE_CONAN)
 	add_conan_remote(scatter https://api.bintray.com/conan/edwardstock/scatter)
 	add_conan_remote(minter https://api.bintray.com/conan/minterteam/minter)
 	add_conan_remote(edwardstock https://api.bintray.com/conan/edwardstock/conan-public)
-	if (ENABLE_SHARED)
-		set(CONAN_OPTIONS bip39:shared=True)
-	else ()
-		set(CONAN_OPTIONS bip39:shared=False)
-	endif ()
 	conan_init()
 else ()
 	message(STATUS "Boost root: ${BOOST_ROOT}")
@@ -93,30 +60,27 @@ else ()
 	if (WIN32)
 		find_package(Boost 1.70.0 REQUIRED)
 	else ()
-		find_package(Boost 1.70.0 COMPONENTS program_options math exception REQUIRED)
+		find_package(Boost 1.70.0 COMPONENTS exception REQUIRED)
 	endif ()
 
-	add_library(CONAN_PKG::boost INTERFACE IMPORTED)
-	set_property(TARGET CONAN_PKG::boost PROPERTY INTERFACE_LINK_LIBRARIES ${Boost_LIBRARIES})
-	set_property(TARGET CONAN_PKG::boost PROPERTY INTERFACE_INCLUDE_DIRECTORIES ${Boost_INCLUDE_DIR})
+	add_library(CONAN_PKG::boost_exception INTERFACE IMPORTED)
+	add_library(CONAN_PKG::boost_multiprecision INTERFACE IMPORTED)
+	set_property(TARGET CONAN_PKG::boost_exception PROPERTY INTERFACE_LINK_LIBRARIES ${Boost_LIBRARIES})
+	set_property(TARGET CONAN_PKG::boost_multiprecision PROPERTY INTERFACE_INCLUDE_DIRECTORIES ${Boost_INCLUDE_DIR})
 
 	# toolbox
-	add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/libs/toolboxpp)
-	add_library(CONAN_PKG::toolboxpp INTERFACE IMPORTED)
-	set_property(TARGET CONAN_PKG::toolboxpp PROPERTY INTERFACE_INCLUDE_DIRECTORIES ${CMAKE_CURRENT_SOURCE_DIR}/libs/toolboxpp/include)
+	conan_fallback(NAME toolbox)
 
 	#bip39
-	set(ENABLE_BIP39_JNI OFF CACHE BOOL "" FORCE)
-	set(ENABLE_BIP39_SHARED ${ENABLE_SHARED} CACHE BOOL "" FORCE)
-	set(ENABLE_BIP39_C OFF CACHE BOOL "" FORCE)
-	set(ENABLE_BIP39_CONAN OFF CACHE BOOL "" FORCE)
-	add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/libs/bip39)
-	add_library(CONAN_PKG::bip39 ALIAS bip39)
+	conan_fallback(NAME bip39 TARGET bip39 SUBDIR bip3x PROPERTIES
+	               ENABLE_BIP39_JNI OFF
+	               ENABLE_BIP39_C OFF
+	               ENABLE_TEST OFF
+	               )
 
 	#gtest
 	if (MINTER_TX_TEST)
-		add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/libs/gtest)
-		add_library(CONAN_PKG::gtest ALIAS gtest)
+		conan_fallback(NAME gtest INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/libs/gtest/googletest/include)
 	endif ()
 endif ()
 
@@ -168,14 +132,13 @@ message(STATUS "Build arch: ${PROJECT_ARCH}")
 
 set(ETH_HEADERS
     include/minter/eth/RLP.h
-    include/minter/eth/common.h
     include/minter/eth/vector_ref.h
-    )
+    include/minter/eth/types.h)
 
 set(ETH_SOURCES
     ${ETH_HEADERS}
     src/eth/RLP.cpp
-    src/eth/common.cpp)
+    )
 
 set(HEADERS
     include/minter/tx/tx.h
@@ -198,14 +161,14 @@ set(HEADERS
     include/minter/tx/signature_data.h
     include/minter/tx/signature.h
     include/minter/tx/utils.h
-    include/minter/crypto/secp256k1_raii.h
+    include/minter/crypto/cxx_secp256k1.h
     include/minter/tx/tx_builder.h
     include/minter/public_key.h
     include/minter/hash.h
     include/minter/address.h
     include/minter/private_key.h
-    include/minter/minter_tx_core.h
-    )
+    include/minter/minter_tx_config.h
+    include/minter/tx/check_tx.h include/minter/check.h)
 
 set(SOURCES
     ${HEADERS}
@@ -231,7 +194,7 @@ set(SOURCES
     src/tx/tx_builder.cpp
     src/data/public_key.cpp
     src/data/hash.cpp
-    src/data/private_key.cpp)
+    src/data/private_key.cpp src/tx/tx_data.cpp src/tx/check_tx.cpp src/data/check.cpp)
 
 set(MINTER_TX_EXPORTING 1)
 if (ENABLE_SHARED)
@@ -239,27 +202,31 @@ if (ENABLE_SHARED)
 endif ()
 
 configure_file(
-	${CMAKE_CURRENT_SOURCE_DIR}/cfg/minter_tx_core.h.in
-	${CMAKE_CURRENT_SOURCE_DIR}/include/minter/minter_tx_core.h
+	${CMAKE_CURRENT_SOURCE_DIR}/cfg/minter_tx_config.h.in
+	${CMAKE_CURRENT_SOURCE_DIR}/include/minter/minter_tx_config.h
 )
 
 if (ENABLE_SHARED)
 	add_library(${PROJECT_NAME} SHARED ${SOURCES})
+	set_property(TARGET ${PROJECT_NAME} PROPERTY
+	             MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
 else ()
 	add_library(${PROJECT_NAME} STATIC ${SOURCES})
+	set_property(TARGET ${PROJECT_NAME} PROPERTY
+	             MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 endif ()
-#set_target_properties(${PROJECT_NAME} PROPERTIES
-#                      PUBLIC_HEADER "${HEADERS}")
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 #secp256k1
+set(ENABLE_JNI OFF CACHE BOOL "secp256k1 shared" FORCE)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/libs/secp256k1 ${CMAKE_BINARY_DIR}/secp256k1)
 
 target_link_libraries(${PROJECT_NAME} secp256k1_core)
-target_link_libraries(${PROJECT_NAME} CONAN_PKG::boost)
+target_link_libraries(${PROJECT_NAME} CONAN_PKG::boost_multiprecision)
+target_link_libraries(${PROJECT_NAME} CONAN_PKG::boost_exception)
 target_link_libraries(${PROJECT_NAME} CONAN_PKG::bip39)
-target_link_libraries(${PROJECT_NAME} CONAN_PKG::toolboxpp)
+target_link_libraries(${PROJECT_NAME} CONAN_PKG::toolbox)
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/libs)
 
@@ -300,9 +267,11 @@ if (MINTER_TX_TEST)
 	    tests/priv_key_test.cpp
 	    tests/tx_multisend_test.cpp
 	    tests/tx_multisig_test.cpp
-	    tests/tx_check_test.cpp
+	    tests/tx_redeem_check_test.cpp
 	    tests/rlp_test.cpp
-	    tests/address_test.cpp tests/pub_key_test.cpp)
+	    tests/address_test.cpp
+	    tests/pub_key_test.cpp
+	    tests/check_tx_test.cpp include/minter/eth/types.h)
 
 	add_executable(${PROJECT_NAME_TEST} ${TEST_SOURCES})
 	if (NOT MSVC)

@@ -7,20 +7,21 @@
  * \link   https://github.com/edwardstock
  */
 
-#include <algorithm>
 #include "minter/tx/tx_create_multisig_address.h"
+
 #include "minter/tx/tx_type.h"
 
+#include <algorithm>
 
-minter::tx_create_multisig_address::tx_create_multisig_address(std::shared_ptr<minter::tx> tx) : tx_data(std::move(tx)) {
-
+minter::tx_create_multisig_address::tx_create_multisig_address(std::shared_ptr<minter::tx> tx)
+    : tx_data(std::move(tx)) {
 }
 uint16_t minter::tx_create_multisig_address::type() const {
-    return minter::tx_create_multisig_address_type::type();
+    return minter::tx_create_multisig_address_type.type();
 }
 dev::bytes minter::tx_create_multisig_address::encode() {
-    dev::RLPStream out;
-    dev::RLPStream lst;
+    eth::RLPStream out;
+    eth::RLPStream lst;
     {
         lst.append(m_threshold);
         lst.append(m_weights);
@@ -29,19 +30,20 @@ dev::bytes minter::tx_create_multisig_address::encode() {
             addresses.push_back(add.get());
         });
         lst.append(addresses);
-        
+
         out.appendList(lst);
     }
 
     return out.out();
 }
 
-void minter::tx_create_multisig_address::decode_internal(dev::RLP rlp) {
-    m_threshold = (dev::bigint)rlp[0];
+void minter::tx_create_multisig_address::decode(const dev::bytes& data) {
+    eth::RLP rlp(data);
+    m_threshold = (dev::bigint) rlp[0];
     m_weights = rlp[1].toVector<dev::bigint>();
 
     std::vector<dev::bytes> addresses = rlp[2].toVector<dev::bytes>();
-    std::for_each(addresses.begin(), addresses.end(), [this](const dev::bytes& add){
+    std::for_each(addresses.begin(), addresses.end(), [this](const dev::bytes& add) {
         m_addresses.push_back(minter::data::address(std::move(add)));
     });
 }
@@ -68,9 +70,7 @@ minter::tx_create_multisig_address& minter::tx_create_multisig_address::add_weig
     return *this;
 }
 
-minter::tx_create_multisig_address& minter::tx_create_multisig_address::add_address(const minter::data::address &address) {
+minter::tx_create_multisig_address& minter::tx_create_multisig_address::add_address(const minter::data::address& address) {
     m_addresses.push_back(address);
     return *this;
 }
-
-

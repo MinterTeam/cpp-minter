@@ -49,37 +49,45 @@ class MinterTxConan(ConanFile):
     default_channel = "latest"
 
     requires = (
-        'bip39/1.4.1@edwardstock/latest',
-        'toolboxpp/2.3.2@edwardstock/latest',
-        'boost/1.70.0@conan/stable'
+        'bip39/2.0.0@edwardstock/latest',
+        'toolbox/3.1.0@edwardstock/latest',
+        'boost_multiprecision/1.69.0@bincrafters/stable',
+        'boost_exception/1.69.0@bincrafters/stable',
     )
 
     build_requires = (
         "gtest/1.8.1@bincrafters/stable",
     )
 
+    # def imports(self):
+    #     self.copy("*.dll", "bin", "bin")
+    #     self.copy("*.dll", "bin", "lib")
+    #     self.copy("*.dylib", "lib", "lib")
+
     def source(self):
         if "CONAN_LOCAL" not in os.environ:
             self.run("rm -rf *")
             self.run("git clone --recursive https://github.com/MinterTeam/cpp-minter.git .")
 
+    def configure(self):
+        if self.settings.compiler == "Visual Studio":
+            del self.settings.compiler.runtime
+
     def build(self):
         cmake = CMake(self)
-        cmake.configure(defs={'CMAKE_BUILD_TYPE': self.options["build_type"]})
+        cmake.configure(defs={'CMAKE_BUILD_TYPE': self.settings.build_type})
         cmake.build(target="minter_tx")
 
     def package(self):
         self.copy("*", dst="include", src="include", keep_path=True)
         self.copy("*", dst="include", src="libs/secp256k1/include", keep_path=True)
-        self.copy("*.lib", dst="lib", keep_path=False)
-        self.copy("*.dll", dst="lib", keep_path=False)
-        self.copy("*.dll.a", dst="lib", keep_path=False)
-        self.copy("*.exp", dst="lib", keep_path=False)
-        self.copy("*.ilk", dst="lib", keep_path=False)
-        self.copy("*.pdb", dst="lib", keep_path=False)
-        self.copy("*.so", dst="lib", keep_path=False)
-        self.copy("*.dylib", dst="lib", keep_path=False)
-        self.copy("*.a", dst="lib", keep_path=False)
+        self.copy("*", dst="include", src="include", keep_path=True)
+        dir_types = ['bin', 'lib', 'Debug', 'Release', 'RelWithDebInfo', 'MinSizeRel']
+        file_types = ['lib', 'dll', 'dll.a', 'a', 'so', 'exp', 'pdb', 'ilk', 'dylib']
+
+        for dirname in dir_types:
+            for ftype in file_types:
+                self.copy("*." + ftype, src=dirname, dst="lib", keep_path=False)
 
     def package_info(self):
-        self.cpp_info.libs = self.collect_libs(folder="lib")
+        self.cpp_info.libs = ['minter_tx', 'secp256k1_core']

@@ -1,12 +1,18 @@
 #!/usr/bin/env bash
-mkdir output
-mkdir -p _build_package && cd _build_package
+rm -rf _build_package && mkdir _build_package
 
-rm -rf _install
+cd _build_package
 
-cmake .. -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=$(pwd)/_install
-cmake --build . --target minter_tx_merge -- -j4
-cmake -DCOMPONENT=minter-sdk -P cmake_install.cmake
+mkdir _build
+mkdir _install
+mkdir _output
+
+BOOST_HASH=$(conan info boost/1.70.0@conan/stable | grep ID | head -n1 | awk '{print $2}')
+CONAN_BOOST_PREFIX=${HOME}/.conan/data/boost/1.70.0/conan/stable/package/${BOOST_HASH}
+
+cmake .. -DCMAKE_BUILD_TYPE=Release -DENABLE_CONAN=Off -DBOOST_ROOT=${CONAN_BOOST_PREFIX} -DENABLE_SHARED=On -DCMAKE_INSTALL_PREFIX=$(pwd)/_install
+cmake --build . -- -j4
+cmake --build . --target install
 
 function to_lower() {
   local outRes=$(echo ${1} | awk '{ for ( i=1; i <= NF; i++) {   sub(".", substr(tolower($i),1,1) , $i)  } print }')
@@ -39,17 +45,16 @@ fi
 arch=$(uname -m)
 sysname=$(uname)
 sysname=$(to_lower ${sysname})
-gvers=$(git tag)
 ghash=$(git rev-parse --short=8 HEAD)
-fname_sufix="v${gvers}-${ghash}-${sysname}-${arch}"
+fname_sufix="v${VERS}-${ghash}-${sysname}-${arch}"
 fname="libminter_tx-${fname_sufix}.tar.gz"
 
 cd $(pwd)/_install
 
 tar -zcvf ${fname} .
 
-mv ${fname} ../../output
-cd ../../output
+mv ${fname} ../_output
+cd ../_output
 
 ls -lsa $(pwd)
 

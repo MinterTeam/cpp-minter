@@ -54,3 +54,6 @@ jobs:
       - run:
           name: "Deploy to Conan"
           command: $(which bash) .circleci/deploy.sh
+      - run:
+          name: Deploy to Github
+          command: $(which bash) .circleci/package.sh

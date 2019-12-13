@@ -7,23 +7,33 @@
  * \link   https://github.com/edwardstock
  */
 
+#include "minter/tx/signature_data.h"
+
+#include "minter/tx/utils.h"
+
 #include <algorithm>
 #include <cassert>
 #include <iostream>
-#include "minter/tx/signature_data.h"
-#include "minter/tx/utils.h"
 
-minter::signature_single_data::signature_single_data(const minter::signature &sig) {
+minter::signature_single_data::signature_single_data(const minter::signature& sig) {
     set_signature(sig);
 }
 
-minter::signature_single_data::signature_single_data(minter::signature &&sig) {
+minter::signature_single_data::signature_single_data(minter::signature&& sig) {
     set_signature(std::move(sig));
 }
 
 dev::bytes minter::signature_single_data::encode() {
-    dev::RLPStream out;
-    dev::RLPStream lst;
+    eth::RLPStream out;
+    eth::RLPStream lst;
+
+    if (m_r[0] == 0x0) {
+        m_r = dev::bytes_data(m_r).take_range_from(1);
+    }
+    if (m_s[0] == 0x0) {
+        m_s = dev::bytes_data(m_s).take_range_from(1);
+    }
+
     {
         lst.append(m_v);
         lst.append(m_r);
@@ -34,27 +44,28 @@ dev::bytes minter::signature_single_data::encode() {
     return out.out();
 }
 
-void minter::signature_single_data::decode(const dev::RLP &data) {
+void minter::signature_single_data::decode(const eth::RLP& data) {
+    if (data.itemCount() != 3) {
+        throw std::runtime_error("can't decode signature: expected size 3, given: " + utils::to_string(data.itemCount()));
+    }
     m_v = (dev::bytes) data[0];
     m_r = (dev::bytes) data[1];
     m_s = (dev::bytes) data[2];
 }
 
-void minter::signature_single_data::set_signature(const minter::signature &sig) {
+void minter::signature_single_data::set_signature(const minter::signature& sig) {
     m_r = sig.r;
     m_s = sig.s;
     m_v = sig.v;
 }
 
-void minter::signature_single_data::set_signature(minter::signature &&sig) {
-    auto tmp = std::move(sig);
-
+void minter::signature_single_data::set_signature(minter::signature&& sig) {
     m_r = std::move(sig.r);
     m_s = std::move(sig.s);
     m_v = std::move(sig.v);
 }
 
-void minter::signature_single_data::set_signature(const uint8_t *data) {
+void minter::signature_single_data::set_signature(const uint8_t* data) {
     m_r.resize(32);
     m_s.resize(32);
     m_v.resize(1);
@@ -62,10 +73,9 @@ void minter::signature_single_data::set_signature(const uint8_t *data) {
     m_r = dev::bytes(data + 00, data + 32);
     m_s = dev::bytes(data + 32, data + 64);
     m_v[0] = data[64];
-
 }
 
-void minter::signature_single_data::set_signature(dev::bytes &&v, dev::bytes &&r, dev::bytes &&s) {
+void minter::signature_single_data::set_signature(dev::bytes&& v, dev::bytes&& r, dev::bytes&& s) {
     assert(v.size() == 1);
     assert(r.size() == 32);
     assert(s.size() == 32);
@@ -74,7 +84,7 @@ void minter::signature_single_data::set_signature(dev::bytes &&v, dev::bytes &&r
     m_v = std::move(v);
 }
 
-void minter::signature_single_data::set_signature(const dev::bytes &v, const dev::bytes &r, const dev::bytes &s) {
+void minter::signature_single_data::set_signature(const dev::bytes& v, const dev::bytes& r, const dev::bytes& s) {
     assert(v.size() == 1);
     assert(r.size() == 32);
     assert(s.size() == 32);
@@ -83,7 +93,7 @@ void minter::signature_single_data::set_signature(const dev::bytes &v, const dev
     m_v = v;
 }
 
-void minter::signature_single_data::set_signature(dev::bytes &&data) {
+void minter::signature_single_data::set_signature(dev::bytes&& data) {
     assert(data.size() == 65);
     m_r.resize(32);
     m_s.resize(32);
@@ -94,7 +104,7 @@ void minter::signature_single_data::set_signature(dev::bytes &&data) {
     m_v[0] = std::move(data[64]);
 }
 
-void minter::signature_single_data::set_signature(const dev::bytes &data) {
+void minter::signature_single_data::set_signature(const dev::bytes& data) {
     m_r.resize(32);
     m_s.resize(32);
     m_v.resize(1);
@@ -104,41 +114,43 @@ void minter::signature_single_data::set_signature(const dev::bytes &data) {
     m_v[0] = std::move(data[64]);
 }
 
-const dev::bytes &minter::signature_single_data::get_v() const {
+const dev::bytes& minter::signature_single_data::get_v() const {
     return m_v;
 }
 
-const dev::bytes &minter::signature_single_data::get_r() const {
+const dev::bytes& minter::signature_single_data::get_r() const {
     return m_r;
 }
 
-const dev::bytes &minter::signature_single_data::get_s() const {
+const dev::bytes& minter::signature_single_data::get_s() const {
     return m_s;
 }
 
 std::string minter::signature_single_data::to_hex() const {
     std::stringstream ss;
-    ss << toolboxpp::data::bytesToHex(get_r().data(), 32);
-    ss << toolboxpp::data::bytesToHex(get_s().data(), 32);
-    ss << toolboxpp::data::bytesToHex(get_v().data(), 1);
+    ss << dev::bytes_data(get_r()).to_hex();
+    ss << dev::bytes_data(get_s()).to_hex();
+    ss << dev::bytes_data(get_v()).to_hex();
     return ss.str();
 }
 
-bool minter::signature_single_data::operator==(const class minter::signature_single_data & other) const noexcept {
-    return get_r() == other.get_r()
-        && get_s() == other.get_s()
-        && get_v() == other.get_v();
+bool minter::signature_single_data::empty() const {
+    return m_r.empty() || m_s.empty() || m_v.empty();
 }
 
-minter::signature_multi_data::signature_multi_data(const minter::data::address &address,
-                                                   std::vector<minter::signature_single_data> &&signs) {
+bool minter::signature_single_data::operator==(const class minter::signature_single_data& other) const noexcept {
+    return get_r() == other.get_r() && get_s() == other.get_s() && get_v() == other.get_v();
+}
+
+minter::signature_multi_data::signature_multi_data(const minter::data::address& address,
+                                                   std::vector<minter::signature_single_data>&& signs) {
     set_signatures(address, std::move(signs));
 }
 
 dev::bytes minter::signature_multi_data::encode() {
-    dev::RLPStream signList;
-    for (const auto &item: m_signs) {
-        dev::RLPStream signItem;
+    eth::RLPStream signList;
+    for (const auto& item : m_signs) {
+        eth::RLPStream signItem;
         signItem.append(item.get_v());
         signItem.append(item.get_r());
         signItem.append(item.get_s());
@@ -146,50 +158,48 @@ dev::bytes minter::signature_multi_data::encode() {
         signList.appendList(signItem);
     }
 
-    dev::RLPStream out;
+    eth::RLPStream out;
     out.append(m_address.get());
     out.appendList(signList);
 
     return out.out();
 }
 
-void minter::signature_multi_data::decode(const dev::RLP &data) {
-    dev::RLPStream out;
+void minter::signature_multi_data::decode(const eth::RLP& data) {
+    eth::RLPStream out;
 
     m_address = minter::address_t((dev::bytes) data[0]);
     size_t signsLen = data[1].itemCount();
     m_signs.resize(signsLen);
 
     for (size_t c = 0; c < signsLen; c++) {
-        dev::RLP els = data[1][c];
+        eth::RLP els = data[1][c];
         signature_single_data sd;
         sd.decode(els);
         m_signs[c] = std::move(sd);
     }
 }
 
-minter::signature_multi_data &minter::signature_multi_data::set_signatures(const minter::data::address &address,
-                                                                           std::vector<minter::signature_single_data> &&signs) {
+minter::signature_multi_data& minter::signature_multi_data::set_signatures(const minter::data::address& address,
+                                                                           std::vector<minter::signature_single_data>&& signs) {
     m_address = address;
     m_signs = std::move(signs);
 
     return *this;
 }
 
-const minter::address_t &minter::signature_multi_data::get_address() const {
+const minter::address_t& minter::signature_multi_data::get_address() const {
     return m_address;
 }
 
-const std::vector<minter::signature_single_data> &minter::signature_multi_data::get_signs() const {
+const std::vector<minter::signature_single_data>& minter::signature_multi_data::get_signs() const {
     return m_signs;
 }
 
-bool minter::signature_multi_data::operator==(const class minter::signature_multi_data & other) const noexcept {
-    if(get_signs().size() != other.get_signs().size()) {
+bool minter::signature_multi_data::operator==(const class minter::signature_multi_data& other) const noexcept {
+    if (get_signs().size() != other.get_signs().size()) {
         return false;
     }
 
     return std::equal(get_signs().begin(), get_signs().end(), other.get_signs().begin());
 }
-
-

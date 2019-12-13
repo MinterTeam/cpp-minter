@@ -6,12 +6,16 @@
  * \author Eduard Maximovich (edward.vstock@gmail.com)
  * \link   https://github.com/edwardstock
  */
-#include <sstream>
 #include <algorithm>
-#include <minter/crypto/sha3.h>
+#include <bip3x/PCGRand.hpp>
+#include <bip3x/crypto/sha2.hpp>
+#include <bip3x/crypto/sha3.h>
 #include <minter/tx/utils.h>
+#include <random>
+#include <sstream>
+#include <toolbox/strings/decimal_formatter.h>
 
-dev::bytes minter::utils::to_bytes(std::string &&input) {
+dev::bytes minter::utils::to_bytes(std::string&& input) {
     if (!input.size()) {
         return dev::bytes(0);
     }
@@ -22,7 +26,7 @@ dev::bytes minter::utils::to_bytes(std::string &&input) {
 
     return output;
 }
-dev::bytes minter::utils::to_bytes(const std::string &input) {
+dev::bytes minter::utils::to_bytes(const std::string& input) {
     if (!input.size()) {
         return dev::bytes(0);
     }
@@ -36,7 +40,7 @@ dev::bytes minter::utils::to_bytes(const std::string &input) {
     return output;
 }
 
-dev::bytes minter::utils::to_bytes_fixed(const std::string &input, size_t fixed_size) {
+dev::bytes minter::utils::to_bytes_fixed(const std::string& input, size_t fixed_size) {
     dev::bytes output;
     output.resize(fixed_size);
     size_t left = fixed_size;
@@ -52,32 +56,32 @@ dev::bytes minter::utils::to_bytes_fixed(const std::string &input, size_t fixed_
     return output;
 }
 
-dev::bytes minter::utils::to_bytes(const dev::bigint &num) {
+dev::bytes minter::utils::to_bytes(const dev::bigint& num) {
     dev::bytes v;
     boost::multiprecision::export_bits(num, std::back_inserter(v), 8);
 
     return v;
 }
 
-dev::bytes minter::utils::to_bytes(const dev::u256 &num) {
+dev::bytes minter::utils::to_bytes(const dev::u256& num) {
     dev::bytes v;
     boost::multiprecision::export_bits(num, std::back_inserter(v), 8);
 
     return v;
 }
 
-dev::bytes minter::utils::to_bytes(const dev::bigdec18 &num) {
+dev::bytes minter::utils::to_bytes(const dev::bigdec18& num) {
     auto out = num * dev::bigdec18("1000000000000000000");
     auto nt = dev::bigint(out);
 
     return to_bytes(nt);
 }
 
-dev::bytes minter::utils::sha3k(const minter::Data &message) {
+dev::bytes minter::utils::sha3k(const dev::bytes_data& message) {
     return sha3k(message.get());
 }
 
-dev::bytes minter::utils::sha3k(const dev::bytes &message) {
+dev::bytes minter::utils::sha3k(const dev::bytes& message) {
     SHA3_CTX hash_ctx;
     dev::bytes output(32);
     keccak_256_Init(&hash_ctx);
@@ -87,42 +91,64 @@ dev::bytes minter::utils::sha3k(const dev::bytes &message) {
     return output;
 }
 
-dev::bigint minter::utils::to_bigint(const dev::bytes &bytes) {
+dev::bytes minter::utils::to_sha3k(dev::bytes message) {
+    return sha3k(message);
+}
+
+dev::bytes minter::utils::sha256(const dev::bytes& message) {
+    trezor::SHA256_CTX hash_ctx;
+    dev::bytes output(SHA256_DIGEST_LENGTH);
+    sha256_Init(&hash_ctx);
+    sha256_Update(&hash_ctx, message.data(), message.size());
+    sha256_Final(&hash_ctx, output.data());
+
+    return output;
+}
+
+dev::bytes minter::utils::sha256(const dev::bytes_data& message) {
+    return sha256(message.get());
+}
+
+dev::bytes minter::utils::to_sha256(dev::bytes message) {
+    return sha256(message);
+}
+
+dev::bigint minter::utils::to_bigint(const dev::bytes& bytes) {
     dev::bigint val;
     boost::multiprecision::import_bits(val, bytes.begin(), bytes.end());
     return val;
 }
 
-dev::bigint minter::utils::to_bigint(const uint8_t *bytes, size_t len) {
+dev::bigint minter::utils::to_bigint(const uint8_t* bytes, size_t len) {
     return to_bigint(dev::bytes(bytes, bytes + len));
 }
 
-std::string minter::utils::to_string(const dev::bytes &src) {
+std::string minter::utils::to_string(const dev::bytes& src) {
     std::stringstream ss;
-    for (const auto &item: src) {
+    for (const auto& item : src) {
         ss << item;
     }
 
     return ss.str();
 }
 
-std::string minter::utils::to_string(const dev::bigdec18 &src) {
+std::string minter::utils::to_string(const dev::bigdec18& src) {
     std::stringstream ss;
     ss << std::setprecision(std::numeric_limits<boost::multiprecision::cpp_dec_float<18>>::max_digits10);
     ss << src;
 
-    return toolboxpp::numbers::decimal_formatter()(ss.str());
+    return toolbox::strings::decimal_formatter()(ss.str());
 }
 
-std::string minter::utils::to_string_lp(const dev::bigdec18 &src) {
+std::string minter::utils::to_string_lp(const dev::bigdec18& src) {
     std::stringstream ss;
     ss << std::setprecision(std::numeric_limits<boost::multiprecision::cpp_dec_float<4>>::max_digits10);
     ss << src;
 
-    return toolboxpp::numbers::decimal_formatter(ss.str()).set_min_fractions(4).set_max_fractions(4).format();
+    return toolbox::strings::decimal_formatter(ss.str()).set_min_fractions(4).set_max_fractions(4).format();
 }
 
-std::string minter::utils::to_string(const dev::bigint &src) {
+std::string minter::utils::to_string(const dev::bigint& src) {
     std::stringstream ss;
     ss << src;
 
@@ -135,17 +161,17 @@ std::string minter::utils::to_string(uint64_t src) {
     return ss.str();
 }
 
-std::string minter::utils::to_string(const std::vector<char> &data) {
+std::string minter::utils::to_string(const std::vector<char>& data) {
     return std::string(data.begin(), data.end());
 }
 
-std::string minter::utils::to_string_clear(const dev::bytes &src) {
+std::string minter::utils::to_string_clear(const dev::bytes& src) {
     const std::string tmp(to_string(src));
-    const char *tmp2 = tmp.c_str();
+    const char* tmp2 = tmp.c_str();
     return strip_null_bytes(tmp2, tmp.size());
 }
 
-std::string minter::utils::strip_null_bytes(const char *input, size_t len) {
+std::string minter::utils::strip_null_bytes(const char* input, size_t len) {
     if (input == nullptr || len == 0) {
         return std::string();
     }
@@ -162,42 +188,52 @@ std::string minter::utils::strip_null_bytes(const char *input, size_t len) {
     return ss.str();
 }
 
-dev::bigint minter::utils::normalize_value(const char *input) {
+dev::bytes minter::utils::gen_random_bytes(size_t n) {
+    std::random_device dev;
+    PCGRand rand(dev);
+    std::uniform_int_distribution<> udist(0x00, 0xFF);
+
+    std::vector<uint8_t> out;
+    out.reserve(n);
+    for (size_t i = 0; i < n; ++i) {
+        out.push_back((uint8_t) udist(rand));
+    }
+
+    return out;
+}
+
+dev::bigint minter::utils::normalize_value(const char* input) {
     return dev::bigint(dev::bigdec18(input) * minter::utils::normalized_value_dec);
 }
 
-dev::bigint minter::utils::normalize_value(const std::string &input) {
+dev::bigint minter::utils::normalize_value(const std::string& input) {
     return minter::utils::normalize_value(input.c_str());
 }
 
-dev::bigint minter::utils::normalize_value(const dev::bigdec18 &value) {
+dev::bigint minter::utils::normalize_value(const dev::bigdec18& value) {
     return dev::bigint(value * minter::utils::normalized_value_dec);
 }
 
-dev::bigdec18 minter::utils::humanize_value(const dev::bigint &value) {
+dev::bigdec18 minter::utils::humanize_value(const dev::bigint& value) {
     return dev::bigdec18(value) / minter::utils::normalized_value_dec;
 }
 
-std::ostream &operator<<(std::ostream &out, const minter::Data &d) {
-    out << d.to_hex();
-    return out;
-}
-
-std::ostream &operator<<(std::ostream &out, const dev::bytes &d) {
-    minter::Data tmp(d);
+std::ostream& operator<<(std::ostream& out, const dev::bytes& d) {
+    dev::bytes_data tmp(d);
     out << tmp.to_hex();
     return out;
 }
 
-std::ostream &operator<<(std::ostream &out, const dev::RLPStream &rlp) {
-    minter::Data tmp(rlp.out());
+std::ostream& operator<<(std::ostream& out, const eth::RLPStream& rlp) {
+    dev::bytes_data tmp(rlp.out());
     out << tmp.to_hex();
     return out;
 }
 
-void minter::utils::memset_s(uint8_t *dst, uint8_t val, size_t n) {
-    if (dst == NULL) return;
-    volatile unsigned char *p = dst;
+void minter::utils::memset_s(uint8_t* dst, uint8_t val, size_t n) {
+    if (dst == NULL)
+        return;
+    volatile unsigned char* p = dst;
     while (n--) {
         *p++ = val;
     }

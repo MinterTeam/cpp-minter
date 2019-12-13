@@ -28,6 +28,6 @@ class tx_create_multisig_address;
 class tx_multisend;
 class tx_edit_candidate;
 
-}
+} // namespace minter
 
 #endif //MINTER_TX_FWD_H

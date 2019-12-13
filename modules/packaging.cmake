@@ -1,5 +1,5 @@
 install(
-	TARGETS ${PROJECT_NAME} secp256k1_core
+	TARGETS ${PROJECT_NAME}
 	RUNTIME DESTINATION bin
 	LIBRARY DESTINATION lib
 	ARCHIVE DESTINATION lib
@@ -7,23 +7,15 @@ install(
 
 install(
 	DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/minter
-	DESTINATION include/minter
+	DESTINATION include/
 )
 
-install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/minter
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/include
-        )
-
 if (ENABLE_CONAN)
-	install(DIRECTORY ${CONAN_INCLUDE_DIRS_BIP39}/minter
-	        DESTINATION ${CMAKE_INSTALL_PREFIX}/include
+	install(DIRECTORY ${CONAN_INCLUDE_DIRS_BIP39}/bip3x/
+	        DESTINATION ${CMAKE_INSTALL_PREFIX}/include/bip3x/
 	        )
-else ()
-	install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/libs/bip39/include/minter
-	        DESTINATION ${CMAKE_INSTALL_PREFIX}/include
+
+	install(DIRECTORY ${CONAN_INCLUDE_DIRS_TOOLBOX}/toolbox/
+	        DESTINATION ${CMAKE_INSTALL_PREFIX}/include/toolbox/
 	        )
 endif ()
-
-install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/libs/secp256k1/include/
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/include
-        )

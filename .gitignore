@@ -11,4 +11,4 @@ _build*
 build_*
 .vscode
 privs.txt
-include/minter/minter_tx_core.h
+include/minter/minter_tx_config.h

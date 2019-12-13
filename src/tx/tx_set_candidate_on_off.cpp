@@ -7,18 +7,18 @@
  * \link   https://github.com/edwardstock
  */
 
-#include "minter/tx/tx_type.h"
 #include "minter/tx/tx_set_candidate_on_off.h"
+
 #include "minter/tx/tx_type.h"
 
 // BASE
-minter::tx_set_candidate_on_off::tx_set_candidate_on_off(std::shared_ptr<minter::tx> tx) : tx_data(std::move(tx)) {
-
+minter::tx_set_candidate_on_off::tx_set_candidate_on_off(std::shared_ptr<minter::tx> tx)
+    : tx_data(std::move(tx)) {
 }
 
 dev::bytes minter::tx_set_candidate_on_off::encode() {
-    dev::RLPStream out;
-    dev::RLPStream lst;
+    eth::RLPStream out;
+    eth::RLPStream lst;
     {
         lst.append(m_pub_key.get());
         out.appendList(lst);
@@ -27,35 +27,36 @@ dev::bytes minter::tx_set_candidate_on_off::encode() {
     return out.out();
 }
 
-void minter::tx_set_candidate_on_off::decode_internal(dev::RLP rlp) {
+void minter::tx_set_candidate_on_off::decode(const dev::bytes& data) {
+    eth::RLP rlp(data);
     m_pub_key = (dev::bytes) rlp[0];
 }
 
-minter::tx_set_candidate_on_off &minter::tx_set_candidate_on_off::set_pub_key(const dev::bytes &pub_key) {
+minter::tx_set_candidate_on_off& minter::tx_set_candidate_on_off::set_pub_key(const dev::bytes& pub_key) {
     m_pub_key = pub_key;
     return *this;
 }
 
-minter::tx_set_candidate_on_off &minter::tx_set_candidate_on_off::set_pub_key(const minter::pubkey_t &pub_key) {
+minter::tx_set_candidate_on_off& minter::tx_set_candidate_on_off::set_pub_key(const minter::pubkey_t& pub_key) {
     m_pub_key = pub_key;
     return *this;
 }
 
-const minter::pubkey_t &minter::tx_set_candidate_on_off::get_pub_key() const {
+const minter::pubkey_t& minter::tx_set_candidate_on_off::get_pub_key() const {
     return m_pub_key;
 }
 
 // ON
 uint16_t minter::tx_set_candidate_on::type() const {
-    return minter::tx_set_candidate_on_type::type();
+    return minter::tx_set_candidate_on_type.type();
 }
-minter::tx_set_candidate_on::tx_set_candidate_on(std::shared_ptr<minter::tx> tx) :
-    tx_data(tx),
-    tx_set_candidate_on_off(tx) {
+minter::tx_set_candidate_on::tx_set_candidate_on(std::shared_ptr<minter::tx> tx)
+    : tx_data(tx),
+      tx_set_candidate_on_off(tx) {
+}
 
-}
-void minter::tx_set_candidate_on::decode_internal(dev::RLP rlp) {
-    tx_set_candidate_on_off::decode_internal(rlp);
+void minter::tx_set_candidate_on::decode(const dev::bytes& data) {
+    tx_set_candidate_on_off::decode(data);
 }
 dev::bytes minter::tx_set_candidate_on::encode() {
     return tx_set_candidate_on_off::encode();
@@ -64,16 +65,16 @@ dev::bytes minter::tx_set_candidate_on::encode() {
 // OFF
 
 uint16_t minter::tx_set_candidate_off::type() const {
-    return minter::tx_set_candidate_off_type::type();
+    return minter::tx_set_candidate_off_type.type();
 }
 
-minter::tx_set_candidate_off::tx_set_candidate_off(std::shared_ptr<minter::tx> tx) :
-tx_data(tx),
-tx_set_candidate_on_off(tx) {
+minter::tx_set_candidate_off::tx_set_candidate_off(std::shared_ptr<minter::tx> tx)
+    : tx_data(tx),
+      tx_set_candidate_on_off(tx) {
 }
 
-void minter::tx_set_candidate_off::decode_internal(dev::RLP rlp) {
-    tx_set_candidate_on_off::decode_internal(rlp);
+void minter::tx_set_candidate_off::decode(const dev::bytes& data) {
+    tx_set_candidate_on_off::decode(data);
 }
 
 dev::bytes minter::tx_set_candidate_off::encode() {

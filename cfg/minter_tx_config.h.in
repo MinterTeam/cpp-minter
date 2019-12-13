@@ -1,0 +1,75 @@
+/*!
+ * minter_tx.
+ * minter_tx_core.h
+ *
+ * \date 2019
+ * \author Eduard Maximovich (edward.vstock@gmail.com)
+ * \link   https://github.com/edwardstock
+ */
+
+#ifndef MINTER_TX_MINTER_TX_CONFIG_H
+#define MINTER_TX_MINTER_TX_CONFIG_H
+
+#cmakedefine MINTER_TX_EXPORTING 1
+#cmakedefine MINTER_EXPORT_SHARED 1
+
+#ifdef MINTER_EXPORT_SHARED
+#ifdef MINTER_TX_EXPORTING
+#   if _MSC_VER
+#       define MINTER_TX_API __declspec(dllexport)
+#   else
+#       define MINTER_TX_API __attribute__((visibility("default")))
+#   endif
+#else
+#   if _MSC_VER
+#       define MINTER_TX_API __declspec(dllimport)
+#   else
+#       define MINTER_TX_API
+#   endif
+#endif
+#else
+#define MINTER_TX_API
+#endif  // MINTER_EXPORT_SHARED
+
+
+#include <boost/multiprecision/cpp_int.hpp>
+#include <boost/multiprecision/cpp_dec_float.hpp>
+#include <toolbox/data/bytes_data.h>
+#include <toolbox/data/bytes_array.h>
+#include <vector>
+
+
+
+namespace minter {
+class tx;
+class tx_builder;
+
+enum chain_id : uint8_t {
+    mainnet = 0x01,
+    testnet = 0x02,
+};
+
+
+}
+
+namespace dev {
+using byte = uint8_t;
+namespace mp = boost::multiprecision;
+
+// Binary data types.
+using bytes = std::vector<byte>;
+using bytes_data = toolbox::data::bytes_data;
+template<size_t N>
+using bytes_array = toolbox::data::bytes_array<N>;
+using bytes_32 = bytes_array<32>;
+using bytes_64 = bytes_array<64>;
+
+// Numeric types.
+using bigint = mp::number<mp::cpp_int_backend<>>;
+using bigdec18 = mp::number<mp::cpp_dec_float<18>>;
+using u256 = mp::number<mp::cpp_int_backend<256, 256, mp::unsigned_magnitude, mp::unchecked, void>>;
+using u160 = mp::number<mp::cpp_int_backend<160, 160, mp::unsigned_magnitude, mp::unchecked, void>>;
+
+}
+
+#endif //MINTER_TX_MINTER_TX_CONFIG_H

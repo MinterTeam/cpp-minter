@@ -7,23 +7,24 @@
  * \link   https://github.com/edwardstock
  */
 
-#include <memory>
-
 #include "minter/tx/tx_builder.h"
-#include "minter/tx/tx_send_coin.h"
-#include "minter/tx/tx_sell_coin.h"
-#include "minter/tx/tx_sell_all_coins.h"
+
 #include "minter/tx/tx_buy_coin.h"
 #include "minter/tx/tx_create_coin.h"
+#include "minter/tx/tx_create_multisig_address.h"
 #include "minter/tx/tx_declare_candidacy.h"
 #include "minter/tx/tx_delegate.h"
-#include "minter/tx/tx_unbond.h"
-#include "minter/tx/tx_redeem_check.h"
-#include "minter/tx/tx_set_candidate_on_off.h"
-#include "minter/tx/tx_create_multisig_address.h"
-#include "minter/tx/tx_multisend.h"
 #include "minter/tx/tx_edit_candidate.h"
+#include "minter/tx/tx_multisend.h"
+#include "minter/tx/tx_redeem_check.h"
+#include "minter/tx/tx_sell_all_coins.h"
+#include "minter/tx/tx_sell_coin.h"
+#include "minter/tx/tx_send_coin.h"
+#include "minter/tx/tx_set_candidate_on_off.h"
+#include "minter/tx/tx_unbond.h"
 #include "minter/tx/utils.h"
+
+#include <memory>
 
 // Out of line
 std::shared_ptr<minter::tx_builder> minter::new_tx() {
@@ -32,98 +33,97 @@ std::shared_ptr<minter::tx_builder> minter::new_tx() {
 }
 
 // setters
-minter::tx_builder &minter::tx_builder::set_nonce(const dev::bigint &nonce) {
+minter::tx_builder& minter::tx_builder::set_nonce(const dev::bigint& nonce) {
     m_tx->m_nonce = nonce;
     return *this;
 }
 
-minter::tx_builder &minter::tx_builder::set_nonce(const char *num) {
+minter::tx_builder& minter::tx_builder::set_nonce(const char* num) {
     return set_nonce(dev::bigint(num));
 }
 
-minter::tx_builder &minter::tx_builder::set_chain_id(uint8_t id) {
+minter::tx_builder& minter::tx_builder::set_chain_id(uint8_t id) {
     m_tx->m_chain_id = id;
     return *this;
 }
 
-minter::tx_builder &minter::tx_builder::set_gas_price(const std::string &amount) {
+minter::tx_builder& minter::tx_builder::set_gas_price(const std::string& amount) {
     m_tx->m_gas_price = dev::bigint(amount);
     return *this;
 }
 
-minter::tx_builder &minter::tx_builder::set_gas_price(const dev::bigdec18 &amount) {
+minter::tx_builder& minter::tx_builder::set_gas_price(const dev::bigdec18& amount) {
     m_tx->m_gas_price = dev::bigint(amount);
     return *this;
 }
 
-minter::tx_builder &minter::tx_builder::set_gas_price(const dev::bigint &amount) {
+minter::tx_builder& minter::tx_builder::set_gas_price(const dev::bigint& amount) {
     m_tx->m_gas_price = amount;
     return *this;
 }
 
-minter::tx_builder &minter::tx_builder::set_gas_coin(const std::string &coin) {
+minter::tx_builder& minter::tx_builder::set_gas_coin(const std::string& coin) {
     m_tx->m_gas_coin = coin;
     return *this;
 }
 
-minter::tx_builder &minter::tx_builder::set_gas_coin(const char *coin) {
+minter::tx_builder& minter::tx_builder::set_gas_coin(const char* coin) {
     m_tx->m_gas_coin = std::string(coin);
     return *this;
 }
 
-minter::tx_builder &minter::tx_builder::set_payload(const dev::bytes &payload) {
+minter::tx_builder& minter::tx_builder::set_payload(const dev::bytes& payload) {
     std::copy(payload.begin(), payload.end(), m_tx->m_payload.begin());
     return *this;
 }
 
-minter::tx_builder &minter::tx_builder::set_payload(dev::bytes &&payload) {
+minter::tx_builder& minter::tx_builder::set_payload(dev::bytes&& payload) {
     m_tx->m_payload = std::move(payload);
     return *this;
 }
 
-minter::tx_builder &minter::tx_builder::set_payload(const std::string &payload) {
+minter::tx_builder& minter::tx_builder::set_payload(const std::string& payload) {
     m_tx->m_payload = minter::utils::to_bytes(payload);
     return *this;
 }
 
-minter::tx_builder &minter::tx_builder::set_payload(std::string &&payload) {
+minter::tx_builder& minter::tx_builder::set_payload(std::string&& payload) {
     m_tx->m_payload = minter::utils::to_bytes(std::move(payload));
     return *this;
 }
 
-minter::tx_builder &minter::tx_builder::set_payload(const char *payload) {
+minter::tx_builder& minter::tx_builder::set_payload(const char* payload) {
     return set_payload(std::string(payload));
 }
 
-minter::tx_builder &minter::tx_builder::set_service_data(const dev::bytes &payload) {
+minter::tx_builder& minter::tx_builder::set_service_data(const dev::bytes& payload) {
     std::copy(payload.begin(), payload.end(), m_tx->m_service_data.begin());
     return *this;
 }
 
-minter::tx_builder &minter::tx_builder::set_service_data(dev::bytes &&payload) {
+minter::tx_builder& minter::tx_builder::set_service_data(dev::bytes&& payload) {
     m_tx->m_service_data = std::move(payload);
     return *this;
 }
 
-minter::tx_builder &minter::tx_builder::set_service_data(const std::string &payload) {
+minter::tx_builder& minter::tx_builder::set_service_data(const std::string& payload) {
     m_tx->m_service_data = minter::utils::to_bytes(payload);
     return *this;
 }
 
-minter::tx_builder &minter::tx_builder::set_service_data(std::string &&payload) {
+minter::tx_builder& minter::tx_builder::set_service_data(std::string&& payload) {
     m_tx->m_service_data = minter::utils::to_bytes(std::move(payload));
     return *this;
 }
 
-minter::tx_builder &minter::tx_builder::set_service_data(const char *payload) {
+minter::tx_builder& minter::tx_builder::set_service_data(const char* payload) {
     return set_service_data(std::string(payload));
 }
 
-minter::tx_builder &minter::tx_builder::set_signature_type(minter::signature_type type) {
+minter::tx_builder& minter::tx_builder::set_signature_type(minter::signature_type type) {
     m_tx->m_signature_type = type;
     return *this;
 }
-
 
 // Detailed data builders
 std::shared_ptr<minter::tx_send_coin> minter::tx_builder::tx_send_coin() {

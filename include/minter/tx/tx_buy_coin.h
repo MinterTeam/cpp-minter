@@ -14,11 +14,12 @@
 
 namespace minter {
 
-class MINTER_TX_API tx_buy_coin: public virtual minter::tx_data {
+class MINTER_TX_API tx_buy_coin : public virtual minter::tx_data {
 public:
     explicit tx_buy_coin(std::shared_ptr<minter::tx> tx);
     uint16_t type() const override;
     dev::bytes encode() override;
+    void decode(const dev::bytes& data) override;
 
     std::string get_coin_to_buy() const;
     dev::bigdec18 get_value_to_buy() const;
@@ -26,17 +27,15 @@ public:
     dev::bigdec18 get_max_value_to_sell() const;
 
     tx_buy_coin& set_coin_to_buy(const char* coin);
-    tx_buy_coin& set_coin_to_buy(const std::string &coin);
+    tx_buy_coin& set_coin_to_buy(const std::string& coin);
     tx_buy_coin& set_value_to_buy(const char* valueDec);
-    tx_buy_coin& set_value_to_buy(const dev::bigdec18 &valueDec);
-    tx_buy_coin& set_value_to_buy(const dev::bigint &valueRaw);
+    tx_buy_coin& set_value_to_buy(const dev::bigdec18& valueDec);
+    tx_buy_coin& set_value_to_buy(const dev::bigint& valueRaw);
     tx_buy_coin& set_coin_to_sell(const char* coin);
-    tx_buy_coin& set_coin_to_sell(const std::string &coin);
+    tx_buy_coin& set_coin_to_sell(const std::string& coin);
     tx_buy_coin& set_max_value_to_sell(const char* valueDec);
-    tx_buy_coin& set_max_value_to_sell(const dev::bigdec18 &valueDec);
-    tx_buy_coin& set_max_value_to_sell(const dev::bigint &value);
-protected:
-    void decode_internal(dev::RLP rlp) override;
+    tx_buy_coin& set_max_value_to_sell(const dev::bigdec18& valueDec);
+    tx_buy_coin& set_max_value_to_sell(const dev::bigint& value);
 
 private:
     std::string m_coin_to_buy;
@@ -45,6 +44,6 @@ private:
     dev::bigint m_max_value_to_sell;
 };
 
-}
+} // namespace minter
 
 #endif //MINTER_TX_BUY_COIN_H

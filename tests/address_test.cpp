@@ -7,30 +7,21 @@
  * \link   https://github.com/edwardstock
  */
 
-#include <sstream>
 #include <gtest/gtest.h>
 #include <minter/address.h>
 #include <minter/private_key.h>
+#include <sstream>
 
-static const char *NULL_ADDRESS_NO_PREFIX = "0000000000000000000000000000000000000000";
-static const char *NULL_ADDRESS = "Mx0000000000000000000000000000000000000000";
-static const char *TEST_ADDRESS_NO_PREFIX = "42516215b2dd72187d3ef6adb19fc3aabbbced23";
-static const char *TEST_ADDRESS = "Mx42516215b2dd72187d3ef6adb19fc3aabbbced23";
-static const uint8_t TEST_ADDRESS_DATA[] = {
-    0x42, 0x51, 0x62, 0x15,
-    0xb2, 0xdd, 0x72, 0x18,
-    0x7d, 0x3e, 0xf6, 0xad,
-    0xb1, 0x9f, 0xc3, 0xaa,
-    0xbb, 0xbc, 0xed, 0x23
-};
+static const char* NULL_ADDRESS_NO_PREFIX = "0000000000000000000000000000000000000000";
+static const char* NULL_ADDRESS = "Mx0000000000000000000000000000000000000000";
+static const char* TEST_ADDRESS_NO_PREFIX = "42516215b2dd72187d3ef6adb19fc3aabbbced23";
+static const char* TEST_ADDRESS = "Mx42516215b2dd72187d3ef6adb19fc3aabbbced23";
 static const std::vector<uint8_t> TEST_ADDRESS_VECT = {
     0x42, 0x51, 0x62, 0x15,
     0xb2, 0xdd, 0x72, 0x18,
     0x7d, 0x3e, 0xf6, 0xad,
     0xb1, 0x9f, 0xc3, 0xaa,
-    0xbb, 0xbc, 0xed, 0x23
-};
-
+    0xbb, 0xbc, 0xed, 0x23};
 
 TEST(Address, DefaultCtr) {
     minter::address_t address;
@@ -59,11 +50,11 @@ TEST(Address, StringCtr) {
     std::string errmsg;
     try {
         minter::address_t d("wtf");
-    } catch (const std::runtime_error &e) {
+    } catch (const std::runtime_error& e) {
         // length is not 40 or 42
         errmsg = e.what();
         threw = true;
-    } catch (const std::exception &e) {
+    } catch (const std::exception& e) {
         errmsg = e.what();
     }
 
@@ -75,7 +66,7 @@ TEST(Address, StringCtr) {
 
     try {
         minter::address_t d(std::string("some invalid hex string"));
-    } catch (const std::runtime_error &e) {
+    } catch (const std::runtime_error& e) {
         // length is not 40 or 42
         errmsg = e.what();
         threw = true;

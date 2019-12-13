@@ -11,5 +11,4 @@
 #include <minter/public_key.h>
 
 TEST(PublicKey, DefaultCtor) {
-
 }

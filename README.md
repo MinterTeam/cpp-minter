@@ -11,7 +11,7 @@ Minter C++ SDK: build and sign any transaction, generate mnemonic with private a
  * Generating mnemonic (with low-predictable [PCG](http://www.pcg-random.org/) random generator)
 
 ## Requirements:
- * GCC 4.9+/Clang/AppleClang
+ * GCC 5+/Clang/AppleClang
  * CMake 3.10+
  * Python with PIP
  * Conan
@@ -50,10 +50,10 @@ conan remote add minter https://api.bintray.com/conan/minterteam/minter
 
 For more information, see official [docs](https://docs.conan.io/en/latest/getting_started.html)
 
-## Use as conan dependency
+## Use as conan dependency without manually build
 You can just add to your conanfile.txt dependency:
 
-`minter_tx/0.4.2@minter/latest`
+`minter_tx/0.5.0@minter/latest`
 
 CMakeLists.txt
 ```cmake
@@ -81,7 +81,11 @@ g++ my_program.cpp -lminter_tx
 ```bash
 git clone --recursive https://github.com/MinterTeam/cpp-minter.git
 mkdir build && cd build
-cmake .. -DCMAKE_BUILD_TYPE=Debug -DENABLE_CONAN=Off -DMINTER_TX_TEST=On -DCMAKE_INSTALL_PREFIX=/usr
+cmake .. -DCMAKE_BUILD_TYPE=Debug -DENABLE_CONAN=Off \
+    -DMINTER_TX_TEST=On \
+    -DBOOST_ROOT=/path/to/boost \
+    -DCMAKE_INSTALL_PREFIX=/path/to/install/dir
+
 cmake --build . -- -j4
 cmake --build . --target install
 ```

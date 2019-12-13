@@ -10,31 +10,29 @@
 #ifndef MINTER_SIGNATURE_H
 #define MINTER_SIGNATURE_H
 
-#include <minter/eth/common.h>
+#include "minter/minter_tx_config.h"
+
+#include <bip3x/utils.h>
 
 namespace minter {
 
-typedef enum {
-  single = (uint8_t) 0x01,
-  multi = (uint8_t) 0x02
-} signature_type;
+enum signature_type : uint8_t {
+    single = 0x01,
+    multi = 0x02
+};
 
-typedef struct {
-  dev::bytes r, s, v;
-  bool success = false;
-} signature;
+struct signature {
+    dev::bytes r, s, v;
+    bool success = false;
+};
 
-inline minter::signature signature_from_data(minter::Data &&input65) {
-    if(input65.size() != 65) {
-        throw std::out_of_range("Signature data must contains exact 65 bytes, where 65th byte is an recovery id");
+inline minter::signature signature_from_data(dev::bytes_data&& input65) {
+    if (input65.size() != 65) {
+        throw std::out_of_range("Signature data must contains exact 65 bytes, and 65th byte is a recovery id");
     }
-    return minter::signature{
-        input65.take_range(0, 32),
-        input65.take_range(32, 64),
-        input65.take_last(1)
-    };
+    return minter::signature{input65.take_range(0, 32), input65.take_range(32, 64), input65.take_last(1)};
 }
 
-}
+} // namespace minter
 
-#endif //MINTER_SIGNATURE_H
+#endif // MINTER_SIGNATURE_H

@@ -43,7 +43,7 @@ int main() {
     // create private key instance to sign transaction with
     minter::privkey_t pk("df1f236d0396cc43147e44206c341a65573326e907d033690e31a21323c03a9f");
 
-    // sign transaction: result is a minter::Data - simple bytes wrapper
+    // sign transaction: result is a dev::bytes_data - useful bytes wrapper
     auto signedTx = tx->sign_single(pk);
 
 

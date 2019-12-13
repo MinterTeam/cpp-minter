@@ -2,8 +2,9 @@
 // Created by edwardstock on 26.04.19.
 //
 #include <gtest/gtest.h>
-#include <minter/tx.hpp>
 #include <iostream>
+#include <minter/tx.hpp>
+#include <minter/tx/tx_buy_coin.h>
 
 TEST(TxBuy, TestEncode) {
 
@@ -12,23 +13,20 @@ TEST(TxBuy, TestEncode) {
     minter::data::private_key pk = "07bc17abdcee8b971bb8723e36fe9d2523306d5ab2d683631693238e0f9df142";
 
     auto tx = minter::new_tx()
-            ->set_nonce("1")
-            .set_gas_price("1")
-            .set_gas_coin("MNT")
-            .set_chain_id(minter::testnet)
-            .tx_buy_coin()
-            ->set_coin_to_buy("TEST")
-            .set_coin_to_sell("MNT")
-            .set_value_to_buy("1")
-            .set_max_value_to_sell("1")
-            .build();
+                  ->set_nonce("1")
+                  .set_gas_price("1")
+                  .set_gas_coin("MNT")
+                  .set_chain_id(minter::testnet)
+                  .tx_buy_coin()
+                  ->set_coin_to_buy("TEST")
+                  .set_coin_to_sell("MNT")
+                  .set_value_to_buy("1")
+                  .set_max_value_to_sell("1")
+                  .build();
 
     auto signature = tx->sign_single(pk);
 
-
-
     ASSERT_STREQ(expected, signature.to_hex().c_str());
-
 }
 
 TEST(TxBuy, TestDecode) {
@@ -51,20 +49,19 @@ TEST(TxBuy, TestValuePrecisionEncodeDecode) {
     minter::data::private_key pk = "07bc17abdcee8b971bb8723e36fe9d2523306d5ab2d683631693238e0f9df142";
 
     auto tx = minter::new_tx()
-            ->set_nonce("1")
-            .set_gas_price("1")
-            .set_gas_coin("MNT")
-            .set_chain_id(minter::testnet)
-            .tx_buy_coin()
-            ->set_coin_to_buy("TEST")
-            .set_coin_to_sell("MNT")
-            .set_value_to_buy("1")
-            .set_max_value_to_sell("1.102030405060708090")
-            .build();
+                  ->set_nonce("1")
+                  .set_gas_price("1")
+                  .set_gas_coin("MNT")
+                  .set_chain_id(minter::testnet)
+                  .tx_buy_coin()
+                  ->set_coin_to_buy("TEST")
+                  .set_coin_to_sell("MNT")
+                  .set_value_to_buy("1")
+                  .set_max_value_to_sell("1.102030405060708090")
+                  .build();
     auto signature = tx->sign_single(pk);
 
     auto decoded = minter::tx::decode(signature.get());
     std::shared_ptr<minter::tx_buy_coin> data = decoded->get_data<minter::tx_buy_coin>();
     ASSERT_EQ(dev::bigdec18("1.102030405060708090"), data->get_max_value_to_sell());
-
 }

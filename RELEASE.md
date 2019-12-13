@@ -1,5 +1,12 @@
 # Release notes
 
+## 0.5.0
+ - Checks support (with texasnet gas coin)
+ - Clean-up leading zeroes in signature
+ - clang-format
+ - Less macros, more templates
+ - Refactoring
+
 ## 0.4.2
  - Fixes for MacOS
 
