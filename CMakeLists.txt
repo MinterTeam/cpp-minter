@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 project(minter_tx
-        VERSION 0.5.0
+        VERSION 0.5.1
         DESCRIPTION "Minter Transaction Maker"
         LANGUAGES CXX
         )
@@ -63,10 +63,8 @@ else ()
 		find_package(Boost 1.70.0 COMPONENTS exception REQUIRED)
 	endif ()
 
-	add_library(CONAN_PKG::boost_exception INTERFACE IMPORTED)
-	add_library(CONAN_PKG::boost_multiprecision INTERFACE IMPORTED)
-	set_property(TARGET CONAN_PKG::boost_exception PROPERTY INTERFACE_LINK_LIBRARIES ${Boost_LIBRARIES})
-	set_property(TARGET CONAN_PKG::boost_multiprecision PROPERTY INTERFACE_INCLUDE_DIRECTORIES ${Boost_INCLUDE_DIR})
+	add_library(CONAN_PKG::boost INTERFACE IMPORTED)
+	set_property(TARGET CONAN_PKG::boost PROPERTY INTERFACE_LINK_LIBRARIES ${Boost_LIBRARIES})
 
 	# toolbox
 	conan_fallback(NAME toolbox)
@@ -223,8 +221,7 @@ set(ENABLE_JNI OFF CACHE BOOL "secp256k1 shared" FORCE)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/libs/secp256k1 ${CMAKE_BINARY_DIR}/secp256k1)
 
 target_link_libraries(${PROJECT_NAME} secp256k1_core)
-target_link_libraries(${PROJECT_NAME} CONAN_PKG::boost_multiprecision)
-target_link_libraries(${PROJECT_NAME} CONAN_PKG::boost_exception)
+target_link_libraries(${PROJECT_NAME} CONAN_PKG::boost)
 target_link_libraries(${PROJECT_NAME} CONAN_PKG::bip39)
 target_link_libraries(${PROJECT_NAME} CONAN_PKG::toolbox)
 

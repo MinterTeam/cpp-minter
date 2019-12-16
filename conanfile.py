@@ -51,8 +51,7 @@ class MinterTxConan(ConanFile):
     requires = (
         'bip39/2.0.0@edwardstock/latest',
         'toolbox/3.1.0@edwardstock/latest',
-        'boost_multiprecision/1.69.0@bincrafters/stable',
-        'boost_exception/1.69.0@bincrafters/stable',
+        'boost/1.70.0@conan/stable',
     )
 
     build_requires = (

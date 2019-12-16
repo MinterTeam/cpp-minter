@@ -1,5 +1,8 @@
 # Release notes
 
+## 0.5.1
+ - Set boost version to 1.70 for compatibility 
+
 ## 0.5.0
  - Checks support (with texasnet gas coin)
  - Clean-up leading zeroes in signature
