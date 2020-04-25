@@ -17,5 +17,5 @@ add_executable(${PROJECT_NAME} main.cpp)
 
 target_link_libraries(${PROJECT_NAME} CONAN_PKG::minter_tx)
 target_link_libraries(${PROJECT_NAME} CONAN_PKG::boost)
-target_link_libraries(${PROJECT_NAME} CONAN_PKG::toolboxpp)
+target_link_libraries(${PROJECT_NAME} CONAN_PKG::toolbox)
 

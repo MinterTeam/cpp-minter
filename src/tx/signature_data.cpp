@@ -159,8 +159,10 @@ dev::bytes minter::signature_multi_data::encode() {
     }
 
     eth::RLPStream out;
-    out.append(m_address.get());
-    out.appendList(signList);
+    eth::RLPStream lst;
+    lst.append(m_address.get());
+    lst.appendList(signList);
+    out.appendList(lst);
 
     return out.out();
 }

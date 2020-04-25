@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 project(minter_tx
-        VERSION 0.5.1
+        VERSION 0.6.0
         DESCRIPTION "Minter Transaction Maker"
         LANGUAGES CXX
         )
@@ -33,8 +33,9 @@ elseif (MINGW)
 	set(CMAKE_CXX_FLAGS_DEBUG "-g -O0")
 	set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 else ()
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -fvisibility=hidden -fPIC -Wextra -pedantic -Wno-unknown-pragmas -Wno-unused-parameter -Wno-shift-count-overflow")
-	set(CMAKE_CXX_FLAGS_DEBUG "-g -O0 -D_LIBCPP_DEBUG=1")
+	#-fvisibility=hidden
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -fPIC -Wextra -pedantic -Wno-unknown-pragmas -Wno-unused-parameter -Wno-shift-count-overflow")
+	set(CMAKE_CXX_FLAGS_DEBUG "-g -O0")
 	set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 endif ()
 
@@ -166,7 +167,9 @@ set(HEADERS
     include/minter/address.h
     include/minter/private_key.h
     include/minter/minter_tx_config.h
-    include/minter/tx/check_tx.h include/minter/check.h)
+    include/minter/tx/check_tx.h
+    include/minter/check.h
+    include/minter/tx/tx_deeplink.h)
 
 set(SOURCES
     ${HEADERS}
@@ -192,7 +195,7 @@ set(SOURCES
     src/tx/tx_builder.cpp
     src/data/public_key.cpp
     src/data/hash.cpp
-    src/data/private_key.cpp src/tx/tx_data.cpp src/tx/check_tx.cpp src/data/check.cpp)
+    src/data/private_key.cpp src/tx/tx_data.cpp src/tx/check_tx.cpp src/data/check.cpp src/tx/tx_deeplink.cpp)
 
 set(MINTER_TX_EXPORTING 1)
 if (ENABLE_SHARED)
@@ -268,7 +271,8 @@ if (MINTER_TX_TEST)
 	    tests/rlp_test.cpp
 	    tests/address_test.cpp
 	    tests/pub_key_test.cpp
-	    tests/check_tx_test.cpp include/minter/eth/types.h)
+	    tests/check_tx_test.cpp
+	    tests/tx_create_multisig_address_test.cpp tests/tx_deeplink_test.cpp)
 
 	add_executable(${PROJECT_NAME_TEST} ${TEST_SOURCES})
 	if (NOT MSVC)

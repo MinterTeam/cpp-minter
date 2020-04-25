@@ -41,13 +41,13 @@ minter::tx_send_coin& minter::tx_send_coin::set_to(const minter::data::address& 
     return *this;
 }
 
-minter::tx_send_coin& minter::tx_send_coin::set_value(const std::string& normalized) {
-    m_value = minter::utils::normalize_value(normalized);
+minter::tx_send_coin& minter::tx_send_coin::set_value(const std::string& human_decimal) {
+    m_value = minter::utils::normalize_value(human_decimal);
     return *this;
 }
 
-minter::tx_send_coin& minter::tx_send_coin::set_value(const dev::bigdec18& normalized) {
-    m_value = minter::utils::normalize_value(normalized);
+minter::tx_send_coin& minter::tx_send_coin::set_value(const dev::bigdec18& human_decimal) {
+    m_value = minter::utils::normalize_value(human_decimal);
     return *this;
 }
 

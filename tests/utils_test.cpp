@@ -60,3 +60,69 @@ TEST(Utils, SHA256) {
     ASSERT_EQ(exp_data, res);
     ASSERT_TRUE(exp_data == res);
 }
+
+TEST(Utils, Base64Web1) {
+    const std::string test = "hello";
+    const std::string result = "aGVsbG8";
+    dev::bytes_data encoded = dev::bytes_data::from_string_raw(test);
+    encoded.switch_map(minter::utils::to_base64_web);
+    ASSERT_STREQ(result.c_str(), encoded.to_string().c_str());
+
+    dev::bytes_data decoded = encoded.switch_map_c(minter::utils::from_base64_web);
+    ASSERT_STREQ(test.c_str(), decoded.to_string().c_str());
+}
+
+TEST(Utils, Base64Web2) {
+    const std::string test = "hellow";
+    const std::string result = "aGVsbG93";
+    dev::bytes_data encoded = dev::bytes_data::from_string_raw(test);
+    encoded.switch_map(minter::utils::to_base64_web);
+    ASSERT_STREQ(result.c_str(), encoded.to_string().c_str());
+
+    dev::bytes_data decoded = encoded.switch_map_c(minter::utils::from_base64_web);
+    ASSERT_STREQ(test.c_str(), decoded.to_string().c_str());
+}
+
+TEST(Utils, Base64Web3) {
+    const std::string test = "hellowo";
+    const std::string result = "aGVsbG93bw";
+    dev::bytes_data encoded = dev::bytes_data::from_string_raw(test);
+    encoded.switch_map(minter::utils::to_base64_web);
+    ASSERT_STREQ(result.c_str(), encoded.to_string().c_str());
+
+    dev::bytes_data decoded = encoded.switch_map_c(minter::utils::from_base64_web);
+    ASSERT_STREQ(test.c_str(), decoded.to_string().c_str());
+}
+
+TEST(Utils, Base64Web4) {
+    const std::string test = "hellowor";
+    const std::string result = "aGVsbG93b3I";
+    dev::bytes_data encoded = dev::bytes_data::from_string_raw(test);
+    encoded.switch_map(minter::utils::to_base64_web);
+    ASSERT_STREQ(result.c_str(), encoded.to_string().c_str());
+
+    dev::bytes_data decoded = encoded.switch_map_c(minter::utils::from_base64_web);
+    ASSERT_STREQ(test.c_str(), decoded.to_string().c_str());
+}
+
+TEST(Utils, Base64Web5) {
+    const std::string test = "helloworl";
+    const std::string result = "aGVsbG93b3Js";
+    dev::bytes_data encoded = dev::bytes_data::from_string_raw(test);
+    encoded.switch_map(minter::utils::to_base64_web);
+    ASSERT_STREQ(result.c_str(), encoded.to_string().c_str());
+
+    dev::bytes_data decoded = encoded.switch_map_c(minter::utils::from_base64_web);
+    ASSERT_STREQ(test.c_str(), decoded.to_string().c_str());
+}
+
+TEST(Utils, Base64Web6) {
+    const std::string test = "helloworld";
+    const std::string result = "aGVsbG93b3JsZA";
+    dev::bytes_data encoded = dev::bytes_data::from_string_raw(test);
+    encoded.switch_map(minter::utils::to_base64_web);
+    ASSERT_STREQ(result.c_str(), encoded.to_string().c_str());
+
+    dev::bytes_data decoded = encoded.switch_map_c(minter::utils::from_base64_web);
+    ASSERT_STREQ(test.c_str(), decoded.to_string().c_str());
+}

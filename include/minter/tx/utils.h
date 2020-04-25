@@ -36,6 +36,8 @@ MINTER_TX_API dev::bytes to_sha3k(dev::bytes message);
 MINTER_TX_API dev::bytes sha256(const dev::bytes& message);
 MINTER_TX_API dev::bytes sha256(const dev::bytes_data& message);
 MINTER_TX_API dev::bytes to_sha256(dev::bytes message);
+MINTER_TX_API dev::bytes from_base64_web(const dev::bytes data);
+MINTER_TX_API dev::bytes to_base64_web(const dev::bytes data);
 MINTER_TX_API std::string strip_null_bytes(const char* input, size_t len);
 MINTER_TX_API std::string to_string(const dev::bytes& src);
 MINTER_TX_API std::string to_string(const std::vector<char>& src);

@@ -88,11 +88,11 @@ TEST(TxSend, TestEncodeSignExternal) {
 
     auto signedTx0 = tx->sign_single(pk);
     std::cout << "TX 0: " << tx->get_signature_data<minter::signature_single_data>()->to_hex() << std::endl;
-    auto signedTx1 = tx->sign_external(sign1);
+    auto signedTx1 = tx->sign_single_external(sign1);
     std::cout << "TX 1: " << tx->get_signature_data<minter::signature_single_data>()->to_hex() << std::endl;
-    auto signedTx2 = tx->sign_external(signer_func);
+    auto signedTx2 = tx->sign_single_external(signer_func);
     std::cout << "TX 2: " << tx->get_signature_data<minter::signature_single_data>()->to_hex() << std::endl;
-    auto signedTx3 = tx->sign_external(&test_signer_func);
+    auto signedTx3 = tx->sign_single_external(&test_signer_func);
     std::cout << "TX 3: " << tx->get_signature_data<minter::signature_single_data>()->to_hex() << std::endl;
 
     ASSERT_TRUE(signedTx1 == signedTx0);

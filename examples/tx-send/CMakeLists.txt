@@ -3,6 +3,7 @@ project(minter-send)
 
 set(CMAKE_CXX_STANDARD 14)
 
+set(CONANFILE_NAME conanfile.txt)
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../../modules)
 include(ConanInit)
 

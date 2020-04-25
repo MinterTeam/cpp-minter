@@ -49,6 +49,15 @@ std::shared_ptr<minter::tx> minter::tx::create() {
     return std::make_shared<minter::tx>();
 }
 
+std::shared_ptr<minter::tx> minter::tx::decode(const char* hexEncoded) {
+    dev::bytes_data d(hexEncoded);
+    return decode(d.get());
+}
+
+std::shared_ptr<minter::tx> minter::tx::decode(const dev::bytes_data& tx) {
+    return decode(tx.get());
+}
+
 std::shared_ptr<minter::tx> minter::tx::decode(const dev::bytes& tx) {
     eth::RLP s(tx);
 
@@ -88,11 +97,6 @@ std::shared_ptr<minter::tx> minter::tx::decode(const dev::bytes& tx) {
     }
 
     return out;
-}
-
-std::shared_ptr<minter::tx> minter::tx::decode(const char* hexEncoded) {
-    dev::bytes_data d(hexEncoded);
-    return decode(d.get());
 }
 
 /// \todo make static map, remove switch-case
@@ -151,19 +155,19 @@ dev::bytes_32 minter::tx::get_unsigned_hash(minter::signature_type signType) {
     return dev::bytes_32(minter::utils::sha3k(raw_tx_data));
 }
 
-dev::bytes_data minter::tx::sign_external(const minter::signature& sig) {
-    if (!sig.success) {
+dev::bytes_data minter::tx::sign_single_external(const minter::signature& sign) {
+    if (!sign.success) {
         return dev::bytes_data();
     }
 
     std::shared_ptr<minter::signature_single_data> sig_data = std::make_shared<minter::signature_single_data>();
-    sig_data->set_signature(sig);
+    sig_data->set_signature(sign);
     m_signature = std::move(sig_data);
 
     return dev::bytes_data(encode(false));
 }
 
-dev::bytes_data minter::tx::sign_external(minter::signature&& sign) {
+dev::bytes_data minter::tx::sign_single_external(minter::signature&& sign) {
     auto sig = std::move(sign);
 
     if (!sig.success) {
@@ -177,7 +181,7 @@ dev::bytes_data minter::tx::sign_external(minter::signature&& sign) {
     return dev::bytes_data(encode(false));
 }
 
-dev::bytes_data minter::tx::sign_external(minter::tx::signer_func_t func) {
+dev::bytes_data minter::tx::sign_single_external(minter::tx::signer_func_t func) {
     m_signature_type = minter::signature_type::single;
 
     dev::bytes_data raw_tx_data = dev::bytes_data(encode(true));
@@ -196,7 +200,7 @@ dev::bytes_data minter::tx::sign_external(minter::tx::signer_func_t func) {
     return dev::bytes_data(encode(false));
 }
 
-dev::bytes_data minter::tx::sign_external(minter::tx::signer_func_c_t func) {
+dev::bytes_data minter::tx::sign_single_external(minter::tx::signer_func_c_t func) {
     m_signature_type = minter::signature_type::single;
 
     dev::bytes_data raw_tx_data = dev::bytes_data(encode(true));
@@ -235,7 +239,17 @@ dev::bytes_data minter::tx::sign_single(const minter::data::private_key& pk) {
     return dev::bytes_data(encode(false));
 }
 
-dev::bytes_data minter::tx::sign_multiple(const minter::data::address& signatureAddress, const std::vector<minter::data::private_key>& pks) {
+minter::signature minter::tx::sign_only_single(const minter::privkey_t& pk) {
+    m_signature_type = minter::signature_type::single;
+
+    dev::bytes_data raw_tx_data = dev::bytes_data(encode(true));
+    dev::bytes_32 hash(minter::utils::sha3k(raw_tx_data));
+
+    minter::cxx_secp256k1 secp;
+    return secp.sign_message(hash, pk);
+}
+
+dev::bytes_data minter::tx::sign_multiple(const minter::data::address& signatureAddress, const std::vector<minter::privkey_t>& pks) {
     m_signature_type = minter::signature_type::multi;
     if (pks.empty()) {
         throw std::runtime_error("empty private key passed");
@@ -251,6 +265,36 @@ dev::bytes_data minter::tx::sign_multiple(const minter::data::address& signature
     for (const auto& pk : pks) {
         auto sig = secp.sign_message(hash.get(), pk.get());
         signaturesData.emplace_back(std::move(sig));
+    }
+
+    std::shared_ptr<minter::signature_multi_data> multisig = std::make_shared<minter::signature_multi_data>();
+    multisig->set_signatures(signatureAddress, std::move(signaturesData));
+
+    m_signature = std::move(multisig);
+
+    return dev::bytes_data(encode(false));
+}
+
+minter::signature minter::tx::sign_only_multiple(const minter::privkey_t& pk) {
+    m_signature_type = minter::signature_type::multi;
+
+    dev::bytes_data raw_tx_data = dev::bytes_data(encode(true));
+    dev::bytes_32 hash(minter::utils::sha3k(raw_tx_data));
+
+    minter::cxx_secp256k1 secp;
+    return secp.sign_message(hash, pk);
+}
+
+dev::bytes_data minter::tx::sign_multiple_external(const minter::address_t& signatureAddress, const std::vector<minter::signature>&& signatures) {
+    m_signature_type = minter::signature_type::multi;
+    if (signatures.empty()) {
+        throw std::runtime_error("signatures list is empty");
+    }
+
+    std::vector<minter::signature_single_data> signaturesData(signatures.size());
+
+    for (size_t i = 0; i < signatures.size(); i++) {
+        signaturesData[i] = minter::signature_single_data(std::move(signatures[i]));
     }
 
     std::shared_ptr<minter::signature_multi_data> multisig = std::make_shared<minter::signature_multi_data>();

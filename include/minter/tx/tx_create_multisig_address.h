@@ -29,8 +29,7 @@ public:
     const std::vector<minter::address_t>& get_addresses() const;
 
     tx_create_multisig_address& set_threshold(unsigned threshold);
-    tx_create_multisig_address& add_weight(unsigned weight);
-    tx_create_multisig_address& add_address(const minter::address_t& address);
+    tx_create_multisig_address& add_address(const minter::address_t& address, unsigned weight);
 
 private:
     dev::bigint m_threshold;

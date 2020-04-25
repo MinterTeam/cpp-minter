@@ -3,6 +3,9 @@ Minter Pretty Address
 
 Concurrent high-performance Minter pretty address generator.
 
+## Presequences
+**Conan** must be installed to build this example.
+
 ## Usage
 Generator by default, uses simple hex dictionary with a real words:
 ```

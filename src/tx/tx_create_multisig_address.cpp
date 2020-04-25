@@ -25,11 +25,7 @@ dev::bytes minter::tx_create_multisig_address::encode() {
     {
         lst.append(m_threshold);
         lst.append(m_weights);
-        std::vector<dev::bytes> addresses(m_addresses.size());
-        std::for_each(m_addresses.begin(), m_addresses.end(), [&addresses](const minter::data::address& add) {
-            addresses.push_back(add.get());
-        });
-        lst.append(addresses);
+        lst.append(m_addresses);
 
         out.appendList(lst);
     }
@@ -65,12 +61,8 @@ minter::tx_create_multisig_address& minter::tx_create_multisig_address::set_thre
     return *this;
 }
 
-minter::tx_create_multisig_address& minter::tx_create_multisig_address::add_weight(unsigned weight) {
-    m_weights.push_back(dev::bigint(weight));
-    return *this;
-}
-
-minter::tx_create_multisig_address& minter::tx_create_multisig_address::add_address(const minter::data::address& address) {
+minter::tx_create_multisig_address& minter::tx_create_multisig_address::add_address(const minter::address_t& address, unsigned weight) {
     m_addresses.push_back(address);
+    m_weights.push_back(dev::bigint(weight));
     return *this;
 }

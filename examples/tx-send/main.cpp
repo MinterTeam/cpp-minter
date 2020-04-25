@@ -7,13 +7,14 @@
  * \link   https://github.com/edwardstock
  */
 
+#include <minter/address.h>
+#include <minter/private_key.h>
 #include <minter/tx.hpp>
 #include <minter/tx/tx_send_coin.h>
-#include <minter/private_key.h>
-#include <minter/address.h>
 
 int main() {
     // create transactions build: here we're setting common transaction data
+    // auto = std::shared_ptr<minter::tx_builder>
     auto tx_builder = minter::new_tx();
     // set nonce
     tx_builder->set_nonce("1");
@@ -28,6 +29,7 @@ int main() {
     tx_builder->set_chain_id(minter::testnet);
 
     // create specific transaction: in this case is a "send" transaction
+    // auto = std::shared_ptr<minter::tx_send_coin>
     auto data = tx_builder->tx_send_coin();
 
     // set "send" recipient
@@ -46,7 +48,6 @@ int main() {
     // sign transaction: result is a dev::bytes_data - useful bytes wrapper
     auto signedTx = tx->sign_single(pk);
 
-
     // now u can use signed as you wish
 
     // print
@@ -56,5 +57,3 @@ int main() {
 
     return 0;
 }
- 
- 

@@ -1,6 +1,7 @@
 # Created by .ignore support plugin (hsz.mobi)
 cmake-build-debug
 cmake-build-debug-*
+.DS_Store
 *.so
 *.o
 .idea

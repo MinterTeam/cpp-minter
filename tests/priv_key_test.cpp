@@ -40,7 +40,7 @@ TEST(PrivateKey, EmptyCtor) {
     ASSERT_STREQ(NULL_PRIVKEY, a.to_string().c_str());
 }
 
-TEST(PrivKey, Equaling) {
+TEST(PrivateKey, Equaling) {
     minter::privkey_t a = TEST_PRIVKEY;
     minter::privkey_t b = std::string(TEST_PRIVKEY);
 
@@ -58,7 +58,7 @@ TEST(PrivKey, Equaling) {
     ASSERT_STREQ(NULL_PRIVKEY, a.to_string().c_str());
 }
 
-TEST(PrivKey, DataCtr) {
+TEST(PrivateKey, DataCtr) {
     uint8_t data[32];
     auto vecdata = toolbox::data::hex_to_bytes(TEST_PRIVKEY);
     memcpy(data, vecdata.data(), 32);

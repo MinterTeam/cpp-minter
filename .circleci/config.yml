@@ -38,10 +38,9 @@ jobs:
           keys:
             - conan-dir-{{ checksum "conanfile.py" }}
       - run: conan install gtest/1.8.1@bincrafters/stable
-      - run: conan install toolbox/3.1.0@edwardstock/latest
+      - run: conan install toolbox/3.1.1@edwardstock/latest
       - run: conan install bip39/2.0.0@edwardstock/latest
-      - run: conan install boost_multiprecision/1.69.0@bincrafters/stable
-      - run: conan install boost_exception/1.69.0@bincrafters/stable
+      - run: conan install boost/1.70.0@conan/stable
       - run:
           name: Configuring
           command: conan remove --locks && cd _build && cmake .. -DCMAKE_BUILD_TYPE=Debug -DMINTER_TX_TEST=ON

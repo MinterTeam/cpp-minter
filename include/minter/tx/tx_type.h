@@ -101,8 +101,4 @@ struct hash<minter::tx_type_val> {
 };
 } // namespace std
 
-namespace minter {
-
-}
-
 #endif //MINTER_TX_TYPE_H

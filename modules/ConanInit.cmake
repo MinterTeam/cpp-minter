@@ -31,10 +31,16 @@ function (add_conan_remote NAME URL)
 	endif ()
 endfunction ()
 
+if (CONANFILE_NAME)
+	set(CONANFILE_NAME ${CONANFILE_NAME})
+else ()
+	set(CONANFILE_NAME conanfile.py)
+endif ()
+
 macro (conan_init)
 	include(ConanBuild)
 	conan_cmake_run(
-		CONANFILE conanfile.py
+		CONANFILE ${CONANFILE_NAME}
 		BUILD missing
 		BASIC_SETUP
 	)

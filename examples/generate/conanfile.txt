@@ -1,8 +1,0 @@
-[generators]
-cmake
-
-[requires]
-minter_tx/0.1.3@minter/latest
-
-[options]
-minter_tx:shared=False

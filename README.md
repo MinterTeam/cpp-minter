@@ -53,7 +53,7 @@ For more information, see official [docs](https://docs.conan.io/en/latest/gettin
 ## Use as conan dependency without manually build
 You can just add to your conanfile.txt dependency:
 
-`minter_tx/0.5.1@minter/latest`
+`minter_tx/0.6.0@minter/latest`
 
 CMakeLists.txt
 ```cmake
@@ -117,7 +117,7 @@ To build other configurations, just change `--config Debug` to one of: Release, 
 ## Examples:
 See here [link](examples)
 
-#### Build mnemonic generator
+#### Bucket mnemonic generator
 ```bash
 git clone --recursive https://github.com/MinterTeam/cpp-minter.git
 cd examples/generate

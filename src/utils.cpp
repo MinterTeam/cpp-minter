@@ -13,7 +13,10 @@
 #include <minter/tx/utils.h>
 #include <random>
 #include <sstream>
+#include <toolbox/data/base64.h>
+#include <toolbox/strings.hpp>
 #include <toolbox/strings/decimal_formatter.h>
+#include <vector>
 
 dev::bytes minter::utils::to_bytes(std::string&& input) {
     if (!input.size()) {
@@ -109,8 +112,61 @@ dev::bytes minter::utils::sha256(const dev::bytes_data& message) {
     return sha256(message.get());
 }
 
-dev::bytes minter::utils::to_sha256(dev::bytes message) {
+dev::bytes minter::utils::to_sha256(const dev::bytes message) {
     return sha256(message);
+}
+
+dev::bytes minter::utils::from_base64_web(const dev::bytes data) {
+    dev::bytes out;
+    for (size_t i = 0; i < data.size(); i++) {
+        switch (data[i]) {
+        case '-':
+            out.push_back('+');
+            break;
+        case '_':
+            out.push_back('/');
+            break;
+        default:
+            out.push_back(data[i]);
+        }
+    }
+    if (out.size() % 4 != 0) {
+        const char padding = '=';
+        size_t sz = out.size();
+        size_t its = (4 - sz % 4);
+
+        for (size_t i = 0; i < its; i++) {
+            out.push_back(padding);
+        }
+    }
+
+    //if (enc.length() % 4 != 0) {
+    //            enc += strRepeat(PADDING, 4 - enc.length() % 4);
+    //        }
+
+    return toolbox::data::base64_decode_bytes(out);
+}
+
+dev::bytes minter::utils::to_base64_web(const dev::bytes data) {
+    dev::bytes b64 = toolbox::data::base64_encode_bytes(data);
+    dev::bytes out;
+
+    for (size_t i = 0; i < b64.size(); i++) {
+        switch (b64[i]) {
+        case '+':
+            out.push_back('-');
+            break;
+        case '/':
+            out.push_back('_');
+            break;
+        case '=':
+            break;
+        default:
+            out.push_back(b64[i]);
+        }
+    }
+
+    return out;
 }
 
 dev::bigint minter::utils::to_bigint(const dev::bytes& bytes) {

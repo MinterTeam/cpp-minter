@@ -1,5 +1,16 @@
 # Release notes
 
+## 0.6.0
+ - Fixed build for macos (removed LIBCPP_DEBUG flag)
+ - Updated examples:
+   - minter-pretty:
+     - fixed searching by single word
+   - minter-generator:
+     - updated dependencies, using conanfile.py instead of conanfile.txt
+ - Added multisig send test
+ - Added test for CreateMultisigAddress transaction
+ - Added external multisig and sign-only function to get only transaction signature without transaction hash
+ - Added deeplink generator and parser
 ## 0.5.1
  - Set boost version to 1.70 for compatibility 
 

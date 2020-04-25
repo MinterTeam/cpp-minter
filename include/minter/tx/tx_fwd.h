@@ -12,6 +12,7 @@
 
 namespace minter {
 
+class tx_deeplink;
 class tx_data;
 class tx_send_coin;
 class tx_sell_coin;
