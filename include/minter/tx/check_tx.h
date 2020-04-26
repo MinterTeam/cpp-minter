@@ -30,8 +30,17 @@ namespace minter {
 
 class MINTER_TX_API check_tx {
 public:
+    /// \brief Create proof for new check. Proof is require to redeem check, as proof is a check "password"
+    /// \param address sender address
+    /// \param pass password in bytes
+    /// \return proof bytes
     static dev::bytes_data make_proof(const address_t& address, const dev::bytes& pass);
+
+    /// \brief Decodes check
+    /// \param check_data hash: McAAABBBCCC.....
+    /// \return decoded check transaction
     static check_tx decode(const std::string& check_data);
+
     static check_tx decode(const minter::check_t& check);
 
     check_tx()

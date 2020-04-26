@@ -70,7 +70,8 @@ TEST(TxSend, TestEncodeSignExternal) {
     tx_builder->set_gas_coin("MNT");
     tx_builder->set_chain_id(minter::testnet);
     auto data = tx_builder->tx_send_coin();
-    data->set_to("Mxbf5c2fec34cfe73e7178b3ab96deaf9ca6d9a592");
+    std::string a = "Mxbf5c2fec34cfe73e7178b3ab96deaf9ca6d9a592";
+    data->set_to(a);
     data->set_value("1");
     data->set_coin("MNT");
     auto tx = data->build();

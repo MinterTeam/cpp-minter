@@ -53,7 +53,7 @@ For more information, see official [docs](https://docs.conan.io/en/latest/gettin
 ## Use as conan dependency without manually build
 You can just add to your conanfile.txt dependency:
 
-`minter_tx/0.6.0@minter/latest`
+`minter_tx/0.6.1@minter/latest`
 
 CMakeLists.txt
 ```cmake

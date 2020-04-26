@@ -38,7 +38,7 @@ minter::tx_builder& minter::tx_builder::set_nonce(const dev::bigint& nonce) {
     return *this;
 }
 
-minter::tx_builder& minter::tx_builder::set_nonce(const char* num) {
+minter::tx_builder& minter::tx_builder::set_nonce(const std::string& num) {
     return set_nonce(dev::bigint(num));
 }
 
@@ -67,11 +67,6 @@ minter::tx_builder& minter::tx_builder::set_gas_coin(const std::string& coin) {
     return *this;
 }
 
-minter::tx_builder& minter::tx_builder::set_gas_coin(const char* coin) {
-    m_tx->m_gas_coin = std::string(coin);
-    return *this;
-}
-
 minter::tx_builder& minter::tx_builder::set_payload(const dev::bytes& payload) {
     std::copy(payload.begin(), payload.end(), m_tx->m_payload.begin());
     return *this;
@@ -92,10 +87,6 @@ minter::tx_builder& minter::tx_builder::set_payload(std::string&& payload) {
     return *this;
 }
 
-minter::tx_builder& minter::tx_builder::set_payload(const char* payload) {
-    return set_payload(std::string(payload));
-}
-
 minter::tx_builder& minter::tx_builder::set_service_data(const dev::bytes& payload) {
     std::copy(payload.begin(), payload.end(), m_tx->m_service_data.begin());
     return *this;
@@ -114,10 +105,6 @@ minter::tx_builder& minter::tx_builder::set_service_data(const std::string& payl
 minter::tx_builder& minter::tx_builder::set_service_data(std::string&& payload) {
     m_tx->m_service_data = minter::utils::to_bytes(std::move(payload));
     return *this;
-}
-
-minter::tx_builder& minter::tx_builder::set_service_data(const char* payload) {
-    return set_service_data(std::string(payload));
 }
 
 minter::tx_builder& minter::tx_builder::set_signature_type(minter::signature_type type) {

@@ -13,7 +13,7 @@
 #include <minter/tx/tx_deeplink.h>
 #include <minter/tx/utils.h>
 
-std::shared_ptr<minter::tx_deeplink> minter::tx_deeplink::decode(const char* encoded_hex) {
+std::shared_ptr<minter::tx_deeplink> minter::tx_deeplink::decode(const std::string& encoded_hex) {
     dev::bytes_data d(encoded_hex);
     return decode(d.get());
 }

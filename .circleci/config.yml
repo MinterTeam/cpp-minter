@@ -39,7 +39,7 @@ jobs:
             - conan-dir-{{ checksum "conanfile.py" }}
       - run: conan install gtest/1.8.1@bincrafters/stable
       - run: conan install toolbox/3.1.1@edwardstock/latest
-      - run: conan install bip39/2.0.0@edwardstock/latest
+      - run: conan install bip39/2.0.1@edwardstock/latest
       - run: conan install boost/1.70.0@conan/stable
       - run:
           name: Configuring

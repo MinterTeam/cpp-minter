@@ -11,8 +11,10 @@
 
 #include "minter/tx/tx_type.h"
 #include "minter/tx/utils.h"
+
 minter::tx_create_coin::tx_create_coin(std::shared_ptr<minter::tx> tx)
-    : tx_data(std::move(tx)) {
+    : tx_data(std::move(tx)),
+      m_max_supply(minter::utils::normalize_value(dev::bigdec18("1000000000000000"))) {
 }
 
 uint16_t minter::tx_create_coin::type() const {
@@ -27,6 +29,7 @@ dev::bytes minter::tx_create_coin::encode() {
         lst.append(m_initial_amount);
         lst.append(m_initial_reserve);
         lst.append(m_crr);
+        lst.append(m_max_supply);
 
         out.appendList(lst);
     }
@@ -41,20 +44,11 @@ void minter::tx_create_coin::decode(const dev::bytes& data) {
     m_initial_amount = (dev::bigint) rlp[2];
     m_initial_reserve = (dev::bigint) rlp[3];
     m_crr = (dev::bigint) rlp[4];
-}
-
-minter::tx_create_coin& minter::tx_create_coin::set_name(const char* name) {
-    m_name = std::string(name);
-    return *this;
+    m_max_supply = (dev::bigint) rlp[5];
 }
 
 minter::tx_create_coin& minter::tx_create_coin::set_name(const std::string& name) {
     m_name = name;
-    return *this;
-}
-
-minter::tx_create_coin& minter::tx_create_coin::set_ticker(const char* coin_symbol) {
-    m_ticker = std::string(coin_symbol);
     return *this;
 }
 
@@ -63,7 +57,7 @@ minter::tx_create_coin& minter::tx_create_coin::set_ticker(const std::string& co
     return *this;
 }
 
-minter::tx_create_coin& minter::tx_create_coin::set_initial_amount(const char* amount) {
+minter::tx_create_coin& minter::tx_create_coin::set_initial_amount(const std::string& amount) {
     m_initial_amount = minter::utils::normalize_value(amount);
     return *this;
 }
@@ -78,7 +72,7 @@ minter::tx_create_coin& minter::tx_create_coin::set_initial_amount(const dev::bi
     return *this;
 }
 
-minter::tx_create_coin& minter::tx_create_coin::set_initial_reserve(const char* amount) {
+minter::tx_create_coin& minter::tx_create_coin::set_initial_reserve(const std::string& amount) {
     m_initial_reserve = minter::utils::normalize_value(amount);
     return *this;
 }
@@ -94,6 +88,9 @@ minter::tx_create_coin& minter::tx_create_coin::set_initial_reserve(const dev::b
 }
 
 minter::tx_create_coin& minter::tx_create_coin::set_crr(unsigned crr) {
+    if (crr > 100) {
+        throw std::runtime_error("maximum crr: 100 (means 100%)");
+    }
     m_crr = dev::bigint(crr);
     return *this;
 }
@@ -116,4 +113,20 @@ dev::bigdec18 minter::tx_create_coin::get_initial_reserve() const {
 
 unsigned minter::tx_create_coin::get_crr() const {
     return static_cast<unsigned>(m_crr);
+}
+
+minter::tx_create_coin& minter::tx_create_coin::set_max_supply(const std::string& max_supply) {
+    m_max_supply = minter::utils::normalize_value(max_supply);
+    return *this;
+}
+minter::tx_create_coin& minter::tx_create_coin::set_max_supply(const dev::bigint& max_supply) {
+    m_max_supply = max_supply;
+    return *this;
+}
+minter::tx_create_coin& minter::tx_create_coin::set_max_supply(const dev::bigdec18& max_supply) {
+    m_max_supply = minter::utils::normalize_value(max_supply);
+    return *this;
+}
+dev::bigdec18 minter::tx_create_coin::get_max_supply() const {
+    return minter::utils::humanize_value(m_max_supply);
 }

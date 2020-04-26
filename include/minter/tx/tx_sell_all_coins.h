@@ -21,12 +21,10 @@ public:
     dev::bytes encode() override;
     void decode(const dev::bytes& data) override;
 
-    tx_sell_all_coins& set_coin_to_sell(const char* coin);
     tx_sell_all_coins& set_coin_to_sell(const std::string& coin);
-    tx_sell_all_coins& set_coin_to_buy(const char* coin);
     tx_sell_all_coins& set_coin_to_buy(const std::string& coin);
-    tx_sell_all_coins& set_min_value_to_buy(const char* amount);
     tx_sell_all_coins& set_min_value_to_buy(const std::string& amount);
+    tx_sell_all_coins& set_min_value_to_buy(const dev::bigint& amount);
     tx_sell_all_coins& set_min_value_to_buy(const dev::bigdec18& amount);
 
     std::string get_coin_to_sell() const;

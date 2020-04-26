@@ -26,15 +26,13 @@ public:
     std::string get_coin_to_sell() const;
     dev::bigdec18 get_max_value_to_sell() const;
 
-    tx_buy_coin& set_coin_to_buy(const char* coin);
     tx_buy_coin& set_coin_to_buy(const std::string& coin);
-    tx_buy_coin& set_value_to_buy(const char* valueDec);
-    tx_buy_coin& set_value_to_buy(const dev::bigdec18& valueDec);
-    tx_buy_coin& set_value_to_buy(const dev::bigint& valueRaw);
-    tx_buy_coin& set_coin_to_sell(const char* coin);
+    tx_buy_coin& set_value_to_buy(const std::string& value);
+    tx_buy_coin& set_value_to_buy(const dev::bigdec18& value);
+    tx_buy_coin& set_value_to_buy(const dev::bigint& value);
     tx_buy_coin& set_coin_to_sell(const std::string& coin);
-    tx_buy_coin& set_max_value_to_sell(const char* valueDec);
-    tx_buy_coin& set_max_value_to_sell(const dev::bigdec18& valueDec);
+    tx_buy_coin& set_max_value_to_sell(const std::string& value);
+    tx_buy_coin& set_max_value_to_sell(const dev::bigdec18& value);
     tx_buy_coin& set_max_value_to_sell(const dev::bigint& value);
 
 private:

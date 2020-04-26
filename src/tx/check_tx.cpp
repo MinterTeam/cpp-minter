@@ -131,6 +131,10 @@ dev::bigdec18 minter::check_tx::get_value() const {
     return minter::utils::humanize_value(m_value);
 }
 
+minter::check_tx minter::check_tx::decode(const std::string& check) {
+    return decode(minter::check_t(check));
+}
+
 minter::check_tx minter::check_tx::decode(const minter::check_t& check) {
     eth::RLP rlp(check.get());
     if (rlp.itemCount() != 10) {

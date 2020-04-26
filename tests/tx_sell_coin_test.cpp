@@ -69,6 +69,12 @@ TEST(TxSellAll, TestDecode) {
     auto decoded = minter::tx::decode(encoded);
     auto data = decoded->get_data<minter::tx_sell_all_coins>();
 
+    ASSERT_EQ(dev::bigint("1"), decoded->get_nonce());
+    ASSERT_STREQ("MNT", decoded->get_gas_coin().c_str());
+    ASSERT_EQ(dev::bigint("1"), decoded->get_gas_price());
+    ASSERT_EQ(minter::testnet, decoded->get_chain_id());
+    ASSERT_EQ(dev::bytes(0), decoded->get_payload());
+
     ASSERT_STREQ("TEST", data->get_coin_to_buy().c_str());
     ASSERT_STREQ("MNT", data->get_coin_to_sell().c_str());
     ASSERT_EQ(dev::bigdec18("1"), data->get_min_value_to_buy());

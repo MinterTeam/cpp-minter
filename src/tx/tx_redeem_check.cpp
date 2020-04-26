@@ -35,6 +35,11 @@ void minter::tx_redeem_check::decode(const dev::bytes& data) {
     m_proof = (dev::bytes) rlp[1];
 }
 
+minter::tx_redeem_check& minter::tx_redeem_check::set_check(const minter::check_t& check_data) {
+    m_check = check_data.get();
+    return *this;
+}
+
 minter::tx_redeem_check& minter::tx_redeem_check::set_check(const dev::bytes& check_data) {
     m_check = check_data;
     return *this;
@@ -43,10 +48,7 @@ minter::tx_redeem_check& minter::tx_redeem_check::set_check(const dev::bytes_dat
     m_check = check_data.get();
     return *this;
 }
-minter::tx_redeem_check& minter::tx_redeem_check::set_check(const minter::check_t& check_data) {
-    m_check = check_data.get();
-    return *this;
-}
+
 minter::tx_redeem_check& minter::tx_redeem_check::set_proof(const dev::bytes& proof) {
     m_proof = proof;
     return *this;
@@ -56,8 +58,8 @@ minter::tx_redeem_check& minter::tx_redeem_check::set_proof(const dev::bytes_dat
     m_proof = proof.get();
     return *this;
 }
-const dev::bytes& minter::tx_redeem_check::get_check() const {
-    return m_check;
+minter::check_t minter::tx_redeem_check::get_check() const {
+    return minter::check_t(m_check);
 }
 const dev::bytes& minter::tx_redeem_check::get_proof() const {
     return m_proof;

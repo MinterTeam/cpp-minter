@@ -116,7 +116,7 @@ dev::bytes minter::utils::to_sha256(const dev::bytes message) {
     return sha256(message);
 }
 
-dev::bytes minter::utils::from_base64_web(const dev::bytes data) {
+dev::bytes minter::utils::from_base64_web(dev::bytes data) {
     dev::bytes out;
     for (size_t i = 0; i < data.size(); i++) {
         switch (data[i]) {
@@ -147,7 +147,7 @@ dev::bytes minter::utils::from_base64_web(const dev::bytes data) {
     return toolbox::data::base64_decode_bytes(out);
 }
 
-dev::bytes minter::utils::to_base64_web(const dev::bytes data) {
+dev::bytes minter::utils::to_base64_web(dev::bytes data) {
     dev::bytes b64 = toolbox::data::base64_encode_bytes(data);
     dev::bytes out;
 

@@ -17,7 +17,7 @@ namespace minter {
 
 class tx_deeplink {
 public:
-    static std::shared_ptr<minter::tx_deeplink> decode(const char* encoded_hex);
+    static std::shared_ptr<minter::tx_deeplink> decode(const std::string& encoded_hex);
     static std::shared_ptr<minter::tx_deeplink> decode(const dev::bytes& tx);
     static std::shared_ptr<minter::tx_deeplink> decode(const dev::bytes_data& tx);
 

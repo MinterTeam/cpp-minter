@@ -25,9 +25,9 @@ public:
 
     tx_delegate& set_pub_key(const dev::bytes& pub_key);
     tx_delegate& set_pub_key(const minter::pubkey_t& pub_key);
-    tx_delegate& set_coin(const char* coin);
     tx_delegate& set_coin(const std::string& coin);
-    tx_delegate& set_stake(const char* amount);
+    tx_delegate& set_stake(const std::string& amount);
+    tx_delegate& set_stake(const dev::bigint& amount);
     tx_delegate& set_stake(const dev::bigdec18& amount);
 
     const minter::pubkey_t& get_pub_key() const;

@@ -41,6 +41,8 @@ dev::bytes minter::tx_unbond::encode() {
     return out.out();
 }
 
+// Setters
+
 minter::tx_unbond& minter::tx_unbond::set_pub_key(const dev::bytes& pub_key) {
     m_pub_key = pub_key;
     return *this;
@@ -49,15 +51,13 @@ minter::tx_unbond& minter::tx_unbond::set_pub_key(const minter::pubkey_t& pub_ke
     m_pub_key = pub_key;
     return *this;
 }
-minter::tx_unbond& minter::tx_unbond::set_coin(const char* coin) {
-    m_coin = std::string(coin);
-    return *this;
-}
+
 minter::tx_unbond& minter::tx_unbond::set_coin(const std::string& coin) {
     m_coin = coin;
     return *this;
 }
-minter::tx_unbond& minter::tx_unbond::set_value(const char* value) {
+
+minter::tx_unbond& minter::tx_unbond::set_value(const std::string& value) {
     m_value = minter::utils::normalize_value(value);
     return *this;
 }
@@ -65,6 +65,13 @@ minter::tx_unbond& minter::tx_unbond::set_value(const dev::bigdec18& value) {
     m_value = minter::utils::normalize_value(value);
     return *this;
 }
+minter::tx_unbond& minter::tx_unbond::set_value(const dev::bigint& value) {
+    m_value = value;
+    return *this;
+}
+
+// Getters
+
 const minter::pubkey_t& minter::tx_unbond::get_pub_key() const {
     return m_pub_key;
 }

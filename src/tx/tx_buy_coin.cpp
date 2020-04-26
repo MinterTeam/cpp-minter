@@ -55,23 +55,18 @@ dev::bigdec18 minter::tx_buy_coin::get_max_value_to_sell() const {
     return minter::utils::humanize_value(m_max_value_to_sell);
 }
 
-minter::tx_buy_coin& minter::tx_buy_coin::set_coin_to_buy(const char* coin) {
-    m_coin_to_buy = std::string(coin);
-    return *this;
-}
-
 minter::tx_buy_coin& minter::tx_buy_coin::set_coin_to_buy(const std::string& coin) {
     m_coin_to_buy = coin;
     return *this;
 }
 
-minter::tx_buy_coin& minter::tx_buy_coin::set_value_to_buy(const char* valueDec) {
-    m_value_to_buy = minter::utils::normalize_value(valueDec);
+minter::tx_buy_coin& minter::tx_buy_coin::set_value_to_buy(const std::string& value) {
+    m_value_to_buy = minter::utils::normalize_value(value);
     return *this;
 }
 
-minter::tx_buy_coin& minter::tx_buy_coin::set_value_to_buy(const dev::bigdec18& valueDec) {
-    m_value_to_buy = minter::utils::normalize_value(valueDec);
+minter::tx_buy_coin& minter::tx_buy_coin::set_value_to_buy(const dev::bigdec18& value) {
+    m_value_to_buy = minter::utils::normalize_value(value);
     return *this;
 }
 
@@ -80,18 +75,13 @@ minter::tx_buy_coin& minter::tx_buy_coin::set_value_to_buy(const dev::bigint& va
     return *this;
 }
 
-minter::tx_buy_coin& minter::tx_buy_coin::set_coin_to_sell(const char* coin) {
-    m_coin_to_sell = std::string(coin);
-    return *this;
-}
-
 minter::tx_buy_coin& minter::tx_buy_coin::set_coin_to_sell(const std::string& coin) {
-    m_coin_to_sell = std::string(coin);
+    m_coin_to_sell = coin;
     return *this;
 }
 
-minter::tx_buy_coin& minter::tx_buy_coin::set_max_value_to_sell(const char* valueDec) {
-    m_max_value_to_sell = minter::utils::normalize_value(valueDec);
+minter::tx_buy_coin& minter::tx_buy_coin::set_max_value_to_sell(const std::string& value) {
+    m_max_value_to_sell = minter::utils::normalize_value(value);
     return *this;
 }
 

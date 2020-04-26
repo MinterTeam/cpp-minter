@@ -1,5 +1,9 @@
 # Release notes
 
+## 0.6.1
+ - Added max supply to create coin transaction
+ - Unified strings in transactions. No more c-style strings, now only std::string
+
 ## 0.6.0
  - Fixed build for macos (removed LIBCPP_DEBUG flag)
  - Updated examples:

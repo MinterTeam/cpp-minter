@@ -38,32 +38,26 @@ void minter::tx_sell_all_coins::decode(const dev::bytes& data) {
     m_min_value_to_buy = (dev::bigint) rlp[2];
 }
 
-minter::tx_sell_all_coins& minter::tx_sell_all_coins::set_coin_to_sell(const char* coin) {
-    m_coin_to_sell = std::string(coin);
-    return *this;
-}
 minter::tx_sell_all_coins& minter::tx_sell_all_coins::set_coin_to_sell(const std::string& coin) {
     m_coin_to_sell = coin;
     return *this;
 }
-minter::tx_sell_all_coins& minter::tx_sell_all_coins::set_coin_to_buy(const char* coin) {
-    m_coin_to_buy = std::string(coin);
-    return *this;
-}
+
 minter::tx_sell_all_coins& minter::tx_sell_all_coins::set_coin_to_buy(const std::string& coin) {
     m_coin_to_buy = coin;
     return *this;
 }
-minter::tx_sell_all_coins& minter::tx_sell_all_coins::set_min_value_to_buy(const char* amount) {
-    m_min_value_to_buy = minter::utils::normalize_value(amount);
-    return *this;
-}
+
 minter::tx_sell_all_coins& minter::tx_sell_all_coins::set_min_value_to_buy(const std::string& amount) {
-    m_min_value_to_buy - minter::utils::normalize_value(amount);
+    m_min_value_to_buy = minter::utils::normalize_value(amount);
     return *this;
 }
 minter::tx_sell_all_coins& minter::tx_sell_all_coins::set_min_value_to_buy(const dev::bigdec18& amount) {
     m_min_value_to_buy = minter::utils::normalize_value(amount);
+    return *this;
+}
+minter::tx_sell_all_coins& minter::tx_sell_all_coins::set_min_value_to_buy(const dev::bigint& amount) {
+    m_min_value_to_buy = amount;
     return *this;
 }
 std::string minter::tx_sell_all_coins::get_coin_to_sell() const {

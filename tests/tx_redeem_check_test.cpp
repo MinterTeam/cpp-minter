@@ -45,6 +45,6 @@ TEST(TxRedeemCheck, TestDecode) {
     ASSERT_EQ(minter::testnet, tx->get_chain_id());
 
     auto data = tx->get_data<minter::tx_redeem_check>();
-    ASSERT_EQ(valid_check.get(), data->get_check());
+    ASSERT_EQ(valid_check, data->get_check());
     ASSERT_EQ(proof.get(), data->get_proof());
 }

@@ -62,13 +62,18 @@ minter::tx_declare_candidacy& minter::tx_declare_candidacy::set_commission(unsig
     return *this;
 }
 
-minter::tx_declare_candidacy& minter::tx_declare_candidacy::set_coin(const char* coin) {
-    m_coin = std::string(coin);
+minter::tx_declare_candidacy& minter::tx_declare_candidacy::set_coin(const std::string& coin) {
+    m_coin = coin;
     return *this;
 }
 
-minter::tx_declare_candidacy& minter::tx_declare_candidacy::set_stake(const char* amount) {
+minter::tx_declare_candidacy& minter::tx_declare_candidacy::set_stake(const std::string& amount) {
     m_stake = minter::utils::normalize_value(amount);
+    return *this;
+}
+
+minter::tx_declare_candidacy& minter::tx_declare_candidacy::set_stake(const dev::bigint& amount) {
+    m_stake = amount;
     return *this;
 }
 

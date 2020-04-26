@@ -21,13 +21,13 @@ public:
     dev::bytes encode() override;
     void decode(const dev::bytes& data) override;
 
+    tx_redeem_check& set_check(const minter::check_t& check_data);
     tx_redeem_check& set_check(const dev::bytes& check_data);
     tx_redeem_check& set_check(const dev::bytes_data& check_data);
-    tx_redeem_check& set_check(const check_t& check_data);
     tx_redeem_check& set_proof(const dev::bytes& proof);
     tx_redeem_check& set_proof(const dev::bytes_data& proof);
 
-    const dev::bytes& get_check() const;
+    minter::check_t get_check() const;
     const dev::bytes& get_proof() const;
 
 private:

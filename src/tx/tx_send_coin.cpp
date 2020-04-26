@@ -19,40 +19,24 @@ minter::tx_send_coin& minter::tx_send_coin::set_coin(const std::string& coin) {
     m_coin = coin;
     return *this;
 }
-minter::tx_send_coin& minter::tx_send_coin::set_coin(std::string&& coin) {
-    m_coin = std::move(coin);
-    return *this;
-}
-minter::tx_send_coin& minter::tx_send_coin::set_coin(const char* coin) {
-    m_coin = std::string(coin);
-    return *this;
-}
 
-minter::tx_send_coin& minter::tx_send_coin::set_to(const char* address) {
-    return set_to(minter::data::address(address));
-}
-
-minter::tx_send_coin& minter::tx_send_coin::set_to(const std::string& address) {
-    return set_to(address.c_str());
-}
-
-minter::tx_send_coin& minter::tx_send_coin::set_to(const minter::data::address& address) {
+minter::tx_send_coin& minter::tx_send_coin::set_to(const minter::address_t& address) {
     m_to = address;
     return *this;
 }
 
-minter::tx_send_coin& minter::tx_send_coin::set_value(const std::string& human_decimal) {
-    m_value = minter::utils::normalize_value(human_decimal);
+minter::tx_send_coin& minter::tx_send_coin::set_value(const std::string& value) {
+    m_value = minter::utils::normalize_value(value);
     return *this;
 }
 
-minter::tx_send_coin& minter::tx_send_coin::set_value(const dev::bigdec18& human_decimal) {
-    m_value = minter::utils::normalize_value(human_decimal);
+minter::tx_send_coin& minter::tx_send_coin::set_value(const dev::bigdec18& value) {
+    m_value = minter::utils::normalize_value(value);
     return *this;
 }
 
-minter::tx_send_coin& minter::tx_send_coin::set_value(const dev::bigint& raw) {
-    m_value = raw;
+minter::tx_send_coin& minter::tx_send_coin::set_value(const dev::bigint& value) {
+    m_value = value;
     return *this;
 }
 

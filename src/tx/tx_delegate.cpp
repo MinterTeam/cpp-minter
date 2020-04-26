@@ -48,18 +48,18 @@ minter::tx_delegate& minter::tx_delegate::set_pub_key(const minter::pubkey_t& pu
     return *this;
 }
 
-minter::tx_delegate& minter::tx_delegate::set_coin(const char* coin) {
-    m_coin = std::string(coin);
-    return *this;
-}
-
 minter::tx_delegate& minter::tx_delegate::set_coin(const std::string& coin) {
     m_coin = coin;
     return *this;
 }
 
-minter::tx_delegate& minter::tx_delegate::set_stake(const char* amount) {
+minter::tx_delegate& minter::tx_delegate::set_stake(const std::string& amount) {
     m_stake = minter::utils::normalize_value(amount);
+    return *this;
+}
+
+minter::tx_delegate& minter::tx_delegate::set_stake(const dev::bigint& amount) {
+    m_stake = amount;
     return *this;
 }
 

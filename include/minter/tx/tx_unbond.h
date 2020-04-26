@@ -24,10 +24,12 @@ public:
 
     tx_unbond& set_pub_key(const minter::pubkey_t& pub_key);
     tx_unbond& set_pub_key(const dev::bytes& pub_key);
-    tx_unbond& set_coin(const char* coin);
+
     tx_unbond& set_coin(const std::string& coin);
-    tx_unbond& set_value(const char* value);
+
+    tx_unbond& set_value(const std::string& value);
     tx_unbond& set_value(const dev::bigdec18& value);
+    tx_unbond& set_value(const dev::bigint& value);
 
     const minter::pubkey_t& get_pub_key() const;
     std::string get_coin() const;
