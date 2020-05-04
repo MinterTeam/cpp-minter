@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 project(minter_tx
-        VERSION 0.6.1
+        VERSION 0.6.2
         DESCRIPTION "Minter Transaction Maker"
         LANGUAGES CXX
         )
