@@ -20,6 +20,7 @@
 #include <iosfwd>
 #include <unordered_set>
 #include <vector>
+#include <set>
 
 namespace eth {
 
