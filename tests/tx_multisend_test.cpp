@@ -13,18 +13,18 @@
 
 TEST(TxMultisend, TestEncode) {
     const char* expected =
-        "f8b30102018a4d4e54000000000000000db858f856f854e98a4d4e540000000000000094fe60014a6e9ac91618f5d1cab3fd58cded61ee9988016345785d8a0000e98a4d4e540000000000000094ddab6281766ad86497741ff91b6b48fe85012e3c8802c68af0bb140000808001b845f8431ca0b15dcf2e013df1a2aea02e36a17af266d8ee129cdcb3e881d15b70c9457e7571a0226af7bdaca9d42d6774c100b22e0c7ba4ec8dd664d17986318e905613013283";
+        "f895060101800db844f842f840df809467691076548b20234461ff6fd2bc9c64393eb8fc8801b4fbd92b5f8000df8094d82558ea00eb81d35f2654953598f5d51737d31d8804746bcc9ce68000808001b845f8431ba0a936ac922d8d67f06efc996f50f3d2af55a77453f521bc96d73158de16b530baa0192f5d1f2feb520b38d92513ed89fc1ede26353ce3660502f61721ea6232b261";
 
-    minter::privkey_t priv_key = "07bc17abdcee8b971bb8723e36fe9d2523306d5ab2d683631693238e0f9df142";
+    minter::privkey_t priv_key = "4daf02f92bf760b53d3c725d6bcc0da8e55d27ba5350c78d3a88f873e502bd6e";
 
     auto tx = minter::new_tx()
-                  ->set_gas_coin("MNT")
-                  .set_nonce("1")
+                  ->set_gas_coin_id("0")
+                  .set_nonce("6")
                   .set_gas_price("1")
-                  .set_chain_id(minter::testnet)
+                  .set_chain_id(minter::mainnet)
                   .tx_multisend()
-                  ->add_item("MNT", "Mxfe60014a6e9ac91618f5d1cab3fd58cded61ee99", "0.1")
-                  .add_item("MNT", "Mxddab6281766ad86497741ff91b6b48fe85012e3c", "0.2")
+                  ->add_item(dev::bigint("0"), "Mx67691076548b20234461ff6fd2bc9c64393eb8fc", "0.123")
+                  .add_item(dev::bigint("0"), "Mxd82558ea00eb81d35f2654953598f5d51737d31d", "0.321")
                   .build();
 
     auto signature = tx->sign_single(priv_key);
@@ -32,22 +32,9 @@ TEST(TxMultisend, TestEncode) {
     ASSERT_STREQ(expected, signature.to_hex().c_str());
 }
 
-TEST(TxMultisend, RealSend) {
-    minter::privkey_t priv = minter::privkey_t::from_mnemonic("puzzle feed enlist rack cliff divert exist bind swamp kiwi casino pull");
-    auto tx = minter::new_tx()
-                  ->set_gas_coin("BIP")
-                  .set_nonce("1")
-                  .set_gas_price("1")
-                  .set_chain_id(minter::testnet)
-                  .tx_multisend()
-                  ->add_item("MNT", "Mxfe60014a6e9ac91618f5d1cab3fd58cded61ee99", "0.1")
-                  .add_item("MNT", "Mxddab6281766ad86497741ff91b6b48fe85012e3c", "0.2")
-                  .build();
-}
-
 TEST(TxMultisend, TestDecode) {
     const char* encoded =
-        "f8b30102018a4d4e54000000000000000db858f856f854e98a4d4e540000000000000094fe60014a6e9ac91618f5d1cab3fd58cded61ee9988016345785d8a0000e98a4d4e540000000000000094ddab6281766ad86497741ff91b6b48fe85012e3c8802c68af0bb140000808001b845f8431ca0b15dcf2e013df1a2aea02e36a17af266d8ee129cdcb3e881d15b70c9457e7571a0226af7bdaca9d42d6774c100b22e0c7ba4ec8dd664d17986318e905613013283";
+        "f895060101800db844f842f840df809467691076548b20234461ff6fd2bc9c64393eb8fc8801b4fbd92b5f8000df8094d82558ea00eb81d35f2654953598f5d51737d31d8804746bcc9ce68000808001b845f8431ba0a936ac922d8d67f06efc996f50f3d2af55a77453f521bc96d73158de16b530baa0192f5d1f2feb520b38d92513ed89fc1ede26353ce3660502f61721ea6232b261";
     auto decoded = minter::tx::decode(encoded);
     auto data = decoded->get_data<minter::tx_multisend>();
 
@@ -55,10 +42,10 @@ TEST(TxMultisend, TestDecode) {
     minter::send_target t1 = data->get_items()[0];
     minter::send_target t2 = data->get_items()[1];
 
-    ASSERT_STREQ("Mxfe60014a6e9ac91618f5d1cab3fd58cded61ee99", t1.to.to_string().c_str());
-    ASSERT_STREQ("Mxddab6281766ad86497741ff91b6b48fe85012e3c", t2.to.to_string().c_str());
-    ASSERT_EQ(dev::bigdec18("0.1"), t1.get_amount());
-    ASSERT_EQ(dev::bigdec18("0.2"), t2.get_amount());
-    ASSERT_STREQ("MNT", t1.coin.c_str());
-    ASSERT_STREQ("MNT", t2.coin.c_str());
+    ASSERT_STREQ("Mx67691076548b20234461ff6fd2bc9c64393eb8fc", t1.to.to_string().c_str());
+    ASSERT_STREQ("Mxd82558ea00eb81d35f2654953598f5d51737d31d", t2.to.to_string().c_str());
+    ASSERT_EQ(dev::bigdec18("0.123"), t1.get_amount());
+    ASSERT_EQ(dev::bigdec18("0.321"), t2.get_amount());
+    ASSERT_EQ(minter::def_coin_id, t1.coin_id);
+    ASSERT_EQ(minter::def_coin_id, t2.coin_id);
 }

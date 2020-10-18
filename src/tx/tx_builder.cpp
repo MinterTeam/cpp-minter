@@ -15,12 +15,18 @@
 #include "minter/tx/tx_declare_candidacy.h"
 #include "minter/tx/tx_delegate.h"
 #include "minter/tx/tx_edit_candidate.h"
+#include "minter/tx/tx_edit_candidate_public_key.h"
+#include "minter/tx/tx_edit_coin_owner.h"
+#include "minter/tx/tx_edit_multisig.h"
 #include "minter/tx/tx_multisend.h"
+#include "minter/tx/tx_price_vote.h"
+#include "minter/tx/tx_recreate_coin.h"
 #include "minter/tx/tx_redeem_check.h"
 #include "minter/tx/tx_sell_all_coins.h"
 #include "minter/tx/tx_sell_coin.h"
 #include "minter/tx/tx_send_coin.h"
 #include "minter/tx/tx_set_candidate_on_off.h"
+#include "minter/tx/tx_set_halt_block.h"
 #include "minter/tx/tx_unbond.h"
 #include "minter/tx/utils.h"
 
@@ -47,13 +53,13 @@ minter::tx_builder& minter::tx_builder::set_chain_id(uint8_t id) {
     return *this;
 }
 
-minter::tx_builder& minter::tx_builder::set_gas_price(const std::string& amount) {
-    m_tx->m_gas_price = dev::bigint(amount);
+minter::tx_builder& minter::tx_builder::set_gas_price(const std::string& amount_human) {
+    m_tx->m_gas_price = dev::bigint(amount_human);
     return *this;
 }
 
 minter::tx_builder& minter::tx_builder::set_gas_price(const dev::bigdec18& amount) {
-    m_tx->m_gas_price = dev::bigint(amount);
+    m_tx->m_gas_price = amount.to_bigint();
     return *this;
 }
 
@@ -62,8 +68,13 @@ minter::tx_builder& minter::tx_builder::set_gas_price(const dev::bigint& amount)
     return *this;
 }
 
-minter::tx_builder& minter::tx_builder::set_gas_coin(const std::string& coin) {
-    m_tx->m_gas_coin = coin;
+minter::tx_builder& minter::tx_builder::set_gas_coin_id(const dev::bigint& coin_id) {
+    m_tx->m_gas_coin_id = coin_id;
+    return *this;
+}
+
+minter::tx_builder& minter::tx_builder::set_gas_coin_id(const std::string& coin_id_num) {
+    m_tx->m_gas_coin_id = dev::bigint(coin_id_num);
     return *this;
 }
 
@@ -133,6 +144,10 @@ std::shared_ptr<minter::tx_create_coin> minter::tx_builder::tx_create_coin() {
     return std::make_shared<minter::tx_create_coin>(m_tx);
 }
 
+std::shared_ptr<minter::tx_recreate_coin> minter::tx_builder::tx_recreate_coin() {
+    return std::make_shared<minter::tx_recreate_coin>(m_tx);
+}
+
 std::shared_ptr<minter::tx_declare_candidacy> minter::tx_builder::tx_declare_candidacy() {
     return std::make_shared<minter::tx_declare_candidacy>(m_tx);
 }
@@ -167,4 +182,24 @@ std::shared_ptr<minter::tx_multisend> minter::tx_builder::tx_multisend() {
 
 std::shared_ptr<minter::tx_edit_candidate> minter::tx_builder::tx_edit_candidate() {
     return std::make_shared<minter::tx_edit_candidate>(m_tx);
+}
+
+std::shared_ptr<minter::tx_set_halt_block> minter::tx_builder::tx_set_halt_block() {
+    return std::make_shared<minter::tx_set_halt_block>(m_tx);
+}
+
+std::shared_ptr<minter::tx_edit_coin_owner> minter::tx_builder::tx_edit_coin_owner() {
+    return std::make_shared<minter::tx_edit_coin_owner>(m_tx);
+}
+
+std::shared_ptr<minter::tx_edit_multisig> minter::tx_builder::tx_edit_multisig() {
+    return std::make_shared<minter::tx_edit_multisig>(m_tx);
+}
+
+std::shared_ptr<minter::tx_price_vote> minter::tx_builder::tx_price_vote() {
+    return std::make_shared<minter::tx_price_vote>(m_tx);
+}
+
+std::shared_ptr<minter::tx_edit_candidate_public_key> minter::tx_builder::tx_edit_candidate_public_key() {
+    return std::make_shared<minter::tx_edit_candidate_public_key>(m_tx);
 }

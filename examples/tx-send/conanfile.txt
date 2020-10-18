@@ -2,7 +2,7 @@
 cmake
 
 [requires]
-minter_tx/0.6.0@minter/latest
+minter_tx/1.0.0@minter/latest
 
 [options]
 minter_tx:shared=False

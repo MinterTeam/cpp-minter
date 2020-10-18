@@ -1,11 +1,15 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.12)
 project(minter_tx
-        VERSION 0.6.2
-        DESCRIPTION "Minter Transaction Maker"
+        VERSION 1.0.0
+        DESCRIPTION "Minter Transaction SDK for C++"
         LANGUAGES CXX
         )
 
 file(WRITE ${CMAKE_CURRENT_SOURCE_DIR}/version ${CMAKE_PROJECT_VERSION})
+
+if (NOT CMAKE_BUILD_TYPE)
+	set(CMAKE_BUILD_TYPE Release)
+endif ()
 
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
@@ -28,6 +32,7 @@ if (MSVC)
 	add_compile_options(/wd4319)
 	add_compile_options(/wd4251)
 	add_compile_options(/wd4275)
+	add_compile_options(/wd4834)
 elseif (MINGW)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -fPIC -Wno-unknown-pragmas -Wno-shift-count-overflow")
 	set(CMAKE_CXX_FLAGS_DEBUG "-g -O0")
@@ -48,39 +53,30 @@ include(conan_fallback)
 if (ENABLE_CONAN)
 	include(ConanInit)
 	add_conan_remote(bincrafters https://api.bintray.com/conan/bincrafters/public-conan)
-	add_conan_remote(scatter https://api.bintray.com/conan/edwardstock/scatter)
 	add_conan_remote(minter https://api.bintray.com/conan/minterteam/minter)
 	add_conan_remote(edwardstock https://api.bintray.com/conan/edwardstock/conan-public)
 	conan_init()
 else ()
-	message(STATUS "Boost root: ${BOOST_ROOT}")
-	# Boost
-	set(Boost_DEBUG OFF)
-	set(Boost_USE_STATIC_LIBS ON)
-	set(Boost_USE_MULTITHREADED ON)
-	if (WIN32)
-		find_package(Boost 1.70.0 REQUIRED)
-	else ()
-		find_package(Boost 1.70.0 COMPONENTS exception REQUIRED)
-	endif ()
-
-	add_library(CONAN_PKG::boost INTERFACE IMPORTED)
-	set_property(TARGET CONAN_PKG::boost PROPERTY INTERFACE_LINK_LIBRARIES ${Boost_LIBRARIES})
-
 	# toolbox
-	conan_fallback(NAME toolbox)
+	find_package(Toolbox 3.2.0 REQUIRED)
+	set_target_properties(toolbox::toolbox PROPERTIES IMPORTED_GLOBAL TRUE)
+	add_library(CONAN_PKG::toolbox ALIAS toolbox::toolbox)
 
 	#bip39
-	conan_fallback(NAME bip39 TARGET bip39 SUBDIR bip3x PROPERTIES
-	               ENABLE_BIP39_JNI OFF
-	               ENABLE_BIP39_C OFF
-	               ENABLE_TEST OFF
-	               )
+	find_package(bip3x 2.1.0 REQUIRED)
+	set_target_properties(bip3x::bip39 PROPERTIES IMPORTED_GLOBAL TRUE)
+	add_library(CONAN_PKG::bip39 ALIAS bip3x::bip39)
 
-	#gtest
-	if (MINTER_TX_TEST)
-		conan_fallback(NAME gtest INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/libs/gtest/googletest/include)
-	endif ()
+	#secp256k1
+	find_package(secp256k1_java REQUIRED)
+	set_target_properties(secp256k1_java::secp256k1_core PROPERTIES IMPORTED_GLOBAL TRUE)
+	add_library(CONAN_PKG::secp256k1_java ALIAS secp256k1_java::secp256k1_core)
+
+
+	# bigmath
+	find_package(bigmath 1.0.0 REQUIRED)
+	set_target_properties(bigmath::bigmath PROPERTIES IMPORTED_GLOBAL TRUE)
+	add_library(CONAN_PKG::bigmath ALIAS bigmath::bigmath)
 endif ()
 
 if (APPLE)
@@ -148,6 +144,7 @@ set(HEADERS
     include/minter/tx/tx_sell_all_coins.h
     include/minter/tx/tx_buy_coin.h
     include/minter/tx/tx_create_coin.h
+    include/minter/tx/tx_recreate_coin.h
     include/minter/tx/tx_declare_candidacy.h
     include/minter/tx/tx_delegate.h
     include/minter/tx/tx_unbond.h
@@ -169,7 +166,13 @@ set(HEADERS
     include/minter/minter_tx_config.h
     include/minter/tx/check_tx.h
     include/minter/check.h
-    include/minter/tx/tx_deeplink.h)
+    include/minter/tx/tx_deeplink.h
+    include/minter/tx/tx_set_halt_block.h
+    include/minter/tx/tx_edit_coin_owner.h
+    include/minter/tx/tx_edit_multisig.h
+    include/minter/tx/tx_price_vote.h
+    include/minter/tx/tx_edit_candidate_public_key.h
+    )
 
 set(SOURCES
     ${HEADERS}
@@ -180,6 +183,7 @@ set(SOURCES
     src/tx/tx_sell_all_coins.cpp
     src/tx/tx_buy_coin.cpp
     src/tx/tx_create_coin.cpp
+    src/tx/tx_recreate_coin.cpp
     src/tx/tx_declare_candidacy.cpp
     src/tx/tx_delegate.cpp
     src/tx/tx_unbond.cpp
@@ -195,7 +199,17 @@ set(SOURCES
     src/tx/tx_builder.cpp
     src/data/public_key.cpp
     src/data/hash.cpp
-    src/data/private_key.cpp src/tx/tx_data.cpp src/tx/check_tx.cpp src/data/check.cpp src/tx/tx_deeplink.cpp)
+    src/data/private_key.cpp
+    src/tx/tx_data.cpp
+    src/tx/check_tx.cpp
+    src/data/check.cpp
+    src/tx/tx_deeplink.cpp
+    src/tx/tx_set_halt_block.cpp
+    src/tx/tx_edit_coin_owner.cpp
+    src/tx/tx_edit_multisig.cpp
+    src/tx/tx_price_vote.cpp
+    src/tx/tx_edit_candidate_public_key.cpp
+    )
 
 set(MINTER_TX_EXPORTING 1)
 if (ENABLE_SHARED)
@@ -217,18 +231,15 @@ else ()
 	             MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 endif ()
 
-target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_include_directories(${PROJECT_NAME} PUBLIC
+                           $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+                           $<INSTALL_INTERFACE:include>)
 
-#secp256k1
-set(ENABLE_JNI OFF CACHE BOOL "secp256k1 shared" FORCE)
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/libs/secp256k1 ${CMAKE_BINARY_DIR}/secp256k1)
-
-target_link_libraries(${PROJECT_NAME} secp256k1_core)
-target_link_libraries(${PROJECT_NAME} CONAN_PKG::boost)
+target_link_libraries(${PROJECT_NAME} CONAN_PKG::secp256k1_java)
+target_link_libraries(${PROJECT_NAME} CONAN_PKG::bigmath)
 target_link_libraries(${PROJECT_NAME} CONAN_PKG::bip39)
 target_link_libraries(${PROJECT_NAME} CONAN_PKG::toolbox)
 
-target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/libs)
 
 if (ENABLE_PVS)
 	include(PVS-Studio)
@@ -240,9 +251,8 @@ if (ENABLE_PVS)
 	                      LOG target.err)
 endif ()
 
-if (MINTER_TX_TEST)
+if (ENABLE_TEST)
 	set(gtest_force_shared_crt ${ENABLE_SHARED} CACHE BOOL "" FORCE)
-	add_definitions(-DTEST_ROOT="${CMAKE_CURRENT_SOURCE_DIR}/tests")
 	set(PROJECT_NAME_TEST ${PROJECT_NAME}-test)
 
 	if (APPLE)
@@ -253,11 +263,20 @@ if (MINTER_TX_TEST)
 		string(REGEX REPLACE "\\/W4" "" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
 	endif ()
 
+	#gtest
+	if (NOT ENABLE_CONAN)
+		add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/libs/gtest)
+		add_library(CONAN_PKG::gtest ALIAS gtest)
+	endif ()
+
+	enable_testing()
+
 	set(TEST_SOURCES
 	    tests/main.cpp
 	    tests/tx_send_test.cpp
 	    tests/tx_buy_coin_test.cpp
 	    tests/tx_create_coin_test.cpp
+	    tests/tx_recreate_coin_test.cpp
 	    tests/utils_test.cpp
 	    tests/tx_sell_coin_test.cpp
 	    tests/tx_delegate_test.cpp
@@ -272,16 +291,22 @@ if (MINTER_TX_TEST)
 	    tests/address_test.cpp
 	    tests/pub_key_test.cpp
 	    tests/check_tx_test.cpp
-	    tests/tx_create_multisig_address_test.cpp tests/tx_deeplink_test.cpp)
+	    tests/tx_create_multisig_address_test.cpp
+	    tests/tx_deeplink_test.cpp
+	    tests/tx_set_halt_block_test.cpp
+	    tests/tx_edit_coin_owner_test.cpp
+	    tests/tx_edit_multisig_test.cpp
+	    tests/tx_edit_candidate_public_key_test.cpp
+	    )
 
 	add_executable(${PROJECT_NAME_TEST} ${TEST_SOURCES})
 	if (NOT MSVC)
 		target_compile_options(${PROJECT_NAME_TEST} PUBLIC -Wno-unused-parameter)
 	endif ()
 	target_include_directories(${PROJECT_NAME_TEST} PRIVATE tests)
+
 	target_link_libraries(${PROJECT_NAME_TEST} PRIVATE CONAN_PKG::gtest)
 	target_link_libraries(${PROJECT_NAME_TEST} PUBLIC ${PROJECT_NAME})
-
 
 	if (WITH_COVERAGE)
 		set(COVERAGE_LCOV_EXCLUDES
@@ -302,6 +327,12 @@ if (MINTER_TX_TEST)
 			DEPENDENCIES ${PROJECT_NAME}
 		)
 	endif ()
+
+	add_test(
+		NAME test-all
+		COMMAND ${CMAKE_CURRENT_BINARY_DIR}/bin/${PROJECT_NAME_TEST}
+	)
 endif ()
 
-include(modules/packaging.cmake)
+include(package)
+

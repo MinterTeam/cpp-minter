@@ -26,7 +26,6 @@ MINTER_TX_API dev::bytes to_bytes_fixed(const std::string& input, size_t fixed_s
 MINTER_TX_API dev::bytes to_bytes(std::string&& input);
 MINTER_TX_API dev::bytes to_bytes(const std::string& input);
 MINTER_TX_API dev::bytes to_bytes(const dev::bigint& num);
-MINTER_TX_API dev::bytes to_bytes(const dev::u256& num);
 MINTER_TX_API dev::bytes to_bytes(const dev::bigdec18& num);
 MINTER_TX_API dev::bigint to_bigint(const dev::bytes& bytes);
 MINTER_TX_API dev::bigint to_bigint(const uint8_t* bytes, size_t len);

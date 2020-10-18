@@ -17,7 +17,7 @@
 
 namespace minter {
 
-class MINTER_TX_API tx_create_multisig_address : public minter::tx_data {
+class MINTER_TX_API tx_create_multisig_address : public virtual minter::tx_data {
 public:
     explicit tx_create_multisig_address(std::shared_ptr<minter::tx> tx);
     uint16_t type() const override;
@@ -31,10 +31,10 @@ public:
     tx_create_multisig_address& set_threshold(unsigned threshold);
     tx_create_multisig_address& add_address(const minter::address_t& address, unsigned weight);
 
-private:
+protected:
     dev::bigint m_threshold;
     std::vector<dev::bigint> m_weights;
-    std::vector<minter::data::address> m_addresses;
+    std::vector<minter::address_t> m_addresses;
 };
 
 } // namespace minter

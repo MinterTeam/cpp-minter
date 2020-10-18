@@ -46,8 +46,8 @@ public:
     check_tx()
         : m_nonce(utils::gen_random_bytes(32)),
           m_chain_id(chain_id::mainnet),
-          m_coin("BIP"),
-          m_gas_coin(m_coin),
+          m_coin_id("0"),
+          m_gas_coin_id("0"),
           m_lock(65) {
     }
 
@@ -55,8 +55,8 @@ public:
         : m_pass(pass.begin(), pass.end()),
           m_nonce(dev::bytes(nonce.begin(), nonce.end())),
           m_chain_id(chain_id::mainnet),
-          m_coin("BIP"),
-          m_gas_coin("BIP"),
+          m_coin_id("0"),
+          m_gas_coin_id("0"),
           m_lock(65) {
     }
 
@@ -67,8 +67,10 @@ public:
     check_tx& set_due_block(const dev::bigint& due_block);
     check_tx& set_due_block(const std::string& due_block);
     check_tx& set_due_block(std::string&& due_block);
-    check_tx& set_coin(const std::string& coin);
-    check_tx& set_gas_coin(const std::string& coin);
+    check_tx& set_coin_id(const dev::bigint& coin_id);
+    check_tx& set_coin_id(const std::string& coin_id_num);
+    check_tx& set_gas_coin_id(const std::string& coin_id_num);
+    check_tx& set_gas_coin_id(const dev::bigint& coin_id);
     check_tx& set_value(const dev::bigint& raw);
     check_tx& set_value(const dev::bigdec18& normalized);
     check_tx& set_value(const std::string& normalized);
@@ -77,8 +79,8 @@ public:
     const dev::bytes_data& get_nonce() const;
     chain_id get_chain_id() const;
     const dev::bigint& get_due_block() const;
-    const std::string& get_coin() const;
-    const std::string& get_gas_coin() const;
+    const dev::bigint& get_coin_id() const;
+    const dev::bigint& get_gas_coin() const;
     dev::bigdec18 get_value() const;
 
     minter::check_t sign(const privkey_t& priv_key);
@@ -90,9 +92,9 @@ private:
     dev::bytes_data m_nonce;
     dev::bigint m_chain_id;
     dev::bigint m_due_block;
-    std::string m_coin;
+    dev::bigint m_coin_id;
     dev::bigint m_value;
-    std::string m_gas_coin;
+    dev::bigint m_gas_coin_id;
     dev::bytes_data m_lock;
     minter::signature_single_data m_signature;
 };

@@ -28,7 +28,7 @@ const std::unordered_map<minter::tx_type_val, std::string> minter::tx_type_names
     {minter::tx_type_val::sell_coin, "sell"},
     {minter::tx_type_val::sell_all_coins, "sell all"},
     {minter::tx_type_val::buy_coin, "buy"},
-    {minter::tx_type_val::create_coin, "create coin"},
+    {minter::tx_type_val::create_coin, "create coin_id"},
     {minter::tx_type_val::declare_candidacy, "declare candidacy"},
     {minter::tx_type_val::delegate, "delegate"},
     {minter::tx_type_val::unbond, "unbond"},

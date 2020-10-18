@@ -1,14 +1,34 @@
 # Release notes
 
+## 1.0.0 **Breaking changes**
+
+- Now coins represented by its ID. It means, all methods like `set_coin(std::string)` or `set_gas_coin(std::string)`
+  was renamed to `set_coin_id()` and same, with 2 types as arguments: `dev::bigint` and `std::string`. String represents
+  numeric coin ID (for convenience)
+- Added transactions:
+    - SetHaltBlock (`tx_set_halt_block`)
+    - Recreate Coin (`tx_recreate_coin`)
+    - EditCoinOwner (`tx_edit_coin_owner`)
+    - EditMultisig (`tx_edit_multisig`)
+    - PriceVote (`tx_price_vote`)
+    - EditCandidatePublicKey (`tx_edit_candidate_public_key`)
+- Removed **boost** at all
+- Updated tests
+- Updated examples
+- Removed dependencies as submodules, now to build library without conan, you should build all dependencies by yourself,
+  guide will be attached to README
+
 ## 0.6.1
- - Added max supply to create coin transaction
- - Unified strings in transactions. No more c-style strings, now only std::string
+
+- Added max supply to create coin transaction
+- Unified strings in transactions. No more c-style strings, now only std::string
 
 ## 0.6.0
- - Fixed build for macos (removed LIBCPP_DEBUG flag)
- - Updated examples:
-   - minter-pretty:
-     - fixed searching by single word
+
+- Fixed build for macos (removed LIBCPP_DEBUG flag)
+- Updated examples:
+    - minter-pretty:
+        - fixed searching by single word
    - minter-generator:
      - updated dependencies, using conanfile.py instead of conanfile.txt
  - Added multisig send test

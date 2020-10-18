@@ -10,6 +10,7 @@
 #include "minter/tx/tx_edit_candidate.h"
 
 #include "minter/tx/tx_type.h"
+
 minter::tx_edit_candidate::tx_edit_candidate(std::shared_ptr<minter::tx> tx)
     : tx_data(std::move(tx)) {
 }
@@ -20,11 +21,12 @@ uint16_t minter::tx_edit_candidate::type() const {
 
 dev::bytes minter::tx_edit_candidate::encode() {
     eth::RLPStream out;
-    eth::RLPStream lst;
     {
+        eth::RLPStream lst;
         lst.append(m_pub_key.get());
         lst.append(m_reward_address.get());
         lst.append(m_owner_address.get());
+        lst.append(m_control_address.get());
 
         out.appendList(lst);
     }
@@ -37,14 +39,15 @@ void minter::tx_edit_candidate::decode(const dev::bytes& data) {
     m_pub_key = (dev::bytes) rlp[0];
     m_reward_address = (dev::bytes) rlp[1];
     m_owner_address = (dev::bytes) rlp[2];
+    m_control_address = (dev::bytes) rlp[3];
 }
 
-minter::tx_edit_candidate& minter::tx_edit_candidate::set_pub_key(const minter::pubkey_t& pub_key) {
+minter::tx_edit_candidate& minter::tx_edit_candidate::set_public_key(const minter::pubkey_t& pub_key) {
     m_pub_key = pub_key;
     return *this;
 }
 
-minter::tx_edit_candidate& minter::tx_edit_candidate::set_pub_key(const dev::bytes& pub_key) {
+minter::tx_edit_candidate& minter::tx_edit_candidate::set_public_key(const dev::bytes& pub_key) {
     m_pub_key = pub_key;
     return *this;
 }
@@ -59,7 +62,16 @@ minter::tx_edit_candidate& minter::tx_edit_candidate::set_owner_address(const mi
     return *this;
 }
 
-const minter::pubkey_t& minter::tx_edit_candidate::get_pub_key() const {
+minter::tx_edit_candidate& minter::tx_edit_candidate::set_control_address(const minter::address_t& address) {
+    m_control_address = address;
+    return *this;
+}
+
+const minter::address_t& minter::tx_edit_candidate::get_control_address() const {
+    return m_control_address;
+}
+
+const minter::pubkey_t& minter::tx_edit_candidate::get_public_key() const {
     return m_pub_key;
 }
 

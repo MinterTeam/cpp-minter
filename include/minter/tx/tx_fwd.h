@@ -29,6 +29,14 @@ class tx_create_multisig_address;
 class tx_multisend;
 class tx_edit_candidate;
 
+/// \since minter 1.2
+class tx_set_halt_block;
+class tx_recreate_coin;
+class tx_edit_coin_owner;
+class tx_edit_multisig;
+class tx_price_vote;
+class tx_edit_candidate_public_key;
+
 } // namespace minter
 
 #endif //MINTER_TX_FWD_H

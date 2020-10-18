@@ -26,7 +26,7 @@ dev::bytes minter::tx_multisend::encode() {
     {
         for (const auto& item : m_items) {
             eth::RLPStream elements;
-            elements.append(minter::utils::to_bytes_fixed(item.coin, 10));
+            elements.append(item.coin_id);
             elements.append(item.to.get());
             elements.append(item.amount);
             items.appendList(elements);
@@ -50,7 +50,7 @@ void minter::tx_multisend::decode(const dev::bytes& data) {
     for (size_t i = 0; i < rlp[0].itemCount(); i++) {
         eth::RLP els = rlp[0][i];
         send_target t{
-            minter::utils::to_string_clear((dev::bytes) els[0]),
+            (dev::bigint) els[0],
             (dev::bytes) els[1],
             (dev::bigint) els[2]};
 
@@ -59,20 +59,20 @@ void minter::tx_multisend::decode(const dev::bytes& data) {
 }
 
 minter::tx_multisend&
-minter::tx_multisend::add_item(const std::string& coin, const minter::data::address& to, const std::string& amount) {
-    m_items.push_back(minter::send_target{coin, to, minter::utils::normalize_value(amount)});
+minter::tx_multisend::add_item(const dev::bigint& coin_id, const minter::data::address& to, const std::string& amount) {
+    m_items.push_back(minter::send_target{coin_id, to, minter::utils::normalize_value(amount)});
     return *this;
 }
 
 minter::tx_multisend&
-minter::tx_multisend::add_item(const std::string& coin, const minter::data::address& to, const dev::bigdec18& amount) {
-    m_items.push_back(minter::send_target{std::string(coin), to, minter::utils::normalize_value(amount)});
+minter::tx_multisend::add_item(const dev::bigint& coin_id, const minter::data::address& to, const dev::bigdec18& amount) {
+    m_items.push_back(minter::send_target{coin_id, to, minter::utils::normalize_value(amount)});
     return *this;
 }
 
 minter::tx_multisend&
-minter::tx_multisend::add_item(const std::string& coin, const minter::data::address& to, const dev::bigint& amount) {
-    m_items.push_back(minter::send_target{std::string(coin), to, amount});
+minter::tx_multisend::add_item(const dev::bigint& coin_id, const minter::data::address& to, const dev::bigint& amount) {
+    m_items.push_back(minter::send_target{coin_id, to, amount});
     return *this;
 }
 

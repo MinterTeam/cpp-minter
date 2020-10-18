@@ -92,8 +92,6 @@ TEST(PrivateKey, FromMnemonicString) {
     dev::bytes_data pubkey_data = pub_key;
 
     ASSERT_STREQ(expected, pubkey_data.to_hex().c_str());
-
-    std::cout << pk.to_string() << std::endl;
 }
 
 TEST(PrivateKey, GetPubKeyUncompressed) {
@@ -131,5 +129,4 @@ TEST(PrivateKey, GetMinterAddress) {
     minter::address_t address(pk);
 
     ASSERT_STREQ(expected, address.to_string_no_prefix().c_str());
-    std::cout << "Address: " << address.to_string() << std::endl;
 }

@@ -15,17 +15,22 @@
 #include "minter/tx/tx_declare_candidacy.h"
 #include "minter/tx/tx_delegate.h"
 #include "minter/tx/tx_edit_candidate.h"
+#include "minter/tx/tx_edit_candidate_public_key.h"
+#include "minter/tx/tx_edit_coin_owner.h"
+#include "minter/tx/tx_edit_multisig.h"
 #include "minter/tx/tx_multisend.h"
+#include "minter/tx/tx_price_vote.h"
+#include "minter/tx/tx_recreate_coin.h"
 #include "minter/tx/tx_redeem_check.h"
 #include "minter/tx/tx_sell_all_coins.h"
 #include "minter/tx/tx_sell_coin.h"
 #include "minter/tx/tx_send_coin.h"
 #include "minter/tx/tx_set_candidate_on_off.h"
+#include "minter/tx/tx_set_halt_block.h"
 #include "minter/tx/tx_type.h"
 #include "minter/tx/tx_unbond.h"
 #include "minter/tx/utils.h"
 
-#include <boost/multiprecision/cpp_int.hpp>
 #include <cstring>
 #include <minter/crypto/cxx_secp256k1.h>
 #include <unordered_map>
@@ -37,10 +42,12 @@ const std::unordered_map<std::string, minter::chain_id> minter::chain_id_str_map
     {"testnet", minter::testnet},
 };
 
+const dev::bigint minter::def_coin_id = dev::bigint(0);
+
 minter::tx::tx()
     : m_chain_id(dev::bigint(chain_id::mainnet)),
       m_gas_price(dev::bigint("1")),
-      m_gas_coin("BIP"),
+      m_gas_coin_id(dev::bigint(0)),
       m_payload(dev::bytes(0)),
       m_service_data(dev::bytes(0)) {
 }
@@ -70,7 +77,7 @@ std::shared_ptr<minter::tx> minter::tx::decode(const dev::bytes& tx) {
     out->m_nonce = (dev::bigint) s[0];
     out->m_chain_id = (dev::bigint) s[1];
     out->m_gas_price = (dev::bigint) s[2];
-    out->m_gas_coin = minter::utils::to_string_clear((dev::bytes) s[3]);
+    out->m_gas_coin_id = (dev::bigint) s[3];
     out->m_type = (dev::bigint) s[4];
 
     out->m_data = (dev::bytes) s[5];
@@ -143,6 +150,24 @@ void minter::tx::create_data_from_type() {
         break;
     case tx_edit_candidate_type.type():
         m_data_raw = tx_edit_candidate_type.create(shared_from_this(), get_data_raw());
+        break;
+    case tx_set_halt_block_type.type():
+        m_data_raw = tx_set_halt_block_type.create(shared_from_this(), get_data_raw());
+        break;
+    case tx_recreate_coin_type.type():
+        m_data_raw = tx_recreate_coin_type.create(shared_from_this(), get_data_raw());
+        break;
+    case tx_edit_coin_owner_type.type():
+        m_data_raw = tx_edit_coin_owner_type.create(shared_from_this(), get_data_raw());
+        break;
+    case tx_edit_multisig_type.type():
+        m_data_raw = tx_edit_multisig_type.create(shared_from_this(), get_data_raw());
+        break;
+    case tx_edit_candidate_public_key_type.type():
+        m_data_raw = tx_edit_candidate_public_key_type.create(shared_from_this(), get_data_raw());
+        break;
+    case tx_price_vote_type.type():
+        m_data_raw = tx_price_vote_type.create(shared_from_this(), get_data_raw());
         break;
     default:
         throw std::runtime_error("Unknown tx type: " + minter::utils::to_string(m_type));
@@ -311,7 +336,7 @@ dev::bytes minter::tx::encode(bool exclude_signature) {
     list.append(m_nonce);
     list.append(m_chain_id);
     list.append(m_gas_price);
-    list.append(minter::utils::to_bytes_fixed(m_gas_coin, 10));
+    list.append(m_gas_coin_id);
     list.append(m_type);
     list.append(m_data);
     list.append(m_payload);
@@ -341,8 +366,8 @@ dev::bigint minter::tx::get_gas_price() const {
     return m_gas_price;
 }
 
-std::string minter::tx::get_gas_coin() const {
-    return m_gas_coin;
+dev::bigint minter::tx::get_gas_coin_id() const {
+    return m_gas_coin_id;
 }
 
 uint8_t minter::tx::get_type() const {

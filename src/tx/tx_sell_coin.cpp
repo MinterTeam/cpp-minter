@@ -21,9 +21,9 @@ dev::bytes minter::tx_sell_coin::encode() {
     eth::RLPStream out;
     eth::RLPStream lst;
     {
-        lst.append(minter::utils::to_bytes_fixed(m_coin_to_sell));
+        lst.append(m_coin_to_sell);
         lst.append(m_value_to_sell);
-        lst.append(minter::utils::to_bytes_fixed(m_coin_to_buy));
+        lst.append(m_coin_to_buy);
         lst.append(m_min_value_to_buy);
         out.appendList(lst);
     }
@@ -33,18 +33,29 @@ dev::bytes minter::tx_sell_coin::encode() {
 
 void minter::tx_sell_coin::decode(const dev::bytes& data) {
     eth::RLP rlp(data);
-    m_coin_to_sell = minter::utils::to_string_clear((dev::bytes) rlp[0]);
+    m_coin_to_sell = (dev::bigint) rlp[0];
     m_value_to_sell = (dev::bigint) rlp[1];
-    m_coin_to_buy = minter::utils::to_string_clear((dev::bytes) rlp[2]);
+    m_coin_to_buy = (dev::bigint) rlp[2];
     m_min_value_to_buy = (dev::bigint) rlp[3];
 }
 
-minter::tx_sell_coin& minter::tx_sell_coin::set_coin_to_sell(const std::string& coin) {
-    m_coin_to_sell = coin;
+minter::tx_sell_coin& minter::tx_sell_coin::set_coin_id_to_sell(const dev::bigint& coin_id) {
+    m_coin_to_sell = coin_id;
     return *this;
 }
-minter::tx_sell_coin& minter::tx_sell_coin::set_coin_to_buy(const std::string& coin) {
-    m_coin_to_buy = coin;
+
+minter::tx_sell_coin& minter::tx_sell_coin::set_coin_id_to_sell(const std::string& coin_id_num) {
+    m_coin_to_sell = dev::bigint(coin_id_num);
+    return *this;
+}
+
+minter::tx_sell_coin& minter::tx_sell_coin::set_coin_id_to_buy(const dev::bigint& coin_id) {
+    m_coin_to_buy = coin_id;
+    return *this;
+}
+
+minter::tx_sell_coin& minter::tx_sell_coin::set_coin_id_to_buy(const std::string& coin_id_num) {
+    m_coin_to_buy = dev::bigint(coin_id_num);
     return *this;
 }
 
@@ -74,10 +85,10 @@ minter::tx_sell_coin& minter::tx_sell_coin::set_min_value_to_buy(const dev::bigi
     return *this;
 }
 
-std::string minter::tx_sell_coin::get_coin_to_sell() const {
+dev::bigint minter::tx_sell_coin::get_coin_id_to_sell() const {
     return m_coin_to_sell;
 }
-std::string minter::tx_sell_coin::get_coin_to_buy() const {
+dev::bigint minter::tx_sell_coin::get_coin_id_to_buy() const {
     return m_coin_to_buy;
 }
 dev::bigdec18 minter::tx_sell_coin::get_value_to_sell() const {

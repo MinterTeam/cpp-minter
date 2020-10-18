@@ -84,13 +84,23 @@ minter::check_tx& minter::check_tx::set_due_block(std::string&& due_block) {
     return *this;
 }
 
-minter::check_tx& minter::check_tx::set_coin(const std::string& coin) {
-    m_coin = coin;
+minter::check_tx& minter::check_tx::set_coin_id(const std::string& coin_id) {
+    m_coin_id = dev::bigint(coin_id);
     return *this;
 }
 
-minter::check_tx& minter::check_tx::set_gas_coin(const std::string& coin) {
-    m_gas_coin = coin;
+minter::check_tx& minter::check_tx::set_coin_id(const dev::bigint& coin_id) {
+    m_coin_id = coin_id;
+    return *this;
+}
+
+minter::check_tx& minter::check_tx::set_gas_coin_id(const std::string& coin_id_num) {
+    m_gas_coin_id = dev::bigint(coin_id_num);
+    return *this;
+}
+
+minter::check_tx& minter::check_tx::set_gas_coin_id(const dev::bigint& coin_id) {
+    m_gas_coin_id = coin_id;
     return *this;
 }
 
@@ -121,11 +131,11 @@ minter::chain_id minter::check_tx::get_chain_id() const {
 const dev::bigint& minter::check_tx::get_due_block() const {
     return m_due_block;
 }
-const std::string& minter::check_tx::get_coin() const {
-    return m_coin;
+const dev::bigint& minter::check_tx::get_coin_id() const {
+    return m_coin_id;
 }
-const std::string& minter::check_tx::get_gas_coin() const {
-    return m_gas_coin;
+const dev::bigint& minter::check_tx::get_gas_coin() const {
+    return m_gas_coin_id;
 }
 dev::bigdec18 minter::check_tx::get_value() const {
     return minter::utils::humanize_value(m_value);
@@ -146,9 +156,9 @@ minter::check_tx minter::check_tx::decode(const minter::check_t& check) {
     tx.m_nonce = (dev::bytes_data) rlp[i++];
     tx.m_chain_id = (dev::bigint) rlp[i++];
     tx.m_due_block = (dev::bigint) rlp[i++];
-    tx.m_coin = minter::utils::to_string_clear((dev::bytes) rlp[i++]);
+    tx.m_coin_id = (dev::bigint) rlp[i++];
     tx.m_value = (dev::bigint) rlp[i++];
-    tx.m_gas_coin = minter::utils::to_string_clear((dev::bytes) rlp[i++]);
+    tx.m_gas_coin_id = (dev::bigint) rlp[i++];
     tx.m_lock = (dev::bytes_data) rlp[i++];
 
     dev::bytes v = (dev::bytes) rlp[i++];
@@ -166,9 +176,9 @@ dev::bytes_data minter::check_tx::encode(bool sign) {
     lst << m_nonce;
     lst << m_chain_id;
     lst << m_due_block;
-    lst << minter::utils::to_bytes_fixed(m_coin, 10);
+    lst << m_coin_id;
     lst << m_value;
-    lst << minter::utils::to_bytes_fixed(m_gas_coin, 10);
+    lst << m_gas_coin_id;
 
     if (sign) {
         out.appendList(lst);
@@ -196,8 +206,6 @@ minter::check_t minter::check_tx::sign(const minter::privkey_t& priv_key) {
     CHECK_ASSERT_NOT_ZERO(m_chain_id, "chain id");
     CHECK_ASSERT_NOT_ZERO(m_due_block, "due block");
     CHECK_ASSERT_NOT_EMPTY(m_nonce, "nonce data");
-    CHECK_ASSERT_NOT_EMPTY(m_coin, "coin");
-    CHECK_ASSERT_NOT_EMPTY(m_gas_coin, "gas coin");
 
     toolbox::data::bytes_data hash = encode(true);
     hash.switch_map(utils::to_sha3k);

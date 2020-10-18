@@ -15,30 +15,27 @@
 
 #ifdef MINTER_EXPORT_SHARED
 #ifdef MINTER_TX_EXPORTING
-#   if _MSC_VER
-#       define MINTER_TX_API __declspec(dllexport)
-#   else
-#       define MINTER_TX_API __attribute__((visibility("default")))
-#   endif
+#if _MSC_VER
+#define MINTER_TX_API __declspec(dllexport)
 #else
-#   if _MSC_VER
-#       define MINTER_TX_API __declspec(dllimport)
-#   else
-#       define MINTER_TX_API
-#   endif
+#define MINTER_TX_API __attribute__((visibility("default")))
+#endif
+#else
+#if _MSC_VER
+#define MINTER_TX_API __declspec(dllimport)
+#else
+#define MINTER_TX_API
+#endif
 #endif
 #else
 #define MINTER_TX_API
-#endif  // MINTER_EXPORT_SHARED
+#endif // MINTER_EXPORT_SHARED
 
-
-#include <boost/multiprecision/cpp_int.hpp>
-#include <boost/multiprecision/cpp_dec_float.hpp>
-#include <toolbox/data/bytes_data.h>
+#include <bigmath/bigdecimal.h>
+#include <bigmath/bigint.h>
 #include <toolbox/data/bytes_array.h>
+#include <toolbox/data/bytes_data.h>
 #include <vector>
-
-
 
 namespace minter {
 class tx;
@@ -54,7 +51,7 @@ enum chain_id : uint8_t {
 
 namespace dev {
 using byte = uint8_t;
-namespace mp = boost::multiprecision;
+//namespace mp = boost::multiprecision;
 
 // Binary data types.
 using bytes = std::vector<byte>;
@@ -65,11 +62,13 @@ using bytes_32 = bytes_array<32>;
 using bytes_64 = bytes_array<64>;
 
 // Numeric types.
-using bigint = mp::number<mp::cpp_int_backend<>>;
-using bigdec18 = mp::number<mp::cpp_dec_float<18>>;
-using u256 = mp::number<mp::cpp_int_backend<256, 256, mp::unsigned_magnitude, mp::unchecked, void>>;
-using u160 = mp::number<mp::cpp_int_backend<160, 160, mp::unsigned_magnitude, mp::unchecked, void>>;
+//using bigint = mp::number<mp::cpp_int_backend<>>;
+//using bigdec18 = mp::number<mp::cpp_dec_float<18>>;
+//using u256 = mp::number<mp::cpp_int_backend<256, 256, mp::unsigned_magnitude, mp::unchecked, void>>;
+//using u160 = mp::number<mp::cpp_int_backend<160, 160, mp::unsigned_magnitude, mp::unchecked, void>>;
+using bigint = bigmath::bigint;
+using bigdec18 = bigmath::bigdecimal;
 
-}
+} // namespace dev
 
 #endif //MINTER_TX_MINTER_TX_CONFIG_H

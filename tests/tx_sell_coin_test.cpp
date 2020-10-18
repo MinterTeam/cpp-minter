@@ -13,19 +13,19 @@
 #include <minter/tx/tx_sell_coin.h>
 
 TEST(TxSell, TestEncode) {
-    const char* expected = "f8830102018a4d4e540000000000000002a9e88a4d4e5400000000000000880de0b6b3a76400008a54455354000000000000880de0b6b3a7640000808001b845f8431ba0e34be907a18acb5a1aed263ef419f32f5adc6e772b92f949906b497bba557df3a0291d7704980994f7a6f5950ca84720746b5928f21c3cfc5a5fbca2a9f4d35db0";
-    minter::data::private_key pk = "07bc17abdcee8b971bb8723e36fe9d2523306d5ab2d683631693238e0f9df142";
+    const char* expected = "f864030101800294d380893635c9adc5dea00000018609184e72a000808001b845f8431ba036361e8cdfe662af2285c98fbeb9aa6af1037711fbe47f580777e14ed13575eaa062ff5ce42bec17732db635c85ccf101b4faad5abd9eb9730a78247d12fc1aa34";
+    minter::data::private_key pk = "4daf02f92bf760b53d3c725d6bcc0da8e55d27ba5350c78d3a88f873e502bd6e";
 
     auto tx = minter::new_tx()
-                  ->set_gas_coin("MNT")
-                  .set_nonce("1")
+                  ->set_gas_coin_id("0")
                   .set_gas_price("1")
-                  .set_chain_id(minter::testnet)
+                  .set_nonce("3")
+                  .set_chain_id(minter::mainnet)
                   .tx_sell_coin()
-                  ->set_coin_to_buy("TEST")
-                  .set_coin_to_sell("MNT")
-                  .set_value_to_sell("1")
-                  .set_min_value_to_buy("1")
+                  ->set_coin_id_to_sell("0")
+                  .set_coin_id_to_buy("1")
+                  .set_value_to_sell("1000")
+                  .set_min_value_to_buy("0.00001")
                   .build();
 
     auto signature = tx->sign_single(pk);
@@ -34,29 +34,29 @@ TEST(TxSell, TestEncode) {
 }
 
 TEST(TxSell, TestDecode) {
-    const char* encoded = "f8830102018a4d4e540000000000000002a9e88a4d4e5400000000000000880de0b6b3a76400008a54455354000000000000880de0b6b3a7640000808001b845f8431ba0e34be907a18acb5a1aed263ef419f32f5adc6e772b92f949906b497bba557df3a0291d7704980994f7a6f5950ca84720746b5928f21c3cfc5a5fbca2a9f4d35db0";
+    const char* encoded = "f864030101800294d380893635c9adc5dea00000018609184e72a000808001b845f8431ba036361e8cdfe662af2285c98fbeb9aa6af1037711fbe47f580777e14ed13575eaa062ff5ce42bec17732db635c85ccf101b4faad5abd9eb9730a78247d12fc1aa34";
     auto decoded = minter::tx::decode(encoded);
     auto data = decoded->get_data<minter::tx_sell_coin>();
 
-    ASSERT_STREQ("TEST", data->get_coin_to_buy().c_str());
-    ASSERT_STREQ("MNT", data->get_coin_to_sell().c_str());
-    ASSERT_EQ(dev::bigdec18("1"), data->get_value_to_sell());
-    ASSERT_EQ(dev::bigdec18("1"), data->get_min_value_to_buy());
+    ASSERT_EQ(dev::bigint("1"), data->get_coin_id_to_buy());
+    ASSERT_EQ(dev::bigint("0"), data->get_coin_id_to_sell());
+    ASSERT_EQ(dev::bigdec18("1000"), data->get_value_to_sell());
+    ASSERT_EQ(dev::bigdec18("0.00001"), data->get_min_value_to_buy());
 }
 
 TEST(TxSellAll, TestEncode) {
-    const char* expected = "f87a0102018a4d4e540000000000000003a0df8a4d4e54000000000000008a54455354000000000000880de0b6b3a7640000808001b845f8431ca0b10794a196b6ad2f94e6162613ca9538429dd49ca493594ba9d99f80d2499765a03c1d78e9e04f57336691e8812a16faccb00bf92ac817ab61cd9bf001e9380d47";
-    minter::data::private_key pk = "07bc17abdcee8b971bb8723e36fe9d2523306d5ab2d683631693238e0f9df142";
+    const char* expected = "f85c04010180038ccb01808801b4fbd92b5f8000808001b845f8431ba0c3a668f479a9a9ee25bc98915877e50b5b91fd38ae53a17142b85919dc9f0baba040617eccdc0b28bc8b182ae9d6cb1d1935358973cf48ebf012c0284ed2898ff9";
+    minter::data::private_key pk = "4daf02f92bf760b53d3c725d6bcc0da8e55d27ba5350c78d3a88f873e502bd6e";
 
     auto tx = minter::new_tx()
-                  ->set_gas_coin("MNT")
-                  .set_nonce("1")
+                  ->set_gas_coin_id("0")
                   .set_gas_price("1")
-                  .set_chain_id(minter::testnet)
+                  .set_nonce("4")
+                  .set_chain_id(minter::mainnet)
                   .tx_sell_all_coins()
-                  ->set_coin_to_buy("TEST")
-                  .set_coin_to_sell("MNT")
-                  .set_min_value_to_buy("1")
+                  ->set_coin_id_to_sell("1")
+                  .set_coin_id_to_buy("0")
+                  .set_min_value_to_buy("0.123")
                   .build();
 
     auto signature = tx->sign_single(pk);
@@ -65,17 +65,17 @@ TEST(TxSellAll, TestEncode) {
 }
 
 TEST(TxSellAll, TestDecode) {
-    const char* encoded = "f87a0102018a4d4e540000000000000003a0df8a4d4e54000000000000008a54455354000000000000880de0b6b3a7640000808001b845f8431ca0b10794a196b6ad2f94e6162613ca9538429dd49ca493594ba9d99f80d2499765a03c1d78e9e04f57336691e8812a16faccb00bf92ac817ab61cd9bf001e9380d47";
+    const char* encoded = "f85c04010180038ccb01808801b4fbd92b5f8000808001b845f8431ba0c3a668f479a9a9ee25bc98915877e50b5b91fd38ae53a17142b85919dc9f0baba040617eccdc0b28bc8b182ae9d6cb1d1935358973cf48ebf012c0284ed2898ff9";
     auto decoded = minter::tx::decode(encoded);
     auto data = decoded->get_data<minter::tx_sell_all_coins>();
 
-    ASSERT_EQ(dev::bigint("1"), decoded->get_nonce());
-    ASSERT_STREQ("MNT", decoded->get_gas_coin().c_str());
+    ASSERT_EQ(dev::bigint("4"), decoded->get_nonce());
+    ASSERT_EQ(dev::bigint("0"), decoded->get_gas_coin_id());
     ASSERT_EQ(dev::bigint("1"), decoded->get_gas_price());
-    ASSERT_EQ(minter::testnet, decoded->get_chain_id());
+    ASSERT_EQ(minter::mainnet, decoded->get_chain_id());
     ASSERT_EQ(dev::bytes(0), decoded->get_payload());
 
-    ASSERT_STREQ("TEST", data->get_coin_to_buy().c_str());
-    ASSERT_STREQ("MNT", data->get_coin_to_sell().c_str());
-    ASSERT_EQ(dev::bigdec18("1"), data->get_min_value_to_buy());
+    ASSERT_EQ(dev::bigint("0"), data->get_coin_id_to_buy());
+    ASSERT_EQ(dev::bigint("1"), data->get_coin_id_to_sell());
+    ASSERT_EQ(dev::bigdec18("0.123"), data->get_min_value_to_buy());
 }

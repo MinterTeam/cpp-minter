@@ -22,7 +22,7 @@ dev::bytes minter::tx_delegate::encode() {
     eth::RLPStream lst;
     {
         lst.append(m_pub_key.get());
-        lst.append(minter::utils::to_bytes_fixed(m_coin));
+        lst.append(m_coin_id);
         lst.append(m_stake);
 
         out.appendList(lst);
@@ -34,7 +34,7 @@ dev::bytes minter::tx_delegate::encode() {
 void minter::tx_delegate::decode(const dev::bytes& data) {
     eth::RLP rlp(data);
     m_pub_key = (dev::bytes) rlp[0];
-    m_coin = minter::utils::to_string_clear((dev::bytes) rlp[1]);
+    m_coin_id = (dev::bigint) rlp[1];
     m_stake = (dev::bigint) rlp[2];
 }
 
@@ -48,8 +48,13 @@ minter::tx_delegate& minter::tx_delegate::set_pub_key(const minter::pubkey_t& pu
     return *this;
 }
 
-minter::tx_delegate& minter::tx_delegate::set_coin(const std::string& coin) {
-    m_coin = coin;
+minter::tx_delegate& minter::tx_delegate::set_coin_id(const dev::bigint& coin_id) {
+    m_coin_id = coin_id;
+    return *this;
+}
+
+minter::tx_delegate& minter::tx_delegate::set_coin_id(const std::string& coin_id_num) {
+    m_coin_id = dev::bigint(coin_id_num);
     return *this;
 }
 
@@ -72,8 +77,8 @@ const minter::pubkey_t& minter::tx_delegate::get_pub_key() const {
     return m_pub_key;
 }
 
-std::string minter::tx_delegate::get_coin() const {
-    return m_coin;
+dev::bigint minter::tx_delegate::get_coin_id() const {
+    return m_coin_id;
 }
 
 dev::bigdec18 minter::tx_delegate::get_stake() const {

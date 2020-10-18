@@ -16,6 +16,7 @@
 #include <gtest/gtest.h>
 #include <toolbox/strings.hpp>
 
+/* todo: fix and test this thing
 static minter::signature test_signer_func(dev::bytes_32 hash) {
     minter::privkey_t pk("33671c8f2363dffb45e166f1cadced9aa5f86ad32509e5c4f0b39257c30b4110");
     minter::cxx_secp256k1 ctx;
@@ -52,159 +53,58 @@ static minter::signature test_signer_func(dev::bytes_32 hash) {
 
     return outSig;
 }
-
-TEST(TxSend, SerializeSign) {
-    dev::bytes_data raw;
-}
-
-TEST(TxSend, TestEncodeSignExternal) {
-    const char* expectedTx = "f8840102018a4d4e540000000000000001aae98a4d4e540000000000000094bf5c2fec34cfe73e7178b3ab96deaf9ca6d9a592880de0b6b3a7640000808001b845f8431ca04090688ae6f0e989d99440a80dce1133deed569edb73c29e22611a9e614d2817a0215cb8614f410d4bb26927dd6d32efe9a7f1fe066f88603842d99b6ea37f57cb";
-
-    auto signer_func = [](const dev::bytes_32& hash) {
-        return test_signer_func(hash);
-    };
-
-    auto tx_builder = minter::new_tx();
-    tx_builder->set_nonce("1");
-    tx_builder->set_gas_price("1");
-    tx_builder->set_gas_coin("MNT");
-    tx_builder->set_chain_id(minter::testnet);
-    auto data = tx_builder->tx_send_coin();
-    std::string a = "Mxbf5c2fec34cfe73e7178b3ab96deaf9ca6d9a592";
-    data->set_to(a);
-    data->set_value("1");
-    data->set_coin("MNT");
-    auto tx = data->build();
-
-    minter::privkey_t pk("33671c8f2363dffb45e166f1cadced9aa5f86ad32509e5c4f0b39257c30b4110");
-
-    auto sign1 = signer_func(tx->get_unsigned_hash());
-    std::cout << "Unsigned hash:\n";
-    std::cout << tx->get_unsigned_hash().to_hex() << "\n";
-    std::cout << "Signed hash:\n";
-    std::cout << toolbox::data::bytes_to_hex(sign1.r.data(), 32);
-    std::cout << toolbox::data::bytes_to_hex(sign1.s.data(), 32);
-    std::cout << toolbox::data::bytes_to_hex(sign1.v.data(), 1);
-    std::cout << std::endl;
-
-    auto signedTx0 = tx->sign_single(pk);
-    std::cout << "TX 0: " << tx->get_signature_data<minter::signature_single_data>()->to_hex() << std::endl;
-    auto signedTx1 = tx->sign_single_external(sign1);
-    std::cout << "TX 1: " << tx->get_signature_data<minter::signature_single_data>()->to_hex() << std::endl;
-    auto signedTx2 = tx->sign_single_external(signer_func);
-    std::cout << "TX 2: " << tx->get_signature_data<minter::signature_single_data>()->to_hex() << std::endl;
-    auto signedTx3 = tx->sign_single_external(&test_signer_func);
-    std::cout << "TX 3: " << tx->get_signature_data<minter::signature_single_data>()->to_hex() << std::endl;
-
-    ASSERT_TRUE(signedTx1 == signedTx0);
-    ASSERT_TRUE(signedTx2 == signedTx1);
-    ASSERT_TRUE(signedTx3 == signedTx2);
-
-    {
-        auto decoded = minter::tx::decode(signedTx1.to_hex().c_str());
-
-        ASSERT_STREQ("MNT", decoded->get_gas_coin().c_str());
-        ASSERT_EQ(dev::bigint("1"), decoded->get_gas_price());
-        ASSERT_EQ(minter::testnet, decoded->get_chain_id());
-        ASSERT_EQ(dev::bigint("1"), decoded->get_nonce());
-        ASSERT_EQ((uint8_t) 0x01, decoded->get_type());
-        ASSERT_EQ(dev::bytes(0), decoded->get_service_data());
-        ASSERT_EQ(dev::bytes(0), decoded->get_payload());
-        ASSERT_EQ(minter::signature_type::single, decoded->get_signature_type());
-        std::shared_ptr<minter::tx_send_coin> data = decoded->get_data<minter::tx_send_coin>();
-        ASSERT_EQ(minter::address_t("Mxbf5c2fec34cfe73e7178b3ab96deaf9ca6d9a592"), data->get_to());
-        ASSERT_EQ(dev::bigdec18("1"), data->get_value());
-        ASSERT_STREQ("MNT", data->get_coin().c_str());
-
-        ASSERT_STREQ(expectedTx, signedTx1.to_hex().c_str());
-        ASSERT_STREQ(expectedTx, signedTx2.to_hex().c_str());
-        ASSERT_STREQ(expectedTx, signedTx3.to_hex().c_str());
-    }
-}
+ */
 
 TEST(TxSend, TestSendEncode) {
-    const char* expectedTx = "f8840102018a4d4e540000000000000001aae98a4d4e5400000000000000940000000000000000000000000000000000000000888ac7230489e80000808001b845f8431ba07a27eed01eae753c028d74e189f23b371fdd936dc0274d36ab27d8f0f4b2e9e1a03cd85dcf65e4204b393de0cd4db03d47479ba4321f074bedff2049b6e048fb6f";
+    const char* expectedTx = "f86f01010180019fde809467691076548b20234461ff6fd2bc9c64393eb8fc872bdbb64bc09000808001b845f8431ca08be3f0c3aecc80ec97332e8aa39f20cd9e735092c0de37eb726d8d3d0a255a66a02040a1001d1a9116317eb24aa7ee4730ed980bd08a1fc0adb4e7598425178d3a";
+    minter::privkey_t pk("4daf02f92bf760b53d3c725d6bcc0da8e55d27ba5350c78d3a88f873e502bd6e");
+    minter::address_t address = "Mx67691076548b20234461ff6fd2bc9c64393eb8fc";
 
     auto tx_builder = minter::new_tx();
     tx_builder->set_nonce("1");
     tx_builder->set_gas_price("1");
-    tx_builder->set_gas_coin("MNT");
-    tx_builder->set_chain_id(minter::testnet);
+    tx_builder->set_gas_coin_id("0");
+    tx_builder->set_chain_id(minter::mainnet);
     auto data = tx_builder->tx_send_coin();
-    data->set_to("Mx0000000000000000000000000000000000000000");
-    data->set_value("10");
-    data->set_coin("MNT");
+    data->set_to(address);
+    data->set_value("0.012345");
+    data->set_coin_id("0");
     auto tx = data->build();
 
-    minter::privkey_t pk("df1f236d0396cc43147e44206c341a65573326e907d033690e31a21323c03a9f");
     auto signedTx = tx->sign_single(pk);
 
     {
         auto decoded = minter::tx::decode(signedTx.to_hex().c_str());
-        ASSERT_STREQ("MNT", decoded->get_gas_coin().c_str());
+        ASSERT_EQ(dev::bigint("0"), decoded->get_gas_coin_id());
         ASSERT_EQ(dev::bigint("1"), decoded->get_gas_price());
-        ASSERT_EQ(minter::testnet, decoded->get_chain_id());
+        ASSERT_EQ(minter::mainnet, decoded->get_chain_id());
         ASSERT_EQ(dev::bigint("1"), decoded->get_nonce());
         ASSERT_EQ((uint8_t) 0x01, decoded->get_type());
         ASSERT_EQ(dev::bytes(0), decoded->get_service_data());
         ASSERT_EQ(dev::bytes(0), decoded->get_payload());
         ASSERT_EQ(minter::signature_type::single, decoded->get_signature_type());
         std::shared_ptr<minter::tx_send_coin> data = decoded->get_data<minter::tx_send_coin>();
-        ASSERT_EQ(minter::address_t("Mx0000000000000000000000000000000000000000"), data->get_to());
-        ASSERT_EQ(dev::bigdec18("10"), data->get_value());
-        ASSERT_STREQ("MNT", data->get_coin().c_str());
+        ASSERT_EQ(address, data->get_to());
+        ASSERT_EQ(dev::bigdec18("0.012345"), data->get_value());
+        ASSERT_EQ(dev::bigint("0"), data->get_coin_id());
     }
 
     ASSERT_STREQ(expectedTx, signedTx.to_hex().c_str());
 }
 
 TEST(TxSend, TestSendDecode) {
-    const char* encoded = "f8840102018a4d4e540000000000000001aae98a4d4e5400000000000000940000000000000000000000000000000000000000888ac7230489e80000808001b845f8431ba07a27eed01eae753c028d74e189f23b371fdd936dc0274d36ab27d8f0f4b2e9e1a03cd85dcf65e4204b393de0cd4db03d47479ba4321f074bedff2049b6e048fb6f";
+    const char* encoded = "f86f01010180019fde809467691076548b20234461ff6fd2bc9c64393eb8fc872bdbb64bc09000808001b845f8431ca08be3f0c3aecc80ec97332e8aa39f20cd9e735092c0de37eb726d8d3d0a255a66a02040a1001d1a9116317eb24aa7ee4730ed980bd08a1fc0adb4e7598425178d3a";
 
     std::shared_ptr<minter::tx> decoded = minter::tx::decode(encoded);
-    minter::address_t exAddress = "Mx0000000000000000000000000000000000000000";
+    minter::address_t exAddress = "Mx67691076548b20234461ff6fd2bc9c64393eb8fc";
 
     ASSERT_EQ(dev::bigint("1"), decoded->get_nonce());
-    ASSERT_STREQ("MNT", decoded->get_gas_coin().c_str());
+    ASSERT_EQ(dev::bigint("0"), decoded->get_gas_coin_id());
     ASSERT_EQ(dev::bigint("1"), decoded->get_gas_price());
     ASSERT_NE(dev::bigint("2"), decoded->get_gas_price());
-    ASSERT_EQ(minter::testnet, decoded->get_chain_id());
+    ASSERT_EQ(minter::mainnet, decoded->get_chain_id());
     std::shared_ptr<minter::tx_send_coin> data = decoded->get_data<minter::tx_send_coin>();
     ASSERT_EQ(exAddress, data->get_to());
-    ASSERT_EQ(dev::bigdec18("10"), data->get_value());
-    ASSERT_STREQ("MNT", data->get_coin().c_str());
-}
-
-TEST(TxSend, TestEncodeForAndroidSDK) {
-    auto tx_builder = minter::new_tx();
-    tx_builder->set_nonce("128");
-    tx_builder->set_gas_price("1");
-    tx_builder->set_gas_coin("MNT");
-    tx_builder->set_chain_id(minter::testnet);
-    auto data = tx_builder->tx_send_coin();
-    data->set_to("Mxb445feaf3eb747ac52426b054aa42b0b3d913e1f");
-    data->set_value("1");
-    data->set_coin("MNT");
-    auto tx = data->build();
-
-    minter::privkey_t pk = minter::privkey_t::from_mnemonic("body attitude enable enjoy swift wise example hammer trap saddle bike lobster");
-    auto signedTx = tx->sign_single(pk);
-
-    {
-        auto decoded = minter::tx::decode(signedTx.to_hex().c_str());
-        ASSERT_STREQ("MNT", decoded->get_gas_coin().c_str());
-        ASSERT_EQ(dev::bigint("1"), decoded->get_gas_price());
-        ASSERT_EQ(minter::testnet, decoded->get_chain_id());
-        ASSERT_EQ(dev::bigint("128"), decoded->get_nonce());
-        ASSERT_EQ((uint8_t) 0x01, decoded->get_type());
-        ASSERT_EQ(dev::bytes(0), decoded->get_service_data());
-        ASSERT_EQ(dev::bytes(0), decoded->get_payload());
-        ASSERT_EQ(minter::signature_type::single, decoded->get_signature_type());
-        auto data = decoded->get_data<minter::tx_send_coin>();
-        ASSERT_EQ(minter::address_t("Mxb445feaf3eb747ac52426b054aa42b0b3d913e1f"), data->get_to());
-        ASSERT_EQ(dev::bigdec18("1"), data->get_value());
-        ASSERT_STREQ("MNT", data->get_coin().c_str());
-    }
-
-    std::cout << signedTx.to_hex() << '\n';
+    ASSERT_EQ(dev::bigdec18("0.012345"), data->get_value());
+    ASSERT_EQ(dev::bigint("0"), data->get_coin_id());
 }

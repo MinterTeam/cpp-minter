@@ -11,6 +11,8 @@
 
 #include "minter/tx/tx.h"
 
+#include <cassert>
+
 minter::tx_data::tx_data(std::shared_ptr<minter::tx> tx)
     : m_tx(std::move(tx)) {
 }
@@ -24,5 +26,6 @@ std::shared_ptr<minter::tx> minter::tx_data::build() {
 }
 
 std::shared_ptr<minter::tx> minter::tx_data::tx() {
+    assert(m_tx.get() != nullptr);
     return m_tx;
 }

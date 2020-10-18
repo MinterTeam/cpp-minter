@@ -18,9 +18,10 @@
 #include <exception>
 #include <iomanip>
 #include <iosfwd>
+#include <set>
+#include <string>
 #include <unordered_set>
 #include <vector>
-#include <set>
 
 namespace eth {
 
@@ -54,14 +55,7 @@ template<class _T>
 struct intTraits {
     static const unsigned maxSize = sizeof(_T);
 };
-template<>
-struct intTraits<u160> {
-    static const unsigned maxSize = 20;
-};
-template<>
-struct intTraits<u256> {
-    static const unsigned maxSize = 32;
-};
+
 template<>
 struct intTraits<bigint> {
     static const unsigned maxSize = ~(unsigned) 0;
@@ -162,7 +156,7 @@ public:
     }
     size_t itemCountStrict() const {
         if (!isList())
-            BOOST_THROW_EXCEPTION(BadCast());
+            throw BadCast();
         return items();
     }
 
@@ -172,7 +166,7 @@ public:
     }
     size_t sizeStrict() const {
         if (!isData())
-            BOOST_THROW_EXCEPTION(BadCast());
+            throw BadCast();
         return length();
     }
 
@@ -194,12 +188,6 @@ public:
     }
     bool operator!=(unsigned const& _i) const {
         return isInt() && toInt<unsigned>() != _i;
-    }
-    bool operator==(u256 const& _i) const {
-        return isInt() && toInt<u256>() == _i;
-    }
-    bool operator!=(u256 const& _i) const {
-        return isInt() && toInt<u256>() != _i;
     }
     bool operator==(bigint const& _i) const {
         return isInt() && toInt<bigint>() == _i;
@@ -283,12 +271,6 @@ public:
     }
     explicit operator uint64_t() const {
         return toInt<uint64_t>();
-    }
-    explicit operator u160() const {
-        return toInt<u160>();
-    }
-    explicit operator u256() const {
-        return toInt<u256>();
     }
     explicit operator bigint() const {
         return toInt<bigint>();
@@ -552,18 +534,7 @@ struct Converter<uint64_t> {
         return _r.toInt<uint64_t>(_flags);
     }
 };
-template<>
-struct Converter<u160> {
-    static u160 convert(RLP const& _r, int _flags) {
-        return _r.toInt<u160>(_flags);
-    }
-};
-template<>
-struct Converter<u256> {
-    static u256 convert(RLP const& _r, int _flags) {
-        return _r.toInt<u256>(_flags);
-    }
-};
+
 template<>
 struct Converter<bigint> {
     static bigint convert(RLP const& _r, int _flags) {
@@ -625,12 +596,6 @@ public:
 
     /// Append given datum to the byte stream.
     RLPStream& append(unsigned _s) {
-        return append(bigint(_s));
-    }
-    RLPStream& append(u160 _s) {
-        return append(bigint(_s));
-    }
-    RLPStream& append(u256 _s) {
         return append(bigint(_s));
     }
     RLPStream& append(bigint _s);

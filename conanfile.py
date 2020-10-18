@@ -24,10 +24,11 @@ class MinterTxConan(ConanFile):
     options = {"shared": [True, False]}
     default_options = {
         "shared": False,
-        "boost:shared": False,
+        "bigmath:shared": False,
         "bip39:shared": False,
         "bip39:enableC": False,
         "bip39:enableJNI": False,
+        "secp256k1_java:disableJNI": True
     }
     exports = "version"
     exports_sources = (
@@ -49,9 +50,10 @@ class MinterTxConan(ConanFile):
     default_channel = "latest"
 
     requires = (
-        'bip39/2.0.1@edwardstock/latest',
-        'toolbox/3.1.1@edwardstock/latest',
-        'boost/1.70.0@conan/stable',
+        'bip39/2.1.0@edwardstock/latest',
+        'secp256k1_java/1.0.0@edwardstock/latest',
+        'toolbox/3.2.1@edwardstock/latest',
+        'bigmath/1.0.0@edwardstock/latest'
     )
 
     build_requires = (

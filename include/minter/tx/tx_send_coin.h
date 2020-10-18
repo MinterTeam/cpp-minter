@@ -25,10 +25,11 @@ public:
     dev::bytes encode() override;
     void decode(const dev::bytes& data) override;
 
-    /// \brief Set coin to send
-    /// \param coin ticker, not name
+    /// \brief Set coin_id to send
+    /// \param coin_id network coin ID
     /// \return
-    tx_send_coin& set_coin(const std::string& coin);
+    tx_send_coin& set_coin_id(const dev::bigint& coin_id);
+    tx_send_coin& set_coin_id(const std::string& coin_id_num);
 
     /// \brief Set recipient address
     /// \param address may be minter::address_t and std::string (implicitly converts to address_t)
@@ -39,12 +40,12 @@ public:
     tx_send_coin& set_value(const dev::bigdec18& value);
     tx_send_coin& set_value(const dev::bigint& value);
 
-    std::string get_coin() const;
-    const minter::data::address& get_to() const;
+    dev::bigint get_coin_id() const;
+    const minter::address_t& get_to() const;
     dev::bigdec18 get_value() const;
 
 private:
-    std::string m_coin;
+    dev::bigint m_coin_id;
     minter::data::address m_to;
     dev::bigint m_value;
 };

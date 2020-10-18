@@ -21,19 +21,22 @@ public:
     dev::bytes encode() override;
     void decode(const dev::bytes& data) override;
 
-    tx_sell_all_coins& set_coin_to_sell(const std::string& coin);
-    tx_sell_all_coins& set_coin_to_buy(const std::string& coin);
+    tx_sell_all_coins& set_coin_id_to_sell(const dev::bigint& coin_id);
+    tx_sell_all_coins& set_coin_id_to_sell(const std::string& coin_id_num);
+    tx_sell_all_coins& set_coin_id_to_buy(const dev::bigint& coin_id);
+    tx_sell_all_coins& set_coin_id_to_buy(const std::string& coin_id_num);
+
     tx_sell_all_coins& set_min_value_to_buy(const std::string& amount);
     tx_sell_all_coins& set_min_value_to_buy(const dev::bigint& amount);
     tx_sell_all_coins& set_min_value_to_buy(const dev::bigdec18& amount);
 
-    std::string get_coin_to_sell() const;
-    std::string get_coin_to_buy() const;
+    dev::bigint get_coin_id_to_sell() const;
+    dev::bigint get_coin_id_to_buy() const;
     dev::bigdec18 get_min_value_to_buy() const;
 
 private:
-    std::string m_coin_to_sell;
-    std::string m_coin_to_buy;
+    dev::bigint m_coin_id_to_sell;
+    dev::bigint m_coin_id_to_buy;
     dev::bigint m_min_value_to_buy;
 };
 

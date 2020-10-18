@@ -30,22 +30,23 @@ public:
     /// \param commission from 10 to 100 percent
     /// \return
     tx_declare_candidacy& set_commission(unsigned commission);
-    tx_declare_candidacy& set_coin(const std::string& coin);
+    tx_declare_candidacy& set_coin_id(const dev::bigint& coin_id);
+    tx_declare_candidacy& set_coin_id(const std::string& coin_id_num);
     tx_declare_candidacy& set_stake(const std::string& amount);
     tx_declare_candidacy& set_stake(const dev::bigint& amount);
     tx_declare_candidacy& set_stake(const dev::bigdec18& amount);
 
-    const minter::data::address& get_address() const;
+    const minter::address_t& get_address() const;
     const minter::pubkey_t& get_pub_key() const;
     unsigned get_commission() const;
-    std::string get_coin() const;
+    dev::bigint get_coin_id() const;
     dev::bigdec18 get_stake() const;
 
 private:
     minter::data::address m_address;
     minter::pubkey_t m_pub_key;
     dev::bigint m_commission;
-    std::string m_coin;
+    dev::bigint m_coin_id;
     dev::bigint m_stake;
 };
 

@@ -46,7 +46,10 @@ int main(int argc, char** argv) {
     po::options_description desc("Minter Beauty Address Generator");
     desc.add_options()("help", "print this help");
 
-    desc.add_options()("word", po::value<std::string>(), "Word to search")("nodict", "Exclude default dictionary")("whence", po::value<std::string>(), "Where to search word: start, end or both (any of side)");
+    desc.add_options()(
+        "word", po::value<std::string>(), "Word to search")(
+        "nodict", "Exclude default dictionary")(
+        "whence", po::value<std::string>(), "Where to search word: start, end or both (any of side)");
 
     po::variables_map vm;
     po::store(po::parse_command_line(argc, argv, desc), vm);

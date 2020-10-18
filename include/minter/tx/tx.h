@@ -24,6 +24,7 @@
 namespace minter {
 
 MINTER_TX_API extern const std::unordered_map<std::string, chain_id> chain_id_str_map;
+MINTER_TX_API extern const dev::bigint def_coin_id;
 
 class MINTER_TX_API tx : public std::enable_shared_from_this<minter::tx> {
     friend class tx_builder;
@@ -45,7 +46,7 @@ public:
     dev::bigint get_nonce() const;
     uint8_t get_chain_id() const;
     dev::bigint get_gas_price() const;
-    std::string get_gas_coin() const;
+    dev::bigint get_gas_coin_id() const;
     uint8_t get_type() const;
     template<typename T = minter::tx_data>
     std::shared_ptr<T> get_data() const {
@@ -121,7 +122,7 @@ private:
     dev::bigint m_nonce;
     dev::bigint m_chain_id;
     dev::bigint m_gas_price;
-    std::string m_gas_coin;
+    dev::bigint m_gas_coin_id;
     dev::bigint m_type;
     dev::bytes m_data;
     std::shared_ptr<minter::tx_data> m_data_raw;

@@ -38,18 +38,28 @@ enum tx_type_val : uint8_t {
     set_candidate_off,
     create_multisig,
     multisend,
-    edit_candidate
+    edit_candidate,
+    /// \since minter 1.2
+    set_halt_block,
+    recreate_coin,
+    edit_coin_owner,
+    edit_multisig,
+    price_vote,
+    edit_candidate_public_key,
 };
 
+/// \brief Map with transaction type names. The key is uint8_t enum: minter::tx_type_val
 MINTER_TX_API extern const std::unordered_map<tx_type_val, std::string> tx_type_names;
 
+/// \brief Class represents a type of transaction with some additional information, like fee in and uint8 type value
+/// \tparam T
 template<typename T>
 class tx_type {
 public:
     using ref_type = T;
 
-    constexpr tx_type(double tx_fee, tx_type_val type)
-        : m_tx_fee(tx_fee),
+    constexpr tx_type(double tx_fee_in_pips, tx_type_val type)
+        : m_tx_fee(tx_fee_in_pips),
           m_type(type) {
     }
 
@@ -89,6 +99,13 @@ constexpr const static auto tx_set_candidate_off_type = tx_type<tx_set_candidate
 constexpr const static auto tx_create_multisig_address_type = tx_type<tx_create_multisig_address>(100.0, tx_type_val::create_multisig);
 constexpr const static auto tx_multisend_type = tx_type<tx_multisend>(10.0, tx_type_val::multisend);
 constexpr const static auto tx_edit_candidate_type = tx_type<tx_edit_candidate>(10000.0, tx_type_val::edit_candidate);
+/// \since minter 1.2
+constexpr const static auto tx_set_halt_block_type = tx_type<tx_set_halt_block>(1000.0, tx_type_val::set_halt_block);
+constexpr const static auto tx_recreate_coin_type = tx_type<tx_recreate_coin>(10000000.0, tx_type_val::recreate_coin);
+constexpr const static auto tx_edit_coin_owner_type = tx_type<tx_edit_coin_owner>(10000000.0, tx_type_val::edit_coin_owner);
+constexpr const static auto tx_edit_multisig_type = tx_type<tx_edit_multisig>(1000.0, tx_type_val::edit_multisig);
+constexpr const static auto tx_price_vote_type = tx_type<tx_price_vote>(10.0, tx_type_val::price_vote);
+constexpr const static auto tx_edit_candidate_public_key_type = tx_type<tx_edit_candidate_public_key>(10000000.0, tx_type_val::edit_candidate_public_key);
 
 } // namespace minter
 

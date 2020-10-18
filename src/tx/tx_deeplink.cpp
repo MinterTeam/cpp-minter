@@ -29,9 +29,18 @@ std::shared_ptr<minter::tx_deeplink> minter::tx_deeplink::decode(const dev::byte
     out->m_tx->m_data = (dev::bytes) s[1];
     out->m_tx->create_data_from_type();
     out->m_tx->m_payload = (dev::bytes) s[2];
-    out->m_tx->m_nonce = (dev::bigint) s[3];
+    if (s[3].isEmpty()) {
+        out->m_tx->m_nonce = dev::bigint("0");
+    } else {
+        out->m_tx->m_nonce = (dev::bigint) s[3];
+    }
     out->m_tx->m_gas_price = (dev::bigint) s[4];
-    out->m_tx->m_gas_coin = minter::utils::to_string_clear((dev::bytes) s[5]);
+
+    if (s[5].isEmpty()) {
+        out->m_tx->m_gas_coin_id = dev::bigint("0");
+    } else {
+        out->m_tx->m_gas_coin_id = (dev::bigint) s[5];
+    }
 
     return out;
 }
@@ -48,7 +57,7 @@ dev::bytes_data minter::tx_deeplink::encode() const {
     list.append(m_tx->get_payload());
     list.append(m_tx->get_nonce());
     list.append(m_tx->get_gas_price());
-    list.append(minter::utils::to_bytes_fixed(m_tx->get_gas_coin(), 10));
+    list.append(m_tx->get_gas_coin_id());
 
     output.appendList(list);
     return dev::bytes_data(output.out());

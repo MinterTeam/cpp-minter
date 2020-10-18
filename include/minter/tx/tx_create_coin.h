@@ -71,7 +71,7 @@ public:
     unsigned get_crr() const;
     dev::bigdec18 get_max_supply() const;
 
-private:
+protected:
     std::string m_name;
     std::string m_ticker;
     dev::bigint m_initial_amount;

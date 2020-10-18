@@ -7,8 +7,7 @@ set(CONANFILE_NAME conanfile.txt)
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../../modules)
 include(ConanInit)
 
-add_conan_remote(bincrafters https://api.bintray.com/conan/bincrafters/public-conan)
-add_conan_remote(scatter https://api.bintray.com/conan/edwardstock/scatter)
+
 add_conan_remote(minter https://api.bintray.com/conan/minterteam/minter)
 add_conan_remote(edwardstock https://api.bintray.com/conan/edwardstock/conan-public)
 conan_init()

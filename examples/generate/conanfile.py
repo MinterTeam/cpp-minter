@@ -14,7 +14,6 @@ class MinterTxConan(ConanFile):
     options = {"shared": [True, False]}
     default_options = {
         "shared": False,
-        "boost:shared": False,
         "bip39:shared": False,
         "bip39:enableC": False,
         "bip39:enableJNI": False,
@@ -24,5 +23,5 @@ class MinterTxConan(ConanFile):
     default_channel = "latest"
 
     requires = (
-        'minter_tx/0.6.0@minter/latest'
+        'minter_tx/1.0.0@minter/latest'
     )

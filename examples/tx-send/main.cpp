@@ -23,7 +23,7 @@ int main() {
     tx_builder->set_gas_price("1");
 
     // set gas coin
-    tx_builder->set_gas_coin("MNT");
+    tx_builder->set_gas_coin_id("0");
 
     // Set network id: minter::testnet or minter::mainnet
     tx_builder->set_chain_id(minter::testnet);
@@ -37,7 +37,7 @@ int main() {
     // set amount to send
     data->set_value("10");
     // set coin to send
-    data->set_coin("MNT");
+    data->set_coin_id("0");
 
     // finalize transaction
     auto tx = data->build();
@@ -52,6 +52,7 @@ int main() {
 
     // print
     std::cout << signedTx.to_hex() << std::endl;
+
     // or do smthng
     const uint8_t* signed_tx_data = signedTx.cdata();
 

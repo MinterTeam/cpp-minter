@@ -15,8 +15,13 @@ minter::tx_send_coin::tx_send_coin(std::shared_ptr<minter::tx> tx)
     : tx_data(std::move(tx)) {
 }
 
-minter::tx_send_coin& minter::tx_send_coin::set_coin(const std::string& coin) {
-    m_coin = coin;
+minter::tx_send_coin& minter::tx_send_coin::set_coin_id(const dev::bigint& coin_id) {
+    m_coin_id = coin_id;
+    return *this;
+}
+
+minter::tx_send_coin& minter::tx_send_coin::set_coin_id(const std::string& coin_id_num) {
+    m_coin_id = dev::bigint(coin_id_num);
     return *this;
 }
 
@@ -44,8 +49,8 @@ uint16_t minter::tx_send_coin::type() const {
     return minter::tx_send_coin_type.type();
 }
 
-std::string minter::tx_send_coin::get_coin() const {
-    return minter::utils::strip_null_bytes(m_coin.c_str(), m_coin.size());
+dev::bigint minter::tx_send_coin::get_coin_id() const {
+    return m_coin_id;
 }
 
 const minter::data::address& minter::tx_send_coin::get_to() const {
@@ -60,7 +65,7 @@ dev::bytes minter::tx_send_coin::encode() {
     eth::RLPStream out;
     eth::RLPStream lst;
     {
-        lst.append(minter::utils::to_bytes_fixed(m_coin));
+        lst.append(m_coin_id);
         lst.append(m_to.get());
         lst.append(m_value);
         out.appendList(lst);
@@ -71,7 +76,7 @@ dev::bytes minter::tx_send_coin::encode() {
 
 void minter::tx_send_coin::decode(const dev::bytes& data) {
     eth::RLP rlp(data);
-    m_coin = (std::string) rlp[0];
+    m_coin_id = (dev::bigint) rlp[0];
     m_to = minter::data::address((dev::bytes) rlp[1]);
     m_value = (dev::bigint) rlp[2];
 }

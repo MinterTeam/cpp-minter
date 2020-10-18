@@ -19,7 +19,7 @@ minter::tx_unbond::tx_unbond(std::shared_ptr<minter::tx> tx)
 void minter::tx_unbond::decode(const dev::bytes& data) {
     eth::RLP rlp(data);
     m_pub_key = (dev::bytes) rlp[0];
-    m_coin = minter::utils::to_string_clear((dev::bytes) rlp[1]);
+    m_coin_id = (dev::bigint) rlp[1];
     m_value = (dev::bigint) rlp[2];
 }
 
@@ -33,7 +33,7 @@ dev::bytes minter::tx_unbond::encode() {
     eth::RLPStream lst;
     {
         lst.append(m_pub_key.get());
-        lst.append(minter::utils::to_bytes_fixed(m_coin, 10));
+        lst.append(m_coin_id);
         lst.append(m_value);
         out.appendList(lst);
     }
@@ -52,8 +52,13 @@ minter::tx_unbond& minter::tx_unbond::set_pub_key(const minter::pubkey_t& pub_ke
     return *this;
 }
 
-minter::tx_unbond& minter::tx_unbond::set_coin(const std::string& coin) {
-    m_coin = coin;
+minter::tx_unbond& minter::tx_unbond::set_coin_id(const dev::bigint& coin_id) {
+    m_coin_id = coin_id;
+    return *this;
+}
+
+minter::tx_unbond& minter::tx_unbond::set_coin_id(const std::string& coin_id_num) {
+    m_coin_id = dev::bigint(coin_id_num);
     return *this;
 }
 
@@ -75,8 +80,8 @@ minter::tx_unbond& minter::tx_unbond::set_value(const dev::bigint& value) {
 const minter::pubkey_t& minter::tx_unbond::get_pub_key() const {
     return m_pub_key;
 }
-std::string minter::tx_unbond::get_coin() const {
-    return m_coin;
+dev::bigint minter::tx_unbond::get_coin_id() const {
+    return m_coin_id;
 }
 dev::bigdec18 minter::tx_unbond::get_value() const {
     return minter::utils::humanize_value(m_value);

@@ -13,18 +13,17 @@
 #include <minter/tx/tx_create_multisig_address.h>
 
 TEST(TxCreateMultisigAddress, TestEncode) {
-    minter::privkey_t priv_key("bc3503cae8c8561df5eadc4a9eda21d32c252a6c94cfae55b5310bf6085c8582");
-    const char* valid_tx = "f8a30102018a4d4e54000000000000000cb848f84607c3010305f83f94ee81347211c72524338f9680072af9074433314394ee81347211c72524338f9680072af9074433314594ee81347211c72524338f9680072af90744333144808001b845f8431ca094eb41d39e6782f5539615cc66da7073d4283893f0b3ee2b2f36aee1eaeb7c57a037f90ffdb45eb9b6f4cf301b48e73a6a81df8182e605b656a52057537d264ab4";
+    minter::privkey_t priv_key("4daf02f92bf760b53d3c725d6bcc0da8e55d27ba5350c78d3a88f873e502bd6e");
+    const char* valid_tx = "f880080101800cb0ef03c20102ea9467691076548b20234461ff6fd2bc9c64393eb8fc94c26dbd06984949a0efce1517925ca57a8d7a2c06808001b845f8431ba077b3ac0b0605279239bdcec12a698f7beb2c5d9d213c2cdc90638b3da020bbeaa021f4a509eaa7e93bc77901de3061d98e092c9ce1c414ad779a92804aedf4eb97";
     auto tx_builder = minter::new_tx();
-    tx_builder->set_nonce(dev::bigint("1"));
+    tx_builder->set_nonce(dev::bigint("8"));
     tx_builder->set_gas_price(dev::bigint("1"));
-    tx_builder->set_gas_coin("MNT");
-    tx_builder->set_chain_id(minter::testnet);
+    tx_builder->set_gas_coin_id(minter::def_coin_id);
+    tx_builder->set_chain_id(minter::mainnet);
     auto tx_data = tx_builder->tx_create_multisig_address();
-    tx_data->set_threshold(7);
-    tx_data->add_address("Mxee81347211c72524338f9680072af90744333143", 1);
-    tx_data->add_address("Mxee81347211c72524338f9680072af90744333145", 3);
-    tx_data->add_address("Mxee81347211c72524338f9680072af90744333144", 5);
+    tx_data->set_threshold(3);
+    tx_data->add_address("Mx67691076548b20234461ff6fd2bc9c64393eb8fc", 1);
+    tx_data->add_address("Mxc26dbd06984949a0efce1517925ca57a8d7a2c06", 2);
     auto tx = tx_data->build();
 
     auto sign = tx->sign_single(priv_key);
@@ -33,20 +32,18 @@ TEST(TxCreateMultisigAddress, TestEncode) {
 }
 
 TEST(TxCreateMultisigAddress, TestDecode) {
-    const char* valid_tx = "f8a30102018a4d4e54000000000000000cb848f84607c3010305f83f94ee81347211c72524338f9680072af9074433314394ee81347211c72524338f9680072af9074433314594ee81347211c72524338f9680072af90744333144808001b845f8431ca094eb41d39e6782f5539615cc66da7073d4283893f0b3ee2b2f36aee1eaeb7c57a037f90ffdb45eb9b6f4cf301b48e73a6a81df8182e605b656a52057537d264ab4";
+    const char* valid_tx = "f880080101800cb0ef03c20102ea9467691076548b20234461ff6fd2bc9c64393eb8fc94c26dbd06984949a0efce1517925ca57a8d7a2c06808001b845f8431ba077b3ac0b0605279239bdcec12a698f7beb2c5d9d213c2cdc90638b3da020bbeaa021f4a509eaa7e93bc77901de3061d98e092c9ce1c414ad779a92804aedf4eb97";
     auto tx = minter::tx::decode(valid_tx);
-    ASSERT_EQ(dev::bigint("1"), tx->get_nonce());
+    ASSERT_EQ(dev::bigint("8"), tx->get_nonce());
     ASSERT_EQ(dev::bigint("1"), tx->get_gas_price());
-    ASSERT_STREQ("MNT", tx->get_gas_coin().c_str());
-    ASSERT_EQ(minter::testnet, tx->get_chain_id());
+    ASSERT_EQ(minter::def_coin_id, tx->get_gas_coin_id());
+    ASSERT_EQ(minter::mainnet, tx->get_chain_id());
 
     auto data = tx->get_data<minter::tx_create_multisig_address>();
-    ASSERT_EQ(7, data->get_threshold());
-    ASSERT_EQ(3, data->get_addresses().size());
-    ASSERT_EQ(minter::address_t("Mxee81347211c72524338f9680072af90744333143"), data->get_addresses().at(0));
-    ASSERT_EQ(minter::address_t("Mxee81347211c72524338f9680072af90744333145"), data->get_addresses().at(1));
-    ASSERT_EQ(minter::address_t("Mxee81347211c72524338f9680072af90744333144"), data->get_addresses().at(2));
+    ASSERT_EQ(3, data->get_threshold());
+    ASSERT_EQ(2, data->get_addresses().size());
+    ASSERT_EQ(minter::address_t("Mx67691076548b20234461ff6fd2bc9c64393eb8fc"), data->get_addresses().at(0));
+    ASSERT_EQ(minter::address_t("Mxc26dbd06984949a0efce1517925ca57a8d7a2c06"), data->get_addresses().at(1));
     ASSERT_EQ(1, data->get_weights().at(0));
-    ASSERT_EQ(3, data->get_weights().at(1));
-    ASSERT_EQ(5, data->get_weights().at(2));
+    ASSERT_EQ(2, data->get_weights().at(1));
 }

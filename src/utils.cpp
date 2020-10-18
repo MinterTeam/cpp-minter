@@ -60,24 +60,12 @@ dev::bytes minter::utils::to_bytes_fixed(const std::string& input, size_t fixed_
 }
 
 dev::bytes minter::utils::to_bytes(const dev::bigint& num) {
-    dev::bytes v;
-    boost::multiprecision::export_bits(num, std::back_inserter(v), 8);
-
-    return v;
-}
-
-dev::bytes minter::utils::to_bytes(const dev::u256& num) {
-    dev::bytes v;
-    boost::multiprecision::export_bits(num, std::back_inserter(v), 8);
-
-    return v;
+    return num.export_bytes();
 }
 
 dev::bytes minter::utils::to_bytes(const dev::bigdec18& num) {
     auto out = num * dev::bigdec18("1000000000000000000");
-    auto nt = dev::bigint(out);
-
-    return to_bytes(nt);
+    return out.to_bigint().export_bytes();
 }
 
 dev::bytes minter::utils::sha3k(const dev::bytes_data& message) {
@@ -170,12 +158,21 @@ dev::bytes minter::utils::to_base64_web(dev::bytes data) {
 }
 
 dev::bigint minter::utils::to_bigint(const dev::bytes& bytes) {
-    dev::bigint val;
-    boost::multiprecision::import_bits(val, bytes.begin(), bytes.end());
-    return val;
+    if (bytes.empty()) {
+        return dev::bigint("0");
+    }
+    //
+    //    dev::bigint val;
+    //    boost::multiprecision::import_bits(val, bytes.begin(), bytes.end());
+    //    return val;
+
+    return dev::bigint(bytes);
 }
 
 dev::bigint minter::utils::to_bigint(const uint8_t* bytes, size_t len) {
+    if (len == 0) {
+        return dev::bigint("0");
+    }
     return to_bigint(dev::bytes(bytes, bytes + len));
 }
 
@@ -189,19 +186,21 @@ std::string minter::utils::to_string(const dev::bytes& src) {
 }
 
 std::string minter::utils::to_string(const dev::bigdec18& src) {
-    std::stringstream ss;
-    ss << std::setprecision(std::numeric_limits<boost::multiprecision::cpp_dec_float<18>>::max_digits10);
-    ss << src;
+    //    std::stringstream ss;
+    //    ss << std::setprecision(std::numeric_limits<boost::multiprecision::cpp_dec_float<18>>::max_digits10);
+    //    ss << src;
+    //
+    //    return toolbox::strings::decimal_formatter()(ss.str());
 
-    return toolbox::strings::decimal_formatter()(ss.str());
+    return src.format(".18f");
 }
 
 std::string minter::utils::to_string_lp(const dev::bigdec18& src) {
-    std::stringstream ss;
-    ss << std::setprecision(std::numeric_limits<boost::multiprecision::cpp_dec_float<4>>::max_digits10);
-    ss << src;
-
-    return toolbox::strings::decimal_formatter(ss.str()).set_min_fractions(4).set_max_fractions(4).format();
+    //    std::stringstream ss;
+    //    ss << std::setprecision(std::numeric_limits<boost::multiprecision::cpp_dec_float<4>>::max_digits10);
+    //    ss << src;
+    const auto res = to_string(src);
+    return toolbox::strings::decimal_formatter(res).set_min_fractions(4).set_max_fractions(4).format();
 }
 
 std::string minter::utils::to_string(const dev::bigint& src) {

@@ -1,59 +1,162 @@
-version: 2
-jobs:
-  build:
-    docker:
-      - image: debian:stretch
-        environment:
-          CXX: /usr/bin/g++
-          CC: /usr/bin/gcc
-          CONAN_CPU_COUNT: 4
+version: 2.1
+commands:
+  init:
     steps:
       - run: apt-get update
-      - run: apt-get install -y git
+
+  checkout_recursive:
+    steps:
       - run:
-          name: Avoid hosts unknown for github
-          command: mkdir -p ~/.ssh/ && echo -e "Host github.com\n\tStrictHostKeyChecking no\n" > ~/.ssh/config
-      - run:
-          name: Cloning repo
+          name: Checkout
           command: git clone --recursive https://github.com/MinterTeam/cpp-minter .
-      - restore_cache:
-          keys:
-            - custom-pkgs-{{ checksum ".circleci/setup.sh" }}
-      - run:
-          name: Preparing
-          command: $(which bash) .circleci/setup.sh
-      - save_cache:
-          key: custom-pkgs-{{ checksum ".circleci/setup.sh" }}
-          paths:
-            - /tmp/pkgs
-      - run: pip3 install setuptools -U
-      - run: pip3 install conan
-      - run: conan remote add scatter https://api.bintray.com/conan/edwardstock/scatter
+  conan_remotes:
+    steps:
       - run: conan remote add edwardstock https://api.bintray.com/conan/edwardstock/conan-public
       - run: conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan
       - run: conan remote add minter https://api.bintray.com/conan/minterteam/minter
       - run: conan user -p $BINTRAY_API_KEY -r minter edwardstock
-      - run: mkdir -p _build
-      - restore_cache:
-          keys:
-            - conan-dir-{{ checksum "conanfile.py" }}
-      - run: conan install gtest/1.8.1@bincrafters/stable
-      - run: conan install toolbox/3.1.1@edwardstock/latest
-      - run: conan install bip39/2.0.1@edwardstock/latest
-      - run: conan install boost/1.70.0@conan/stable
+
+  conan_project_deps:
+    steps:
       - run:
-          name: Configuring
-          command: conan remove --locks && cd _build && cmake .. -DCMAKE_BUILD_TYPE=Debug -DMINTER_TX_TEST=ON
-      - save_cache:
-          key: conan-dir-{{ checksum "conanfile.py" }}
-          paths:
-            - /root/.conan
+          name: Project dependencies
+          command: $(which bash) .circleci/conan_deps.sh
+
+  test:
+    steps:
       - run:
           name: Testing
           command: $(which bash) .circleci/test.sh
+
+  deploy_conan:
+    steps:
       - run:
-          name: "Deploy to Conan"
+          name: Deploy to Conan bintray
           command: $(which bash) .circleci/deploy.sh
-      - run:
-          name: Deploy to Github
-          command: $(which bash) .circleci/package.sh
+
+
+  #  make_package:
+  #    steps:
+  #      - run: bash cfg/package_make.sh -t package
+  #      - run: bash _build/package_upload.sh -t bintray
+
+  do_all_centos:
+    steps:
+      - checkout_recursive
+      - conan_remotes
+      - conan_project_deps
+      - test
+      - deploy_conan
+
+  do_all:
+    steps:
+      - init
+      - checkout_recursive
+      - conan_remotes
+      - conan_project_deps
+      - test
+      - deploy_conan
+
+jobs:
+  #  package_all:
+  #    machine:
+  #      image: ubuntu-1604:202007-01
+  #    steps:
+  #      - run: bash cfg/add_repo.sh debian
+  #      - run: apt-get install dockerpack
+  #      - run: dockerpack build
+
+  gcc-4_8_5:
+    docker:
+      - image: docker.edwardstock.com/gcc_dev_el7
+    steps:
+      - do_all_centos
+
+  gcc-5:
+    docker:
+      - image: conanio/gcc5
+        auth:
+          username: $DOCKER_USER
+          password: $DOCKER_TOKEN
+        environment:
+          CONAN_CPU_COUNT: 4
+    steps:
+      - do_all
+  gcc-6:
+    docker:
+      - image: conanio/gcc6
+        auth:
+          username: $DOCKER_USER
+          password: $DOCKER_TOKEN
+        environment:
+          CONAN_CPU_COUNT: 4
+    steps:
+      - do_all
+  gcc-7:
+    docker:
+      - image: conanio/gcc7
+        auth:
+          username: $DOCKER_USER
+          password: $DOCKER_TOKEN
+        environment:
+          CONAN_CPU_COUNT: 4
+    steps:
+      - do_all
+  gcc-8:
+    docker:
+      - image: conanio/gcc8
+        auth:
+          username: $DOCKER_USER
+          password: $DOCKER_TOKEN
+        environment:
+          CONAN_CPU_COUNT: 4
+    steps:
+      - do_all
+  gcc-9:
+    docker:
+      - image: conanio/gcc9
+        auth:
+          username: $DOCKER_USER
+          password: $DOCKER_TOKEN
+        environment:
+          CONAN_CPU_COUNT: 4
+    steps:
+      - do_all
+  gcc-10:
+    docker:
+      - image: conanio/gcc10
+        auth:
+          username: $DOCKER_USER
+          password: $DOCKER_TOKEN
+        environment:
+          CONAN_CPU_COUNT: 4
+    steps:
+      - do_all
+
+workflows:
+  build_and_test:
+    jobs:
+      - gcc-4_8_5:
+          context:
+            - remote_tokens
+      - gcc-5:
+          context:
+            - remote_tokens
+      - gcc-6:
+          context:
+            - remote_tokens
+      - gcc-7:
+          context:
+            - remote_tokens
+      - gcc-8:
+          context:
+            - remote_tokens
+      - gcc-9:
+          context:
+            - remote_tokens
+      - gcc-10:
+          context:
+            - remote_tokens
+#      - package_all:
+#          context:
+#            - remote_tokens

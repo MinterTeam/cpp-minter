@@ -8,20 +8,20 @@
 
 TEST(TxBuy, TestEncode) {
 
-    const char* expected = "f8830102018a4d4e540000000000000004a9e88a54455354000000000000880de0b6b3a76400008a4d4e5400000000000000880de0b6b3a7640000808001b845f8431ca04ee095a20ca58062a5758e2a6d3941857daa8943b5873c57f111190ca88dbc56a01148bf2fcc721ca353105e4f4a3419bec471d7ae08173f443a28c3ae6d27018a";
+    const char* expected = "f865020101800495d40187038d7ea4c680008089056bc75e2d63100000808001b845f8431ca0f64de1594ea6ea7717a2161771a429a2202e78ae4f1bf628a8c2e12a2df13e4aa04b8eb64ef9e7574983cc66960e98829fd93ab61fd2d7794c3e8810970e9e3693";
 
-    minter::data::private_key pk = "07bc17abdcee8b971bb8723e36fe9d2523306d5ab2d683631693238e0f9df142";
+    minter::data::private_key pk = "4daf02f92bf760b53d3c725d6bcc0da8e55d27ba5350c78d3a88f873e502bd6e";
 
     auto tx = minter::new_tx()
-                  ->set_nonce("1")
+                  ->set_nonce("2")
                   .set_gas_price("1")
-                  .set_gas_coin("MNT")
-                  .set_chain_id(minter::testnet)
+                  .set_gas_coin_id(minter::def_coin_id)
+                  .set_chain_id(minter::mainnet)
                   .tx_buy_coin()
-                  ->set_coin_to_buy("TEST")
-                  .set_coin_to_sell("MNT")
-                  .set_value_to_buy("1")
-                  .set_max_value_to_sell("1")
+                  ->set_coin_id_to_buy(dev::bigint("1"))
+                  .set_coin_id_to_sell(minter::def_coin_id)
+                  .set_value_to_buy("0.001")
+                  .set_max_value_to_sell("100")
                   .build();
 
     auto signature = tx->sign_single(pk);
@@ -30,18 +30,18 @@ TEST(TxBuy, TestEncode) {
 }
 
 TEST(TxBuy, TestDecode) {
-    const char* encoded = "f8830102018a4d4e540000000000000004a9e88a54455354000000000000880de0b6b3a76400008a4d4e5400000000000000880de0b6b3a7640000808001b845f8431ca04ee095a20ca58062a5758e2a6d3941857daa8943b5873c57f111190ca88dbc56a01148bf2fcc721ca353105e4f4a3419bec471d7ae08173f443a28c3ae6d27018a";
+    const char* encoded = "f865020101800495d40187038d7ea4c680008089056bc75e2d63100000808001b845f8431ca0f64de1594ea6ea7717a2161771a429a2202e78ae4f1bf628a8c2e12a2df13e4aa04b8eb64ef9e7574983cc66960e98829fd93ab61fd2d7794c3e8810970e9e3693";
     auto decoded = minter::tx::decode(encoded);
 
-    ASSERT_EQ(dev::bigint("1"), decoded->get_nonce());
-    ASSERT_STREQ("MNT", decoded->get_gas_coin().c_str());
+    ASSERT_EQ(dev::bigint("2"), decoded->get_nonce());
+    ASSERT_EQ(dev::bigint("0"), decoded->get_gas_coin_id());
     ASSERT_EQ(dev::bigint("1"), decoded->get_gas_price());
-    ASSERT_EQ(minter::testnet, decoded->get_chain_id());
+    ASSERT_EQ(minter::mainnet, decoded->get_chain_id());
     auto data = decoded->get_data<minter::tx_buy_coin>();
-    ASSERT_STREQ("TEST", data->get_coin_to_buy().c_str());
-    ASSERT_STREQ("MNT", data->get_coin_to_sell().c_str());
-    ASSERT_EQ(dev::bigdec18("1"), data->get_value_to_buy());
-    ASSERT_EQ(dev::bigdec18("1"), data->get_max_value_to_sell());
+    ASSERT_EQ(dev::bigint("1"), data->get_coin_id_to_buy());
+    ASSERT_EQ(dev::bigint("0"), data->get_coin_id_to_sell());
+    ASSERT_EQ(dev::bigdec18("0.001"), data->get_value_to_buy());
+    ASSERT_EQ(dev::bigdec18("100"), data->get_max_value_to_sell());
     ASSERT_EQ(minter::signature_type::single, decoded->get_signature_type());
 }
 
@@ -51,12 +51,12 @@ TEST(TxBuy, TestValuePrecisionEncodeDecode) {
     auto tx = minter::new_tx()
                   ->set_nonce("1")
                   .set_gas_price("1")
-                  .set_gas_coin("MNT")
+                  .set_gas_coin_id(dev::bigint("0"))
                   .set_chain_id(minter::testnet)
                   .tx_buy_coin()
-                  ->set_coin_to_buy("TEST")
-                  .set_coin_to_sell("MNT")
-                  .set_value_to_buy("1")
+                  ->set_coin_id_to_buy(dev::bigint("1"))
+                  .set_coin_id_to_sell(minter::def_coin_id)
+                  .set_value_to_buy("0.001")
                   .set_max_value_to_sell("1.102030405060708090")
                   .build();
     auto signature = tx->sign_single(pk);

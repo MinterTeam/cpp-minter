@@ -24,7 +24,7 @@ dev::bytes minter::tx_declare_candidacy::encode() {
         lst.append(m_address.get());
         lst.append(m_pub_key.get());
         lst.append(m_commission);
-        lst.append(minter::utils::to_bytes_fixed(m_coin, 10));
+        lst.append(m_coin_id);
         lst.append(m_stake);
 
         out.appendList(lst);
@@ -38,7 +38,7 @@ void minter::tx_declare_candidacy::decode(const dev::bytes& data) {
     m_address = (dev::bytes) rlp[0];
     m_pub_key = (dev::bytes) rlp[1];
     m_commission = (dev::bigint) rlp[2];
-    m_coin = minter::utils::to_string_clear((dev::bytes) rlp[3]);
+    m_coin_id = (dev::bigint) rlp[3];
     m_stake = (dev::bigint) rlp[4];
 }
 
@@ -62,8 +62,13 @@ minter::tx_declare_candidacy& minter::tx_declare_candidacy::set_commission(unsig
     return *this;
 }
 
-minter::tx_declare_candidacy& minter::tx_declare_candidacy::set_coin(const std::string& coin) {
-    m_coin = coin;
+minter::tx_declare_candidacy& minter::tx_declare_candidacy::set_coin_id(const dev::bigint& coin_id) {
+    m_coin_id = coin_id;
+    return *this;
+}
+
+minter::tx_declare_candidacy& minter::tx_declare_candidacy::set_coin_id(const std::string& coin_id_num) {
+    m_coin_id = dev::bigint(coin_id_num);
     return *this;
 }
 
@@ -94,8 +99,8 @@ unsigned minter::tx_declare_candidacy::get_commission() const {
     return static_cast<unsigned>(m_commission);
 }
 
-std::string minter::tx_declare_candidacy::get_coin() const {
-    return m_coin;
+dev::bigint minter::tx_declare_candidacy::get_coin_id() const {
+    return m_coin_id;
 }
 
 dev::bigdec18 minter::tx_declare_candidacy::get_stake() const {
