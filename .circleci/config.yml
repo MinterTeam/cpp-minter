@@ -11,9 +11,9 @@ commands:
           command: git clone --recursive https://github.com/MinterTeam/cpp-minter .
   conan_remotes:
     steps:
-      - run: conan remote add edwardstock https://api.bintray.com/conan/edwardstock/conan-public
-      - run: conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan
-      - run: conan remote add minter https://api.bintray.com/conan/minterteam/minter
+      - run: conan remote add -f edwardstock https://api.bintray.com/conan/edwardstock/conan-public
+      - run: conan remote add -f bincrafters https://api.bintray.com/conan/bincrafters/public-conan
+      - run: conan remote add -f minter https://api.bintray.com/conan/minterteam/minter
       - run: conan user -p $BINTRAY_API_KEY -r minter edwardstock
 
   conan_project_deps:
