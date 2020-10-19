@@ -1,7 +1,7 @@
 checkout: git clone --recursive https://github.com/MinterTeam/cpp-minter.git .
 debug: true
 commands:
-    init_centos:
+  init_centos:
     steps:
       - run: bash cfg/add_repo.sh centos
       - run: yum -y update
