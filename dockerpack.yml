@@ -1,21 +1,7 @@
-checkout: git clone --recursive https://github.com/edwardstock/bip3x.git .
+checkout: git clone --recursive https://github.com/MinterTeam/cpp-minter.git .
 debug: true
 commands:
-  init_ssh_centos:
-    steps:
-      - run: yum install -y nano gdb openssh-server rsync
-      - run: mkdir ~/.ssh
-      - copy: ~/.ssd/id_rsa.pub >> ~/.ssh/authorized_keys
-      - run: sed -i 's/#PermitRootLogin yes/PermitRootLogin yes/g' /etc/ssh/sshd_config
-      - run: sed -i 's/#PubkeyAuthentication yes/PubkeyAuthentication yes/g' /etc/ssh/sshd_config
-      - run: sed -i 's/#PermitEmptyPasswords no/PermitEmptyPasswords yes/g' /etc/ssh/sshd_config
-      - run: sed -i 's/#StrictModes no/#StrictModes no/g' /etc/ssh/sshd_config
-      - run: echo 'root:pwd' | chpasswd
-      - run: ssh-keygen -A
-      - run: $(which sshd) -f /etc/ssh/sshd_config -p 22
-
-
-  init_centos:
+    init_centos:
     steps:
       - run: bash cfg/add_repo.sh centos
       - run: yum -y update
