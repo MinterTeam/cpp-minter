@@ -50,20 +50,15 @@ class MinterTxConan(ConanFile):
     default_channel = "latest"
 
     requires = (
-        'bip39/2.1.0@edwardstock/latest',
+        'bip39/2.1.1@edwardstock/latest',
         'secp256k1_java/1.0.0@edwardstock/latest',
-        'toolbox/3.2.1@edwardstock/latest',
-        'bigmath/1.0.0@edwardstock/latest'
+        'toolbox/3.2.2@edwardstock/latest',
+        'bigmath/1.0.2@edwardstock/latest'
     )
 
     build_requires = (
-        "gtest/1.8.1@bincrafters/stable",
+        "gtest/1.10.0",
     )
-
-    # def imports(self):
-    #     self.copy("*.dll", "bin", "bin")
-    #     self.copy("*.dll", "bin", "lib")
-    #     self.copy("*.dylib", "lib", "lib")
 
     def source(self):
         if "CONAN_LOCAL" not in os.environ:

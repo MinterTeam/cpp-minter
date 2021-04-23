@@ -1,5 +1,26 @@
 # Release notes
 
+## 2.0.0
+
+- Added transactions:
+    - AddLiquidity (`tx_add_liquidity`)
+    - RemoveLiquidity (`tx_remove_liquidity`)
+    - BuySwapPool (`tx_buy_swap_pool`)
+    - SellSwapPool (`tx_sell_swap_pool`)
+    - SellAllSwapPool (`tx_sell_all_swap_pool`)
+    - CreateSwapPool (`tx_create_swap_pool`)
+    - CreateToken (`tx_create_token`)
+    - RecreateToken (`tx_recreate_token`)
+    - MintToken (`tx_mint_token`)
+    - BurnToken (`tx_burn_token`)
+    - EditCandidateCommission (`tx_edit_candidate_commission`)
+    - VoteCommission (`tx_vote_commission`)
+    - VoteUpdate (`tx_vote_update`)
+
+- Passing simple (not exactly) types by value instead of by const reference: dev::bigint, dev::bigdec18 etc
+- Added method overrides with `std::string` argument (float or integer representation) where by default
+  passing `dev::bigdec18` or `dev::bigint`
+
 ## 1.0.0 **Breaking changes**
 
 - Now coins represented by its ID. It means, all methods like `set_coin(std::string)` or `set_gas_coin(std::string)`

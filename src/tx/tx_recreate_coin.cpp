@@ -6,6 +6,8 @@
 
 #include "minter/tx/tx_type.h"
 
+#include <utility>
+
 minter::tx_recreate_coin::tx_recreate_coin(std::shared_ptr<minter::tx> tx)
     : tx_data(tx),
       tx_create_coin(tx) {
@@ -38,8 +40,8 @@ minter::tx_recreate_coin& minter::tx_recreate_coin::set_initial_amount(const dev
     minter::tx_create_coin::set_initial_amount(amount);
     return *this;
 }
-minter::tx_recreate_coin& minter::tx_recreate_coin::set_initial_amount(const dev::bigint& amount) {
-    minter::tx_create_coin::set_initial_amount(amount);
+minter::tx_recreate_coin& minter::tx_recreate_coin::set_initial_amount(dev::bigint amount) {
+    minter::tx_create_coin::set_initial_amount(std::move(amount));
     return *this;
 }
 minter::tx_recreate_coin& minter::tx_recreate_coin::set_initial_reserve(const std::string& amount) {
@@ -50,8 +52,8 @@ minter::tx_recreate_coin& minter::tx_recreate_coin::set_initial_reserve(const de
     minter::tx_create_coin::set_initial_reserve(amount);
     return *this;
 }
-minter::tx_recreate_coin& minter::tx_recreate_coin::set_initial_reserve(const dev::bigint& amount) {
-    minter::tx_create_coin::set_initial_reserve(amount);
+minter::tx_recreate_coin& minter::tx_recreate_coin::set_initial_reserve(dev::bigint amount) {
+    minter::tx_create_coin::set_initial_reserve(std::move(amount));
     return *this;
 }
 minter::tx_recreate_coin& minter::tx_recreate_coin::set_crr(unsigned int crr) {
@@ -62,8 +64,8 @@ minter::tx_recreate_coin& minter::tx_recreate_coin::set_max_supply(const std::st
     minter::tx_create_coin::set_max_supply(max_supply);
     return *this;
 }
-minter::tx_recreate_coin& minter::tx_recreate_coin::set_max_supply(const dev::bigint& max_supply) {
-    minter::tx_create_coin::set_max_supply(max_supply);
+minter::tx_recreate_coin& minter::tx_recreate_coin::set_max_supply(dev::bigint max_supply) {
+    minter::tx_create_coin::set_max_supply(std::move(max_supply));
     return *this;
 }
 minter::tx_recreate_coin& minter::tx_recreate_coin::set_max_supply(const dev::bigdec18& max_supply) {

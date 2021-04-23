@@ -15,9 +15,8 @@ commands:
 
   init_deb:
     steps:
-      - run: bash cfg/add_repo.sh debian
-      - run: apt -y install apt-transport-https
-      - run: apt -y update
+      - run: apt -y update && apt -y install apt-transport-https
+      - run: bash cfg/add_repo.sh debian && apt -y update
       - run: apt -yq install libtoolboxpp-dev libbip3x-dev libsecp256k1_java-dev libbigmath-dev
 
   test:
@@ -37,36 +36,24 @@ commands:
 jobs:
   centos_el7:
     image: docker.edwardstock.com/gcc_dev_el7:latest
-    env:
-      BINTRAY_USER: minterteam
-      BINTRAY_API_KEY: $ENV
     steps:
       - init_centos
       - make_project
 
   centos_el8:
     image: docker.edwardstock.com/gcc_dev_el8:latest
-    env:
-      BINTRAY_USER: minterteam
-      BINTRAY_API_KEY: $ENV
     steps:
       - init_centos
       - make_project
 
   fedora_fc32:
     image: docker.edwardstock.com/gcc_dev_fc32:latest
-    env:
-      BINTRAY_USER: minterteam
-      BINTRAY_API_KEY: $ENV
     steps:
       - init_fedora
       - make_project
 
   fedora_fc33:
     image: docker.edwardstock.com/gcc_dev_fc33:latest
-    env:
-      BINTRAY_USER: minterteam
-      BINTRAY_API_KEY: $ENV
     steps:
       - init_fedora
       - make_project
@@ -74,53 +61,37 @@ jobs:
   fedora_fc34:
     image: docker.edwardstock.com/gcc_dev_fc34:latest
     env:
-      BINTRAY_USER: minterteam
-      BINTRAY_API_KEY: $ENV
+      CXXFLAGS: "-Wno-maybe-uninitialized"
     steps:
       - init_fedora
       - make_project
 
   debian_jessie:
     image: docker.edwardstock.com/gcc_dev_debian_jessie:latest
-    env:
-      BINTRAY_USER: minterteam
-      BINTRAY_API_KEY: $ENV
     steps:
       - init_deb
       - make_project
 
   debian_stretch:
     image: docker.edwardstock.com/gcc_dev_debian_stretch:latest
-    env:
-      BINTRAY_USER: minterteam
-      BINTRAY_API_KEY: $ENV
     steps:
       - init_deb
       - make_project
 
   debian_buster:
     image: docker.edwardstock.com/gcc_dev_debian_buster:latest
-    env:
-      BINTRAY_USER: minterteam
-      BINTRAY_API_KEY: $ENV
     steps:
       - init_deb
       - make_project
 
   ubuntu_xenial:
     image: docker.edwardstock.com/gcc_dev_ubuntu_xenial:latest
-    env:
-      BINTRAY_USER: minterteam
-      BINTRAY_API_KEY: $ENV
     steps:
       - init_deb
       - make_project
 
   ubuntu_bionic:
     image: docker.edwardstock.com/gcc_dev_ubuntu_bionic:latest
-    env:
-      BINTRAY_USER: minterteam
-      BINTRAY_API_KEY: $ENV
     steps:
       - init_deb
       - make_project
@@ -129,17 +100,12 @@ jobs:
     image: docker.edwardstock.com/gcc_dev_ubuntu_focal:latest
     env:
       DEBIAN_FRONTEND: noninteractive
-      BINTRAY_USER: minterteam
-      BINTRAY_API_KEY: $ENV
     steps:
       - init_deb
       - make_project
 
   ubuntu_groovy:
     image: docker.edwardstock.com/gcc_dev_ubuntu_groovy:latest
-    env:
-      BINTRAY_USER: edwardstock
-      BINTRAY_API_KEY: $ENV
     steps:
       - init_deb
       - make_project

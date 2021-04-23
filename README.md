@@ -22,22 +22,17 @@ Supported distributions:
 
 Steps:
 
-* Create `bintray-edwardstock.repo` file inside `/etc/yum.repos.d`
+* Create `edwardstock.repo` file inside `/etc/yum.repos.d`
 * Add below to this file
 
 ```ini
-[bintray-edwardstock]
-name=bintray-edwardstock
-baseurl=https://dl.bintray.com/edwardstock/rh/[paste here centos OR fedora]/$releasever/$basearch
-gpgcheck=0
-repo_gpgcheck=0
+[edwardstock]
+name=edwardstock
+baseurl=https://edwardstock.jfrog.io/artifactory/rhel/[centos or fedora]/$releasever/$basearch
 enabled=1
-```
-
-* Add repository gpg to trusted
-
-```bash
-curl -s https://bintray.com/user/downloadSubjectPublicKey?username=bintray | gpg --import
+gpgcheck=0
+gpgkey=https://edwardstock.jfrog.io/artifactory/rhel/[centos or fedora]/$releasever/$basearch/repodata/repomd.xml.key
+repo_gpgcheck=1
 ```
 
 * Update repository `yum -y update` or `dnf update`
@@ -54,13 +49,21 @@ If you using other distribution, just find what your system based on, for exampl
 Buster. In this case just change distribution name in `/etc/apt/sources.list` by yourself.
 
 ```bash
-echo "deb https://dl.bintray.com/edwardstock/debian $(lsb_release -c -s) main" | sudo tee -a /etc/apt/sources.list
-curl -s https://bintray.com/user/downloadSubjectPublicKey?username=bintray | sudo apt-key add -
+echo "deb https://edwardstock.jfrog.io/artifactory/debian $(lsb_release -c -s) main" | tee -a /etc/apt/sources.list
+curl -s https://edwardstock.jfrog.io/artifactory/api/gpg/key/public | apt-key add -
 apt update && apt install libminter_tx-dev
 ```
 
 If you got error **lsb_release: command not found** then just install `apt install lsb-release`. It can happened on
 naked Docker images.
+
+<br/><br/>
+After installing package from repository, you can use cmake-find module to find library:
+
+```cmake
+find_package(minter_tx 2.0.0 REQUIRED)
+target_link_libraries(MY_PROJECT minter_tx::minter_tx)
+```
 
 ## Using via Conan (very useful dependency manager for C++)
 
@@ -91,9 +94,8 @@ pip3 install conan
 **Setup repositories**
 
 ```bash
-conan remote add scatter https://api.bintray.com/conan/edwardstock/scatter
-conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan
-conan remote add minter https://api.bintray.com/conan/minterteam/minter
+conan remote add minter https://minter.jfrog.io/artifactory/api/conan/conan
+conan remote add edwardstock https://edwardstock.jfrog.io/artifactory/api/conan/conan
 ```
 
 For more information, see official [docs](https://docs.conan.io/en/latest/getting_started.html)
@@ -104,7 +106,7 @@ For more information, see official [docs](https://docs.conan.io/en/latest/gettin
 
 You can just add to your conanfile.txt dependency:
 
-`minter_tx/1.0.0@minter/latest`
+`minter_tx/2.0.0@minter/latest`
 
 CMakeLists.txt
 

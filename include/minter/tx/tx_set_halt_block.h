@@ -28,7 +28,7 @@ public:
 
     tx_set_halt_block& set_public_key(const minter::pubkey_t& public_key);
     tx_set_halt_block& set_public_key(const dev::bytes& public_key_bytes);
-    tx_set_halt_block& set_height(const dev::bigint& height);
+    tx_set_halt_block& set_height(dev::bigint height);
     tx_set_halt_block& set_height(const std::string& height_num);
 
     const minter::pubkey_t& get_public_key() const;

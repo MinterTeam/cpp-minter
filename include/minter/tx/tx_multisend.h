@@ -34,6 +34,7 @@ public:
     dev::bytes encode() override;
     void decode(const dev::bytes& data) override;
 
+    tx_multisend& add_item(const std::string& coin_id_num, const minter::data::address& to, const std::string& amount);
     tx_multisend& add_item(const dev::bigint& coin_id, const minter::data::address& to, const std::string& amount);
     tx_multisend& add_item(const dev::bigint& coin_id, const minter::data::address& to, const dev::bigdec18& amount);
     tx_multisend& add_item(const dev::bigint& coin_id, const minter::data::address& to, const dev::bigint& amount);

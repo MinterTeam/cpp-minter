@@ -9,25 +9,38 @@
 
 #include "minter/tx/tx_builder.h"
 
+#include "minter/tx/tx_add_liquidity.h"
+#include "minter/tx/tx_burn_token.h"
 #include "minter/tx/tx_buy_coin.h"
+#include "minter/tx/tx_buy_swap_pool.h"
 #include "minter/tx/tx_create_coin.h"
 #include "minter/tx/tx_create_multisig_address.h"
+#include "minter/tx/tx_create_swap_pool.h"
+#include "minter/tx/tx_create_token.h"
 #include "minter/tx/tx_declare_candidacy.h"
 #include "minter/tx/tx_delegate.h"
 #include "minter/tx/tx_edit_candidate.h"
+#include "minter/tx/tx_edit_candidate_commission.h"
 #include "minter/tx/tx_edit_candidate_public_key.h"
 #include "minter/tx/tx_edit_coin_owner.h"
 #include "minter/tx/tx_edit_multisig.h"
+#include "minter/tx/tx_mint_token.h"
 #include "minter/tx/tx_multisend.h"
 #include "minter/tx/tx_price_vote.h"
 #include "minter/tx/tx_recreate_coin.h"
+#include "minter/tx/tx_recreate_token.h"
 #include "minter/tx/tx_redeem_check.h"
+#include "minter/tx/tx_remove_liquidity.h"
 #include "minter/tx/tx_sell_all_coins.h"
+#include "minter/tx/tx_sell_all_swap_pool.h"
 #include "minter/tx/tx_sell_coin.h"
+#include "minter/tx/tx_sell_swap_pool.h"
 #include "minter/tx/tx_send_coin.h"
 #include "minter/tx/tx_set_candidate_on_off.h"
 #include "minter/tx/tx_set_halt_block.h"
 #include "minter/tx/tx_unbond.h"
+#include "minter/tx/tx_vote_commission.h"
+#include "minter/tx/tx_vote_update.h"
 #include "minter/tx/utils.h"
 
 #include <memory>
@@ -202,4 +215,46 @@ std::shared_ptr<minter::tx_price_vote> minter::tx_builder::tx_price_vote() {
 
 std::shared_ptr<minter::tx_edit_candidate_public_key> minter::tx_builder::tx_edit_candidate_public_key() {
     return std::make_shared<minter::tx_edit_candidate_public_key>(m_tx);
+}
+
+std::shared_ptr<minter::tx_add_liquidity> minter::tx_builder::tx_add_liquidity() {
+    return std::make_shared<minter::tx_add_liquidity>(m_tx);
+}
+std::shared_ptr<minter::tx_remove_liquidity> minter::tx_builder::tx_remove_liquidity() {
+    return std::make_shared<minter::tx_remove_liquidity>(m_tx);
+}
+
+std::shared_ptr<minter::tx_sell_swap_pool> minter::tx_builder::tx_sell_swap_pool() {
+    return std::make_shared<minter::tx_sell_swap_pool>(m_tx);
+}
+
+std::shared_ptr<minter::tx_sell_all_swap_pool> minter::tx_builder::tx_sell_all_swap_pool() {
+    return std::make_shared<minter::tx_sell_all_swap_pool>(m_tx);
+}
+std::shared_ptr<minter::tx_buy_swap_pool> minter::tx_builder::tx_buy_swap_pool() {
+    return std::make_shared<minter::tx_buy_swap_pool>(m_tx);
+}
+std::shared_ptr<minter::tx_create_swap_pool> minter::tx_builder::tx_create_swap_pool() {
+    return std::make_shared<minter::tx_create_swap_pool>(m_tx);
+}
+std::shared_ptr<minter::tx_mint_token> minter::tx_builder::tx_mint_token() {
+    return std::make_shared<minter::tx_mint_token>(m_tx);
+}
+std::shared_ptr<minter::tx_burn_token> minter::tx_builder::tx_burn_token() {
+    return std::make_shared<minter::tx_burn_token>(m_tx);
+}
+std::shared_ptr<minter::tx_create_token> minter::tx_builder::tx_create_token() {
+    return std::make_shared<minter::tx_create_token>(m_tx);
+}
+std::shared_ptr<minter::tx_recreate_token> minter::tx_builder::tx_recreate_token() {
+    return std::make_shared<minter::tx_recreate_token>(m_tx);
+}
+std::shared_ptr<minter::tx_edit_candidate_commission> minter::tx_builder::tx_edit_candidate_commission() {
+    return std::make_shared<minter::tx_edit_candidate_commission>(m_tx);
+}
+std::shared_ptr<minter::tx_vote_update> minter::tx_builder::tx_vote_update() {
+    return std::make_shared<minter::tx_vote_update>(m_tx);
+}
+std::shared_ptr<minter::tx_vote_commission> minter::tx_builder::tx_vote_commission() {
+    return std::make_shared<minter::tx_vote_commission>(m_tx);
 }

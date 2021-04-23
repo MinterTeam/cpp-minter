@@ -9,6 +9,8 @@
 
 #include "minter/tx/tx_create_coin.h"
 
+#include <utility>
+
 #include "minter/tx/tx_type.h"
 #include "minter/tx/utils.h"
 
@@ -67,8 +69,8 @@ minter::tx_create_coin& minter::tx_create_coin::set_initial_amount(const dev::bi
     return *this;
 }
 
-minter::tx_create_coin& minter::tx_create_coin::set_initial_amount(const dev::bigint& amount) {
-    m_initial_amount = amount;
+minter::tx_create_coin& minter::tx_create_coin::set_initial_amount(dev::bigint amount) {
+    m_initial_amount = std::move(amount);
     return *this;
 }
 
@@ -82,8 +84,8 @@ minter::tx_create_coin& minter::tx_create_coin::set_initial_reserve(const dev::b
     return *this;
 }
 
-minter::tx_create_coin& minter::tx_create_coin::set_initial_reserve(const dev::bigint& amount) {
-    m_initial_reserve = amount;
+minter::tx_create_coin& minter::tx_create_coin::set_initial_reserve(dev::bigint amount) {
+    m_initial_reserve = std::move(amount);
     return *this;
 }
 
@@ -119,8 +121,8 @@ minter::tx_create_coin& minter::tx_create_coin::set_max_supply(const std::string
     m_max_supply = minter::utils::normalize_value(max_supply);
     return *this;
 }
-minter::tx_create_coin& minter::tx_create_coin::set_max_supply(const dev::bigint& max_supply) {
-    m_max_supply = max_supply;
+minter::tx_create_coin& minter::tx_create_coin::set_max_supply(dev::bigint max_supply) {
+    m_max_supply = std::move(max_supply);
     return *this;
 }
 minter::tx_create_coin& minter::tx_create_coin::set_max_supply(const dev::bigdec18& max_supply) {

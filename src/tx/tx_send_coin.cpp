@@ -10,13 +10,14 @@
 #include <minter/tx/tx_send_coin.h>
 #include <minter/tx/tx_type.h>
 #include <minter/tx/utils.h>
+#include <utility>
 
 minter::tx_send_coin::tx_send_coin(std::shared_ptr<minter::tx> tx)
     : tx_data(std::move(tx)) {
 }
 
-minter::tx_send_coin& minter::tx_send_coin::set_coin_id(const dev::bigint& coin_id) {
-    m_coin_id = coin_id;
+minter::tx_send_coin& minter::tx_send_coin::set_coin_id(dev::bigint coin_id) {
+    m_coin_id = std::move(coin_id);
     return *this;
 }
 
@@ -40,8 +41,8 @@ minter::tx_send_coin& minter::tx_send_coin::set_value(const dev::bigdec18& value
     return *this;
 }
 
-minter::tx_send_coin& minter::tx_send_coin::set_value(const dev::bigint& value) {
-    m_value = value;
+minter::tx_send_coin& minter::tx_send_coin::set_value(dev::bigint value) {
+    m_value = std::move(value);
     return *this;
 }
 

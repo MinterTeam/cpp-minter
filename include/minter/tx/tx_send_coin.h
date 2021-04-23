@@ -28,7 +28,7 @@ public:
     /// \brief Set coin_id to send
     /// \param coin_id network coin ID
     /// \return
-    tx_send_coin& set_coin_id(const dev::bigint& coin_id);
+    tx_send_coin& set_coin_id(dev::bigint coin_id);
     tx_send_coin& set_coin_id(const std::string& coin_id_num);
 
     /// \brief Set recipient address
@@ -38,7 +38,7 @@ public:
 
     tx_send_coin& set_value(const std::string& value);
     tx_send_coin& set_value(const dev::bigdec18& value);
-    tx_send_coin& set_value(const dev::bigint& value);
+    tx_send_coin& set_value(dev::bigint value);
 
     dev::bigint get_coin_id() const;
     const minter::address_t& get_to() const;

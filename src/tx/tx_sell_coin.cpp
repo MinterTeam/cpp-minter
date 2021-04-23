@@ -11,6 +11,8 @@
 
 #include "minter/tx/tx_type.h"
 #include "minter/tx/utils.h"
+
+#include <utility>
 minter::tx_sell_coin::tx_sell_coin(std::shared_ptr<minter::tx> tx)
     : tx_data(std::move(tx)) {
 }
@@ -39,8 +41,8 @@ void minter::tx_sell_coin::decode(const dev::bytes& data) {
     m_min_value_to_buy = (dev::bigint) rlp[3];
 }
 
-minter::tx_sell_coin& minter::tx_sell_coin::set_coin_id_to_sell(const dev::bigint& coin_id) {
-    m_coin_to_sell = coin_id;
+minter::tx_sell_coin& minter::tx_sell_coin::set_coin_id_to_sell(dev::bigint coin_id) {
+    m_coin_to_sell = std::move(coin_id);
     return *this;
 }
 
@@ -49,8 +51,8 @@ minter::tx_sell_coin& minter::tx_sell_coin::set_coin_id_to_sell(const std::strin
     return *this;
 }
 
-minter::tx_sell_coin& minter::tx_sell_coin::set_coin_id_to_buy(const dev::bigint& coin_id) {
-    m_coin_to_buy = coin_id;
+minter::tx_sell_coin& minter::tx_sell_coin::set_coin_id_to_buy(dev::bigint coin_id) {
+    m_coin_to_buy = std::move(coin_id);
     return *this;
 }
 
@@ -67,8 +69,8 @@ minter::tx_sell_coin& minter::tx_sell_coin::set_value_to_sell(const dev::bigdec1
     m_value_to_sell = minter::utils::normalize_value(amount);
     return *this;
 }
-minter::tx_sell_coin& minter::tx_sell_coin::set_value_to_sell(const dev::bigint& amount) {
-    m_value_to_sell = amount;
+minter::tx_sell_coin& minter::tx_sell_coin::set_value_to_sell(dev::bigint amount) {
+    m_value_to_sell = std::move(amount);
     return *this;
 }
 
@@ -80,8 +82,8 @@ minter::tx_sell_coin& minter::tx_sell_coin::set_min_value_to_buy(const dev::bigd
     m_min_value_to_buy = minter::utils::normalize_value(amount);
     return *this;
 }
-minter::tx_sell_coin& minter::tx_sell_coin::set_min_value_to_buy(const dev::bigint& amount) {
-    m_min_value_to_buy = amount;
+minter::tx_sell_coin& minter::tx_sell_coin::set_min_value_to_buy(dev::bigint amount) {
+    m_min_value_to_buy = std::move(amount);
     return *this;
 }
 

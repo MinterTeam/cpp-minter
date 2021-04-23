@@ -37,6 +37,22 @@ class tx_edit_multisig;
 class tx_price_vote;
 class tx_edit_candidate_public_key;
 
+/// \since minter 2.0
+class tx_add_liquidity;
+class tx_remove_liquidity;
+class tx_sell_swap_pool;
+class tx_buy_swap_pool;
+class tx_sell_all_swap_pool;
+class tx_edit_candidate_commission;
+class tx_move_stake;
+class tx_mint_token;
+class tx_burn_token;
+class tx_create_token;
+class tx_recreate_token;
+class tx_vote_commission;
+class tx_vote_update;
+class tx_create_swap_pool;
+
 } // namespace minter
 
 #endif //MINTER_TX_FWD_H

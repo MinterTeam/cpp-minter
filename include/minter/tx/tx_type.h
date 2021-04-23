@@ -22,7 +22,8 @@
 
 namespace minter {
 
-constexpr const static double FEE_BASE = 0.001;
+/// \brief Since minter 1.2 base fee has been changed up to 10x
+constexpr const static double FEE_BASE = 0.100;
 
 enum tx_type_val : uint8_t {
     send_coin = 0x01,
@@ -46,6 +47,21 @@ enum tx_type_val : uint8_t {
     edit_multisig,
     price_vote,
     edit_candidate_public_key,
+    /// \since minter 2.0
+    add_liquidity,
+    remove_liquidity,
+    sell_swap_pool,
+    buy_swap_pool,
+    sell_all_swap_pool,
+    edit_candidate_commission,
+    move_stake,
+    mint_token,
+    burn_token,
+    create_token,
+    recreate_token,
+    vote_commission,
+    vote_update,
+    create_swap_pool
 };
 
 /// \brief Map with transaction type names. The key is uint8_t enum: minter::tx_type_val
@@ -105,7 +121,22 @@ constexpr const static auto tx_recreate_coin_type = tx_type<tx_recreate_coin>(10
 constexpr const static auto tx_edit_coin_owner_type = tx_type<tx_edit_coin_owner>(10000000.0, tx_type_val::edit_coin_owner);
 constexpr const static auto tx_edit_multisig_type = tx_type<tx_edit_multisig>(1000.0, tx_type_val::edit_multisig);
 constexpr const static auto tx_price_vote_type = tx_type<tx_price_vote>(10.0, tx_type_val::price_vote);
-constexpr const static auto tx_edit_candidate_public_key_type = tx_type<tx_edit_candidate_public_key>(10000000.0, tx_type_val::edit_candidate_public_key);
+constexpr const static auto tx_edit_candidate_public_key_type = tx_type<tx_edit_candidate_public_key>(100'000'000.0, tx_type_val::edit_candidate_public_key);
+/// \since minter 2.0
+constexpr const static auto tx_add_liquidity_type = tx_type<tx_add_liquidity>(100.0, tx_type_val::add_liquidity);
+constexpr const static auto tx_remove_liquidity_type = tx_type<tx_remove_liquidity>(100.0, tx_type_val::remove_liquidity);
+constexpr const static auto tx_sell_swap_pool_type = tx_type<tx_sell_swap_pool>(100.0, tx_type_val::sell_swap_pool);
+constexpr const static auto tx_buy_swap_pool_type = tx_type<tx_buy_swap_pool>(100.0, tx_type_val::buy_swap_pool);
+constexpr const static auto tx_sell_all_swap_pool_type = tx_type<tx_sell_all_swap_pool>(100.0, tx_type_val::sell_all_swap_pool);
+constexpr const static auto tx_edit_candidate_commission_type = tx_type<tx_edit_candidate_commission>(10'000.0, tx_type_val::edit_candidate_commission);
+constexpr const static auto tx_move_stake_type = tx_type<tx_move_stake>(200.0, tx_type_val::move_stake);
+constexpr const static auto tx_mint_token_type = tx_type<tx_mint_token>(100.0, tx_type_val::mint_token);
+constexpr const static auto tx_burn_token_type = tx_type<tx_burn_token>(100.0, tx_type_val::burn_token);
+constexpr const static auto tx_create_token_type = tx_type<tx_create_token>(0.0, tx_type_val::create_token);
+constexpr const static auto tx_recreate_token_type = tx_type<tx_recreate_token>(10'000'000.0, tx_type_val::recreate_token);
+constexpr const static auto tx_vote_commission_type = tx_type<tx_vote_commission>(1000.0, tx_type_val::vote_commission);
+constexpr const static auto tx_vote_update_type = tx_type<tx_vote_update>(1000.0, tx_type_val::vote_update);
+constexpr const static auto tx_create_swap_pool_type = tx_type<tx_create_swap_pool>(1000.0, tx_type_val::create_swap_pool);
 
 } // namespace minter
 

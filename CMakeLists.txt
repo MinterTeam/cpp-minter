@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.12)
 project(minter_tx
-        VERSION 1.0.0
+        VERSION 2.0.0
         DESCRIPTION "Minter Transaction SDK for C++"
         LANGUAGES CXX
         )
@@ -35,12 +35,12 @@ if (MSVC)
 	add_compile_options(/wd4834)
 elseif (MINGW)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -fPIC -Wno-unknown-pragmas -Wno-shift-count-overflow")
-	set(CMAKE_CXX_FLAGS_DEBUG "-g -O0")
+	set(CMAKE_CXX_FLAGS_DEBUG "-g")
 	set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 else ()
 	#-fvisibility=hidden
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -fPIC -Wextra -pedantic -Wno-unknown-pragmas -Wno-unused-parameter -Wno-shift-count-overflow")
-	set(CMAKE_CXX_FLAGS_DEBUG "-g -O0")
+	set(CMAKE_CXX_FLAGS_DEBUG "-g")
 	set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 endif ()
 
@@ -52,9 +52,8 @@ include(conan_fallback)
 
 if (ENABLE_CONAN)
 	include(ConanInit)
-	add_conan_remote(bincrafters https://api.bintray.com/conan/bincrafters/public-conan)
-	add_conan_remote(minter https://api.bintray.com/conan/minterteam/minter)
-	add_conan_remote(edwardstock https://api.bintray.com/conan/edwardstock/conan-public)
+	add_conan_remote(minter https://minter.jfrog.io/artifactory/api/conan/conan)
+	add_conan_remote(edwardstock https://edwardstock.jfrog.io/artifactory/api/conan/conan)
 	conan_init()
 else ()
 	# toolbox
@@ -172,6 +171,19 @@ set(HEADERS
     include/minter/tx/tx_edit_multisig.h
     include/minter/tx/tx_price_vote.h
     include/minter/tx/tx_edit_candidate_public_key.h
+    include/minter/tx/tx_add_liquidity.h
+    include/minter/tx/tx_remove_liquidity.h
+    include/minter/tx/tx_sell_swap_pool.h
+    include/minter/tx/tx_buy_swap_pool.h
+    include/minter/tx/tx_sell_all_swap_pool.h
+    include/minter/tx/tx_edit_candidate_commission.h
+    include/minter/tx/tx_mint_token.h
+    include/minter/tx/tx_burn_token.h
+    include/minter/tx/tx_create_token.h
+    include/minter/tx/tx_recreate_token.h
+    include/minter/tx/tx_vote_commission.h
+    include/minter/tx/tx_vote_update.h
+    include/minter/tx/tx_create_swap_pool.h
     )
 
 set(SOURCES
@@ -209,6 +221,19 @@ set(SOURCES
     src/tx/tx_edit_multisig.cpp
     src/tx/tx_price_vote.cpp
     src/tx/tx_edit_candidate_public_key.cpp
+    src/tx/tx_add_liquidity.cpp
+    src/tx/tx_remove_liquidity.cpp
+    src/tx/tx_sell_swap_pool.cpp
+    src/tx/tx_buy_swap_pool.cpp
+    src/tx/tx_sell_all_swap_pool.cpp
+    src/tx/tx_edit_candidate_commission.cpp
+    src/tx/tx_mint_token.cpp
+    src/tx/tx_burn_token.cpp
+    src/tx/tx_create_token.cpp
+    src/tx/tx_recreate_token.cpp
+    src/tx/tx_vote_commission.cpp
+    src/tx/tx_vote_update.cpp
+    src/tx/tx_create_swap_pool.cpp
     )
 
 set(MINTER_TX_EXPORTING 1)
@@ -297,7 +322,7 @@ if (ENABLE_TEST)
 	    tests/tx_edit_coin_owner_test.cpp
 	    tests/tx_edit_multisig_test.cpp
 	    tests/tx_edit_candidate_public_key_test.cpp
-	    )
+	    tests/tx_swap_pool_test.cpp tests/tx_liquidity_add_remove_test.cpp tests/tx_edit_candidate_commission_test.cpp tests/tx_token_test.cpp)
 
 	add_executable(${PROJECT_NAME_TEST} ${TEST_SOURCES})
 	if (NOT MSVC)

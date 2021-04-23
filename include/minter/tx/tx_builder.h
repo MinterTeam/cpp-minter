@@ -82,6 +82,20 @@ public:
     std::shared_ptr<minter::tx_edit_multisig> tx_edit_multisig();
     std::shared_ptr<minter::tx_price_vote> tx_price_vote();
     std::shared_ptr<minter::tx_edit_candidate_public_key> tx_edit_candidate_public_key();
+    /// \since minter 2.0
+    std::shared_ptr<minter::tx_add_liquidity> tx_add_liquidity();
+    std::shared_ptr<minter::tx_remove_liquidity> tx_remove_liquidity();
+    std::shared_ptr<minter::tx_sell_swap_pool> tx_sell_swap_pool();
+    std::shared_ptr<minter::tx_sell_all_swap_pool> tx_sell_all_swap_pool();
+    std::shared_ptr<minter::tx_buy_swap_pool> tx_buy_swap_pool();
+    std::shared_ptr<minter::tx_create_swap_pool> tx_create_swap_pool();
+    std::shared_ptr<minter::tx_mint_token> tx_mint_token();
+    std::shared_ptr<minter::tx_burn_token> tx_burn_token();
+    std::shared_ptr<minter::tx_create_token> tx_create_token();
+    std::shared_ptr<minter::tx_recreate_token> tx_recreate_token();
+    std::shared_ptr<minter::tx_edit_candidate_commission> tx_edit_candidate_commission();
+    std::shared_ptr<minter::tx_vote_update> tx_vote_update();
+    std::shared_ptr<minter::tx_vote_commission> tx_vote_commission();
 
 private:
     std::shared_ptr<minter::tx> m_tx;

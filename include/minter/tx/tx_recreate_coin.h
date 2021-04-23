@@ -41,7 +41,7 @@ public:
     /// \brief Initial coin amount in bigint representation (PIPs)
     /// \param amount bigint
     /// \return
-    tx_recreate_coin& set_initial_amount(const dev::bigint& amount);
+    tx_recreate_coin& set_initial_amount(dev::bigint amount);
     /// \brief Initial reserve in decimal string
     /// \param amount decimal string
     /// \return
@@ -53,7 +53,7 @@ public:
     /// \brief Initial reserve in PIPs
     /// \param amount
     /// \return
-    tx_recreate_coin& set_initial_reserve(const dev::bigint& amount);
+    tx_recreate_coin& set_initial_reserve(dev::bigint amount);
     /// \brief
     /// \param crr Min value: 10, max = 100
     /// \return
@@ -62,7 +62,7 @@ public:
     /// \param max_supply decimal string
     /// \return self
     tx_recreate_coin& set_max_supply(const std::string& max_supply);
-    tx_recreate_coin& set_max_supply(const dev::bigint& max_supply);
+    tx_recreate_coin& set_max_supply(dev::bigint max_supply);
     tx_recreate_coin& set_max_supply(const dev::bigdec18& max_supply);
 };
 

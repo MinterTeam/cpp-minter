@@ -11,10 +11,9 @@ commands:
           command: git clone --recursive https://github.com/MinterTeam/cpp-minter .
   conan_remotes:
     steps:
-      - run: conan remote add -f edwardstock https://api.bintray.com/conan/edwardstock/conan-public
-      - run: conan remote add -f bincrafters https://api.bintray.com/conan/bincrafters/public-conan
-      - run: conan remote add -f minter https://api.bintray.com/conan/minterteam/minter
-      - run: conan user -p $BINTRAY_API_KEY -r minter edwardstock
+      - run: conan remote add -f edwardstock https://edwardstock.jfrog.io/artifactory/api/conan/conan
+      - run: conan remote add -f minter https://minter.jfrog.io/artifactory/api/conan/conan
+      - run: conan user -p $ARTIFACTORY_API_KEY -r minter edward.vstock@gmail.com
 
   conan_project_deps:
     steps:
@@ -34,12 +33,6 @@ commands:
           name: Deploy to Conan bintray
           command: $(which bash) .circleci/deploy.sh
 
-
-  #  make_package:
-  #    steps:
-  #      - run: bash cfg/package_make.sh -t package
-  #      - run: bash _build/package_upload.sh -t bintray
-
   do_all_centos:
     steps:
       - checkout_recursive
@@ -58,20 +51,6 @@ commands:
       - deploy_conan
 
 jobs:
-  #  package_all:
-  #    machine:
-  #      image: ubuntu-1604:202007-01
-  #    steps:
-  #      - run: bash cfg/add_repo.sh debian
-  #      - run: apt-get install dockerpack
-  #      - run: dockerpack build
-
-  gcc-4_8_5:
-    docker:
-      - image: docker.edwardstock.com/gcc_dev_el7
-    steps:
-      - do_all_centos
-
   gcc-5:
     docker:
       - image: conanio/gcc5
@@ -136,9 +115,6 @@ jobs:
 workflows:
   build_and_test:
     jobs:
-      - gcc-4_8_5:
-          context:
-            - remote_tokens
       - gcc-5:
           context:
             - remote_tokens

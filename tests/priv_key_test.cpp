@@ -10,7 +10,7 @@
 #include <gtest/gtest.h>
 #include <minter/address.h>
 #include <minter/private_key.h>
-#include <sstream>
+#include <minter/public_key.h>
 #include <toolbox/data/utils.h>
 
 static const char* NULL_PRIVKEY = "0000000000000000000000000000000000000000000000000000000000000000";

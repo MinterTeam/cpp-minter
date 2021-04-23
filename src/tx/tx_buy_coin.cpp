@@ -9,6 +9,8 @@
 
 #include "minter/tx/tx_buy_coin.h"
 
+#include <utility>
+
 #include "minter/tx/tx_type.h"
 #include "minter/tx/utils.h"
 
@@ -54,8 +56,8 @@ dev::bigdec18 minter::tx_buy_coin::get_max_value_to_sell() const {
     return minter::utils::humanize_value(m_max_value_to_sell);
 }
 
-minter::tx_buy_coin& minter::tx_buy_coin::set_coin_id_to_buy(const dev::bigint& coin_id) {
-    m_coin_id_to_buy = coin_id;
+minter::tx_buy_coin& minter::tx_buy_coin::set_coin_id_to_buy(dev::bigint coin_id) {
+    m_coin_id_to_buy = std::move(coin_id);
     return *this;
 }
 
@@ -74,13 +76,13 @@ minter::tx_buy_coin& minter::tx_buy_coin::set_value_to_buy(const dev::bigdec18& 
     return *this;
 }
 
-minter::tx_buy_coin& minter::tx_buy_coin::set_value_to_buy(const dev::bigint& value) {
-    m_value_to_buy = value;
+minter::tx_buy_coin& minter::tx_buy_coin::set_value_to_buy(dev::bigint value) {
+    m_value_to_buy = std::move(value);
     return *this;
 }
 
-minter::tx_buy_coin& minter::tx_buy_coin::set_coin_id_to_sell(const dev::bigint& coin_id) {
-    m_coin_id_to_sell = coin_id;
+minter::tx_buy_coin& minter::tx_buy_coin::set_coin_id_to_sell(dev::bigint coin_id) {
+    m_coin_id_to_sell = std::move(coin_id);
     return *this;
 }
 
@@ -99,7 +101,7 @@ minter::tx_buy_coin& minter::tx_buy_coin::set_max_value_to_sell(const dev::bigde
     return *this;
 }
 
-minter::tx_buy_coin& minter::tx_buy_coin::set_max_value_to_sell(const dev::bigint& value) {
-    m_max_value_to_sell = value;
+minter::tx_buy_coin& minter::tx_buy_coin::set_max_value_to_sell(dev::bigint value) {
+    m_max_value_to_sell = std::move(value);
     return *this;
 }

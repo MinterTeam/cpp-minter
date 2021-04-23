@@ -9,26 +9,39 @@
 
 #include "minter/tx/tx.h"
 
+#include "minter/tx/tx_add_liquidity.h"
+#include "minter/tx/tx_burn_token.h"
 #include "minter/tx/tx_buy_coin.h"
+#include "minter/tx/tx_buy_swap_pool.h"
 #include "minter/tx/tx_create_coin.h"
 #include "minter/tx/tx_create_multisig_address.h"
+#include "minter/tx/tx_create_swap_pool.h"
+#include "minter/tx/tx_create_token.h"
 #include "minter/tx/tx_declare_candidacy.h"
 #include "minter/tx/tx_delegate.h"
 #include "minter/tx/tx_edit_candidate.h"
+#include "minter/tx/tx_edit_candidate_commission.h"
 #include "minter/tx/tx_edit_candidate_public_key.h"
 #include "minter/tx/tx_edit_coin_owner.h"
 #include "minter/tx/tx_edit_multisig.h"
+#include "minter/tx/tx_mint_token.h"
 #include "minter/tx/tx_multisend.h"
 #include "minter/tx/tx_price_vote.h"
 #include "minter/tx/tx_recreate_coin.h"
+#include "minter/tx/tx_recreate_token.h"
 #include "minter/tx/tx_redeem_check.h"
+#include "minter/tx/tx_remove_liquidity.h"
 #include "minter/tx/tx_sell_all_coins.h"
+#include "minter/tx/tx_sell_all_swap_pool.h"
 #include "minter/tx/tx_sell_coin.h"
+#include "minter/tx/tx_sell_swap_pool.h"
 #include "minter/tx/tx_send_coin.h"
 #include "minter/tx/tx_set_candidate_on_off.h"
 #include "minter/tx/tx_set_halt_block.h"
 #include "minter/tx/tx_type.h"
 #include "minter/tx/tx_unbond.h"
+#include "minter/tx/tx_vote_commission.h"
+#include "minter/tx/tx_vote_update.h"
 #include "minter/tx/utils.h"
 
 #include <cstring>
@@ -168,6 +181,45 @@ void minter::tx::create_data_from_type() {
         break;
     case tx_price_vote_type.type():
         m_data_raw = tx_price_vote_type.create(shared_from_this(), get_data_raw());
+        break;
+    case tx_add_liquidity_type.type():
+        m_data_raw = tx_add_liquidity_type.create(shared_from_this(), get_data_raw());
+        break;
+    case tx_remove_liquidity_type.type():
+        m_data_raw = tx_remove_liquidity_type.create(shared_from_this(), get_data_raw());
+        break;
+    case tx_sell_swap_pool_type.type():
+        m_data_raw = tx_sell_swap_pool_type.create(shared_from_this(), get_data_raw());
+        break;
+    case tx_buy_swap_pool_type.type():
+        m_data_raw = tx_buy_swap_pool_type.create(shared_from_this(), get_data_raw());
+        break;
+    case tx_sell_all_swap_pool_type.type():
+        m_data_raw = tx_sell_all_swap_pool_type.create(shared_from_this(), get_data_raw());
+        break;
+    case tx_create_swap_pool_type.type():
+        m_data_raw = tx_create_swap_pool_type.create(shared_from_this(), get_data_raw());
+        break;
+    case tx_create_token_type.type():
+        m_data_raw = tx_create_token_type.create(shared_from_this(), get_data_raw());
+        break;
+    case tx_edit_candidate_commission_type.type():
+        m_data_raw = tx_edit_candidate_commission_type.create(shared_from_this(), get_data_raw());
+        break;
+    case tx_mint_token_type.type():
+        m_data_raw = tx_mint_token_type.create(shared_from_this(), get_data_raw());
+        break;
+    case tx_burn_token_type.type():
+        m_data_raw = tx_burn_token_type.create(shared_from_this(), get_data_raw());
+        break;
+    case tx_recreate_token_type.type():
+        m_data_raw = tx_recreate_token_type.create(shared_from_this(), get_data_raw());
+        break;
+    case tx_vote_commission_type.type():
+        m_data_raw = tx_vote_commission_type.create(shared_from_this(), get_data_raw());
+        break;
+    case tx_vote_update_type.type():
+        m_data_raw = tx_vote_update_type.create(shared_from_this(), get_data_raw());
         break;
     default:
         throw std::runtime_error("Unknown tx type: " + minter::utils::to_string(m_type));

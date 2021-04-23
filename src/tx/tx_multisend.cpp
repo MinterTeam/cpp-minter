@@ -58,6 +58,11 @@ void minter::tx_multisend::decode(const dev::bytes& data) {
     }
 }
 
+minter::tx_multisend& minter::tx_multisend::add_item(const std::string& coin_id_num, const minter::data::address& to, const std::string& amount) {
+    m_items.push_back(minter::send_target{dev::bigint(coin_id_num), to, minter::utils::normalize_value(amount)});
+    return *this;
+}
+
 minter::tx_multisend&
 minter::tx_multisend::add_item(const dev::bigint& coin_id, const minter::data::address& to, const std::string& amount) {
     m_items.push_back(minter::send_target{coin_id, to, minter::utils::normalize_value(amount)});

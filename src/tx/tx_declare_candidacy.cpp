@@ -11,6 +11,8 @@
 
 #include "minter/tx/tx_type.h"
 #include "minter/tx/utils.h"
+
+#include <utility>
 minter::tx_declare_candidacy::tx_declare_candidacy(std::shared_ptr<minter::tx> tx)
     : tx_data(std::move(tx)) {
 }
@@ -62,8 +64,8 @@ minter::tx_declare_candidacy& minter::tx_declare_candidacy::set_commission(unsig
     return *this;
 }
 
-minter::tx_declare_candidacy& minter::tx_declare_candidacy::set_coin_id(const dev::bigint& coin_id) {
-    m_coin_id = coin_id;
+minter::tx_declare_candidacy& minter::tx_declare_candidacy::set_coin_id(dev::bigint coin_id) {
+    m_coin_id = std::move(coin_id);
     return *this;
 }
 
@@ -77,8 +79,8 @@ minter::tx_declare_candidacy& minter::tx_declare_candidacy::set_stake(const std:
     return *this;
 }
 
-minter::tx_declare_candidacy& minter::tx_declare_candidacy::set_stake(const dev::bigint& amount) {
-    m_stake = amount;
+minter::tx_declare_candidacy& minter::tx_declare_candidacy::set_stake(dev::bigint amount) {
+    m_stake = std::move(amount);
     return *this;
 }
 

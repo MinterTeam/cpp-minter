@@ -28,6 +28,7 @@ uint16_t minter::tx_unbond::type() const {
 }
 
 #include <iostream>
+#include <utility>
 dev::bytes minter::tx_unbond::encode() {
     eth::RLPStream out;
     eth::RLPStream lst;
@@ -52,8 +53,8 @@ minter::tx_unbond& minter::tx_unbond::set_pub_key(const minter::pubkey_t& pub_ke
     return *this;
 }
 
-minter::tx_unbond& minter::tx_unbond::set_coin_id(const dev::bigint& coin_id) {
-    m_coin_id = coin_id;
+minter::tx_unbond& minter::tx_unbond::set_coin_id(dev::bigint coin_id) {
+    m_coin_id = std::move(coin_id);
     return *this;
 }
 
@@ -70,8 +71,8 @@ minter::tx_unbond& minter::tx_unbond::set_value(const dev::bigdec18& value) {
     m_value = minter::utils::normalize_value(value);
     return *this;
 }
-minter::tx_unbond& minter::tx_unbond::set_value(const dev::bigint& value) {
-    m_value = value;
+minter::tx_unbond& minter::tx_unbond::set_value(dev::bigint value) {
+    m_value = std::move(value);
     return *this;
 }
 

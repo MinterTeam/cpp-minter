@@ -11,6 +11,8 @@
 
 #include "minter/tx/tx_type.h"
 #include "minter/tx/utils.h"
+
+#include <utility>
 minter::tx_delegate::tx_delegate(std::shared_ptr<minter::tx> tx)
     : tx_data(std::move(tx)) {
 }
@@ -38,18 +40,13 @@ void minter::tx_delegate::decode(const dev::bytes& data) {
     m_stake = (dev::bigint) rlp[2];
 }
 
-minter::tx_delegate& minter::tx_delegate::set_pub_key(const dev::bytes& pub_key) {
-    m_pub_key = pub_key;
-    return *this;
-}
-
 minter::tx_delegate& minter::tx_delegate::set_pub_key(const minter::pubkey_t& pub_key) {
     m_pub_key = pub_key;
     return *this;
 }
 
-minter::tx_delegate& minter::tx_delegate::set_coin_id(const dev::bigint& coin_id) {
-    m_coin_id = coin_id;
+minter::tx_delegate& minter::tx_delegate::set_coin_id(dev::bigint coin_id) {
+    m_coin_id = std::move(coin_id);
     return *this;
 }
 
@@ -63,8 +60,8 @@ minter::tx_delegate& minter::tx_delegate::set_stake(const std::string& amount) {
     return *this;
 }
 
-minter::tx_delegate& minter::tx_delegate::set_stake(const dev::bigint& amount) {
-    m_stake = amount;
+minter::tx_delegate& minter::tx_delegate::set_stake(dev::bigint amount) {
+    m_stake = std::move(amount);
     return *this;
 }
 

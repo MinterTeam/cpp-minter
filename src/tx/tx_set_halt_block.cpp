@@ -9,6 +9,8 @@
 
 #include "minter/tx/tx_set_halt_block.h"
 
+#include <utility>
+
 #include "minter/tx/tx_type.h"
 
 minter::tx_set_halt_block::tx_set_halt_block(std::shared_ptr<minter::tx> tx)
@@ -50,8 +52,8 @@ minter::tx_set_halt_block& minter::tx_set_halt_block::set_height(const std::stri
     return *this;
 }
 
-minter::tx_set_halt_block& minter::tx_set_halt_block::set_height(const dev::bigint& height) {
-    m_height = height;
+minter::tx_set_halt_block& minter::tx_set_halt_block::set_height(dev::bigint height) {
+    m_height = std::move(height);
     return *this;
 }
 const minter::pubkey_t& minter::tx_set_halt_block::get_public_key() const {
