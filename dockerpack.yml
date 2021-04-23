@@ -21,7 +21,7 @@ commands:
 
   test:
     steps:
-      - run: bash cfg/package_make.sh --test
+      - run: bash .circleci/test.sh
 
   build_and_package:
     steps:
