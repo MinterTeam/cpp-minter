@@ -11,7 +11,7 @@ commands:
     steps:
       - run: bash cfg/add_repo.sh fedora
       - run: dnf -y update
-      - run: dnf -y install toolboxpp-devel bip3x-devel secp256k1_java-devel bigmath-devel
+      - run: dnf -y install toolboxpp-devel bip3x-devel secp256k1_java-devel bigmath-devel automake
 
   init_deb:
     steps:
