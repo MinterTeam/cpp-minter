@@ -61,7 +61,7 @@ naked Docker images.
 After installing package from repository, you can use cmake-find module to find library:
 
 ```cmake
-find_package(minter_tx 2.0.0 REQUIRED)
+find_package(minter_tx 2.0.1 REQUIRED)
 target_link_libraries(MY_PROJECT minter_tx::minter_tx)
 ```
 
@@ -106,7 +106,7 @@ For more information, see official [docs](https://docs.conan.io/en/latest/gettin
 
 You can just add to your conanfile.txt dependency:
 
-`minter_tx/2.0.0@minter/latest`
+`minter_tx/2.0.1@minter/latest`
 
 CMakeLists.txt
 

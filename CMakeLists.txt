@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.12)
 project(minter_tx
-        VERSION 2.0.0
+        VERSION 2.0.1
         DESCRIPTION "Minter Transaction SDK for C++"
         LANGUAGES CXX
         )

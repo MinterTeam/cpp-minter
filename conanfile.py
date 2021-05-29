@@ -53,7 +53,7 @@ class MinterTxConan(ConanFile):
         'bip39/2.1.1@edwardstock/latest',
         'secp256k1_java/1.0.0@edwardstock/latest',
         'toolbox/3.2.2@edwardstock/latest',
-        'bigmath/1.0.2@edwardstock/latest'
+        'bigmath/1.0.3@edwardstock/latest'
     )
 
     build_requires = (
