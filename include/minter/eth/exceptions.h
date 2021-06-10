@@ -31,7 +31,9 @@
 namespace eth {
 
 #ifndef BOOST_THROW_EXCEPTION
-#define BOOST_THROW_EXCEPTION(e) throw e
+#define ETH_THROW_EXCEPTION(e) throw e
+#else
+#define ETH_THROW_EXCEPTION(e) BOOST_THROW_EXCEPTION(e)
 #endif
 
 #ifndef _NOEXCEPT

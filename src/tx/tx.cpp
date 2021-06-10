@@ -55,7 +55,7 @@ const std::unordered_map<std::string, minter::chain_id> minter::chain_id_str_map
     {"testnet", minter::testnet},
 };
 
-const dev::bigint minter::def_coin_id = dev::bigint(0);
+const dev::bigint minter::def_coin_id = dev::bigint("0");
 
 minter::tx::tx()
     : m_chain_id(dev::bigint(chain_id::mainnet)),

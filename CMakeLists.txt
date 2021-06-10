@@ -1,17 +1,18 @@
 cmake_minimum_required(VERSION 3.12)
 project(minter_tx
-        VERSION 2.0.1
+        VERSION 2.0.2
         DESCRIPTION "Minter Transaction SDK for C++"
         LANGUAGES CXX
         )
 
-file(WRITE ${CMAKE_CURRENT_SOURCE_DIR}/version ${CMAKE_PROJECT_VERSION})
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cfg/version.in ${CMAKE_CURRENT_SOURCE_DIR}/version @ONLY NEWLINE_STYLE UNIX)
 
 if (NOT CMAKE_BUILD_TYPE)
 	set(CMAKE_BUILD_TYPE Release)
 endif ()
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(ENABLE_SHARED OFF CACHE BOOL "Build shared lib instead of static")
 set(ENABLE_CONAN ON CACHE BOOL "Enable conan dep manager")
@@ -39,7 +40,7 @@ elseif (MINGW)
 	set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 else ()
 	#-fvisibility=hidden
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -fPIC -Wextra -pedantic -Wno-unknown-pragmas -Wno-unused-parameter -Wno-shift-count-overflow")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -fPIC -Wextra -pedantic -Wno-unknown-pragmas -Wno-unused-parameter")
 	set(CMAKE_CXX_FLAGS_DEBUG "-g")
 	set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 endif ()

@@ -73,7 +73,7 @@ static const byte c_rlpListIndLenZero = c_rlpListStart + c_rlpListImmLenCount - 
 template<class T>
 struct Converter {
     static T convert(RLP const&, int) {
-        BOOST_THROW_EXCEPTION(BadCast());
+        ETH_THROW_EXCEPTION(BadCast());
     }
 };
 
@@ -296,7 +296,7 @@ public:
     bytes toBytes(int _flags = LaissezFaire) const {
         if (!isData()) {
             if (_flags & ThrowOnFail)
-                BOOST_THROW_EXCEPTION(BadCast());
+                ETH_THROW_EXCEPTION(BadCast());
             else
                 return bytes();
         }
@@ -306,7 +306,7 @@ public:
     bytesConstRef toBytesConstRef(int _flags = LaissezFaire) const {
         if (!isData()) {
             if (_flags & ThrowOnFail)
-                BOOST_THROW_EXCEPTION(BadCast());
+                ETH_THROW_EXCEPTION(BadCast());
             else
                 return bytesConstRef();
         }
@@ -316,7 +316,7 @@ public:
     std::string toString(int _flags = LaissezFaire) const {
         if (!isData()) {
             if (_flags & ThrowOnFail)
-                BOOST_THROW_EXCEPTION(BadCast());
+                ETH_THROW_EXCEPTION(BadCast());
             else
                 return std::string();
         }
@@ -335,7 +335,7 @@ public:
             for (auto const& i : *this)
                 ret.push_back(i.convert<T>(_flags));
         } else if (_flags & ThrowOnFail)
-            BOOST_THROW_EXCEPTION(BadCast());
+            ETH_THROW_EXCEPTION(BadCast());
         return ret;
     }
 
@@ -346,7 +346,7 @@ public:
             for (auto const& i : *this)
                 ret.insert(i.convert<T>(_flags));
         else if (_flags & ThrowOnFail)
-            BOOST_THROW_EXCEPTION(BadCast());
+            ETH_THROW_EXCEPTION(BadCast());
         return ret;
     }
 
@@ -357,7 +357,7 @@ public:
             for (auto const& i : *this)
                 ret.insert(i.convert<T>(_flags));
         else if (_flags & ThrowOnFail)
-            BOOST_THROW_EXCEPTION(BadCast());
+            ETH_THROW_EXCEPTION(BadCast());
         return ret;
     }
 
@@ -366,7 +366,7 @@ public:
         std::pair<T, U> ret;
         if (itemCountStrict() != 2) {
             if (_flags & ThrowOnFail)
-                BOOST_THROW_EXCEPTION(BadCast());
+                ETH_THROW_EXCEPTION(BadCast());
             else
                 return ret;
         }
@@ -379,7 +379,7 @@ public:
     std::array<T, N> toArray(int _flags = LaissezFaire) const {
         if (itemCountStrict() != N) {
             if (_flags & ThrowOnFail)
-                BOOST_THROW_EXCEPTION(BadCast());
+                ETH_THROW_EXCEPTION(BadCast());
             else
                 return std::array<T, N>();
         }
@@ -395,7 +395,7 @@ public:
         requireGood();
         if ((!isInt() && !(_flags & AllowNonCanon)) || isList() || isNull()) {
             if (_flags & ThrowOnFail)
-                BOOST_THROW_EXCEPTION(BadCast());
+                ETH_THROW_EXCEPTION(BadCast());
             else
                 return 0;
         }
@@ -403,7 +403,7 @@ public:
         auto p = payload();
         if (p.size() > intTraits<_T>::maxSize && (_flags & FailIfTooBig)) {
             if (_flags & ThrowOnFail)
-                BOOST_THROW_EXCEPTION(BadCast());
+                ETH_THROW_EXCEPTION(BadCast());
             else
                 return 0;
         }
@@ -414,7 +414,7 @@ public:
     int64_t toPositiveInt64(int _flags = Strict) const {
         int64_t i = toInt<int64_t>(_flags);
         if ((_flags & ThrowOnFail) && i < 0)
-            BOOST_THROW_EXCEPTION(BadCast());
+            ETH_THROW_EXCEPTION(BadCast());
         return i;
     }
 
@@ -425,7 +425,7 @@ public:
         auto l = p.size();
         if (!isData() || (l > _N::size && (_flags & FailIfTooBig)) || (l < _N::size && (_flags & FailIfTooSmall))) {
             if (_flags & ThrowOnFail)
-                BOOST_THROW_EXCEPTION(BadCast());
+                ETH_THROW_EXCEPTION(BadCast());
             else
                 return _N();
         }
@@ -440,7 +440,7 @@ public:
     bytesConstRef payload() const {
         auto l = length();
         if (l > m_data.size())
-            BOOST_THROW_EXCEPTION(BadRLP());
+            ETH_THROW_EXCEPTION(BadRLP());
         return m_data.cropped(payloadOffset(), l);
     }
 
@@ -690,21 +690,21 @@ public:
     /// Read the byte stream.
     bytes const& out() const {
         if (!m_listStack.empty())
-            BOOST_THROW_EXCEPTION(RLPException() << errinfo_comment("listStack is not empty"));
+            ETH_THROW_EXCEPTION(RLPException() << errinfo_comment("listStack is not empty"));
         return m_out;
     }
 
     /// Invalidate the object and steal the output byte stream.
     bytes&& invalidate() {
         if (!m_listStack.empty())
-            BOOST_THROW_EXCEPTION(RLPException() << errinfo_comment("listStack is not empty"));
+            ETH_THROW_EXCEPTION(RLPException() << errinfo_comment("listStack is not empty"));
         return std::move(m_out);
     }
 
     /// Swap the contents of the output stream out for some other byte array.
     void swapOut(bytes& _dest) {
         if (!m_listStack.empty())
-            BOOST_THROW_EXCEPTION(RLPException() << errinfo_comment("listStack is not empty"));
+            ETH_THROW_EXCEPTION(RLPException() << errinfo_comment("listStack is not empty"));
         swap(m_out, _dest);
     }
 

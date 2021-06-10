@@ -40,13 +40,13 @@ RLP::RLP(bytesConstRef _d, Strictness _s)
     : m_data(_d) {
     if ((_s & FailIfTooBig) && actualSize() < _d.size()) {
         if (_s & ThrowOnFail)
-            BOOST_THROW_EXCEPTION(OversizeRLP() << constructRLPSizeErrorInfo(actualSize(), _d.size()));
+            ETH_THROW_EXCEPTION(OversizeRLP() << constructRLPSizeErrorInfo(actualSize(), _d.size()));
         else
             m_data.reset();
     }
     if ((_s & FailIfTooSmall) && actualSize() > _d.size()) {
         if (_s & ThrowOnFail)
-            BOOST_THROW_EXCEPTION(UndersizeRLP() << constructRLPSizeErrorInfo(actualSize(), _d.size()));
+            ETH_THROW_EXCEPTION(UndersizeRLP() << constructRLPSizeErrorInfo(actualSize(), _d.size()));
         else
             m_data.reset();
     }
@@ -105,14 +105,14 @@ size_t RLP::actualSize() const {
 
 void RLP::requireGood() const {
     if (isNull())
-        BOOST_THROW_EXCEPTION(BadRLP());
+        ETH_THROW_EXCEPTION(BadRLP());
     byte n = m_data[0];
     if (n != c_rlpDataImmLenStart + 1)
         return;
     if (m_data.size() < 2)
-        BOOST_THROW_EXCEPTION(BadRLP());
+        ETH_THROW_EXCEPTION(BadRLP());
     if (m_data[1] < c_rlpDataImmLenStart)
-        BOOST_THROW_EXCEPTION(BadRLP());
+        ETH_THROW_EXCEPTION(BadRLP());
 }
 
 bool RLP::isInt() const {
@@ -126,11 +126,11 @@ bool RLP::isInt() const {
         return true;
     else if (n <= c_rlpDataIndLenZero) {
         if (m_data.size() <= 1)
-            BOOST_THROW_EXCEPTION(BadRLP());
+            ETH_THROW_EXCEPTION(BadRLP());
         return m_data[1] != 0;
     } else if (n < c_rlpListStart) {
         if (m_data.size() <= size_t(1 + n - c_rlpDataIndLenZero))
-            BOOST_THROW_EXCEPTION(BadRLP());
+            ETH_THROW_EXCEPTION(BadRLP());
         return m_data[1 + n - c_rlpDataIndLenZero] != 0;
     } else
         return false;
@@ -149,45 +149,45 @@ size_t RLP::length() const {
         return n - c_rlpDataImmLenStart;
     else if (n < c_rlpListStart) {
         if (m_data.size() <= size_t(n - c_rlpDataIndLenZero))
-            BOOST_THROW_EXCEPTION(BadRLP());
+            ETH_THROW_EXCEPTION(BadRLP());
         if (m_data.size() > 1)
             if (m_data[1] == 0)
-                BOOST_THROW_EXCEPTION(BadRLP());
+                ETH_THROW_EXCEPTION(BadRLP());
         unsigned lengthSize = n - c_rlpDataIndLenZero;
         if (lengthSize > sizeof(ret))
             // We did not check, but would most probably not fit in our memory.
-            BOOST_THROW_EXCEPTION(UndersizeRLP());
+            ETH_THROW_EXCEPTION(UndersizeRLP());
         // No leading zeroes.
         if (!m_data[1])
-            BOOST_THROW_EXCEPTION(BadRLP());
+            ETH_THROW_EXCEPTION(BadRLP());
         for (unsigned i = 0; i < lengthSize; ++i)
             ret = (ret << 8u) | m_data[i + 1];
         // Must be greater than the limit.
         if (ret < c_rlpListStart - c_rlpDataImmLenStart - c_rlpMaxLengthBytes)
-            BOOST_THROW_EXCEPTION(BadRLP());
+            ETH_THROW_EXCEPTION(BadRLP());
     } else if (n <= c_rlpListIndLenZero)
         return n - c_rlpListStart;
     else {
         size_t lengthSize = n - c_rlpListIndLenZero;
         if (m_data.size() <= lengthSize)
-            BOOST_THROW_EXCEPTION(BadRLP());
+            ETH_THROW_EXCEPTION(BadRLP());
         if (m_data.size() > 1)
             if (m_data[1] == 0)
-                BOOST_THROW_EXCEPTION(BadRLP());
+                ETH_THROW_EXCEPTION(BadRLP());
         if (lengthSize > sizeof(ret))
             // We did not check, but would most probably not fit in our memory.
-            BOOST_THROW_EXCEPTION(UndersizeRLP());
+            ETH_THROW_EXCEPTION(UndersizeRLP());
         if (!m_data[1])
-            BOOST_THROW_EXCEPTION(BadRLP());
+            ETH_THROW_EXCEPTION(BadRLP());
         for (unsigned i = 0; i < lengthSize; ++i)
             ret = (ret << 8) | m_data[i + 1];
         if (ret < 0x100 - c_rlpListStart - c_rlpMaxLengthBytes)
-            BOOST_THROW_EXCEPTION(BadRLP());
+            ETH_THROW_EXCEPTION(BadRLP());
     }
     // We have to be able to add payloadOffset to length without overflow.
     // This rejects roughly 4GB-sized RLPs on some platforms.
     if (ret >= std::numeric_limits<size_t>::max() - 0x100)
-        BOOST_THROW_EXCEPTION(UndersizeRLP());
+        ETH_THROW_EXCEPTION(UndersizeRLP());
     return ret;
 }
 
@@ -231,12 +231,12 @@ void RLPStream::noteAppended(size_t _itemCount) {
             if (s < c_rlpListImmLenCount)
                 m_out[p] = (byte)(c_rlpListStart + s);
             else if (c_rlpListIndLenZero + brs <= 0xff) {
-                m_out[p] = (byte)(c_rlpListIndLenZero + brs);
+                m_out[p] = (byte) (c_rlpListIndLenZero + brs);
                 byte* b = &(m_out[p + brs]);
                 for (; s; s >>= 8)
                     *(b--) = (byte) s;
             } else
-                BOOST_THROW_EXCEPTION(RLPException() << errinfo_comment("itemCount too large for RLP"));
+                ETH_THROW_EXCEPTION(RLPException() << errinfo_comment("itemCount too large for RLP"));
         }
         _itemCount = 1; // for all following iterations, we've effectively appended a single item only since we completed a list.
     }
@@ -292,7 +292,7 @@ RLPStream& RLPStream::append(bigint _i) {
         else {
             auto brbr = bytesRequired(br);
             if (c_rlpDataIndLenZero + brbr > 0xff)
-                BOOST_THROW_EXCEPTION(RLPException() << errinfo_comment("Number too large for RLP"));
+                ETH_THROW_EXCEPTION(RLPException() << errinfo_comment("Number too large for RLP"));
             m_out.push_back((byte)(c_rlpDataIndLenZero + brbr));
             pushInt(br, brbr);
         }
@@ -305,7 +305,7 @@ RLPStream& RLPStream::append(bigint _i) {
 void RLPStream::pushCount(size_t _count, byte _base) {
     auto br = bytesRequired(_count);
     if (int(br) + _base > 0xff)
-        BOOST_THROW_EXCEPTION(RLPException() << errinfo_comment("Count too large for RLP"));
+        ETH_THROW_EXCEPTION(RLPException() << errinfo_comment("Count too large for RLP"));
     m_out.push_back((byte)(br + _base)); // max 8 bytes.
     pushInt(_count, br);
 }

@@ -1,6 +1,13 @@
 # Release notes
 
+## 2.0.2
+
+- Updated `bigmath`: fixed memory leaks
+- Removed `BOOST_THROW_EXCEPTION` as it conflicts with boost's macro
+- Added default constructor for `tx_builder`
+
 ## 2.0.1
+
 - Updated `bigmath` as it has major fix for windows builds
 
 ## 2.0.0

@@ -47,8 +47,15 @@
 
 // Out of line
 std::shared_ptr<minter::tx_builder> minter::new_tx() {
-    auto out = std::make_shared<minter::tx_builder>(std::make_shared<minter::tx>());
-    return out;
+    return std::make_shared<minter::tx_builder>(std::make_shared<minter::tx>());
+}
+
+// Construction
+minter::tx_builder::tx_builder(std::shared_ptr<minter::tx> tx)
+    : m_tx(std::move(tx)) {
+}
+minter::tx_builder::tx_builder()
+    : m_tx(std::make_shared<minter::tx>()) {
 }
 
 // setters
@@ -174,7 +181,7 @@ std::shared_ptr<minter::tx_unbond> minter::tx_builder::tx_unbond() {
 }
 
 std::shared_ptr<minter::tx_redeem_check> minter::tx_builder::tx_redeem_check() {
-    return std::make_shared<minter::tx_redeem_check>(m_tx);
+    return std::make_shared<minter::tx_redeem_check>(std::move(m_tx));
 }
 
 std::shared_ptr<minter::tx_set_candidate_on> minter::tx_builder::tx_set_candidate_on() {

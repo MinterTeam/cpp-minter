@@ -20,9 +20,8 @@ namespace minter {
 
 class MINTER_TX_API tx_builder {
 public:
-    tx_builder(std::shared_ptr<minter::tx> tx)
-        : m_tx(std::move(tx)) {
-    }
+    explicit tx_builder(std::shared_ptr<minter::tx> tx);
+    tx_builder();
     ~tx_builder() = default;
 
     /// Base transaction data
