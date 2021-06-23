@@ -128,10 +128,6 @@ dev::bytes minter::utils::from_base64_web(dev::bytes data) {
         }
     }
 
-    //if (enc.length() % 4 != 0) {
-    //            enc += strRepeat(PADDING, 4 - enc.length() % 4);
-    //        }
-
     return toolbox::data::base64_decode_bytes(out);
 }
 
@@ -161,10 +157,6 @@ dev::bigint minter::utils::to_bigint(const dev::bytes& bytes) {
     if (bytes.empty()) {
         return dev::bigint("0");
     }
-    //
-    //    dev::bigint val;
-    //    boost::multiprecision::import_bits(val, bytes.begin(), bytes.end());
-    //    return val;
 
     return dev::bigint(bytes);
 }
@@ -186,21 +178,15 @@ std::string minter::utils::to_string(const dev::bytes& src) {
 }
 
 std::string minter::utils::to_string(const dev::bigdec18& src) {
-    //    std::stringstream ss;
-    //    ss << std::setprecision(std::numeric_limits<boost::multiprecision::cpp_dec_float<18>>::max_digits10);
-    //    ss << src;
-    //
-    //    return toolbox::strings::decimal_formatter()(ss.str());
-
     return src.format(".18f");
 }
 
 std::string minter::utils::to_string_lp(const dev::bigdec18& src) {
-    //    std::stringstream ss;
-    //    ss << std::setprecision(std::numeric_limits<boost::multiprecision::cpp_dec_float<4>>::max_digits10);
-    //    ss << src;
     const auto res = to_string(src);
-    return toolbox::strings::decimal_formatter(res).set_min_fractions(4).set_max_fractions(4).format();
+    return toolbox::strings::decimal_formatter(res)
+        .set_min_precision(2)
+        .set_max_precision(8)
+        .format();
 }
 
 std::string minter::utils::to_string(const dev::bigint& src) {

@@ -1,10 +1,16 @@
 # Release notes
 
+## 2.0.3
+- Updated `bip3x` as it contains important fixes for windows mingw
+- Updated other dependencies
+- Code cleanup
+
 ## 2.0.2
 
 - Updated `bigmath`: fixed memory leaks
 - Removed `BOOST_THROW_EXCEPTION` as it conflicts with boost's macro
 - Added default constructor for `tx_builder`
+- Added `minter::def_con_id` that represents base coin (BIP or MNT) with id=0
 
 ## 2.0.1
 

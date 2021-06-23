@@ -51,10 +51,10 @@ class MinterTxConan(ConanFile):
     default_channel = "latest"
 
     requires = (
-        'bip39/2.1.1@edwardstock/latest',
+        'bip39/2.2.0@edwardstock/latest',
         'secp256k1_java/1.0.0@edwardstock/latest',
-        'toolbox/3.2.2@edwardstock/latest',
-        'bigmath/1.0.5@edwardstock/latest'
+        'toolbox/3.2.3@edwardstock/latest',
+        'bigmath/1.0.6@edwardstock/latest'
     )
 
     build_requires = (

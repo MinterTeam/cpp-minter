@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.12)
 project(minter_tx
-        VERSION 2.0.2
+        VERSION 2.0.3
         DESCRIPTION "Minter Transaction SDK for C++"
         LANGUAGES CXX
         )
@@ -23,6 +23,10 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY bin)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY lib)
 set(CMAKE_PDB_OUTPUT_DIRECTORY lib)
+
+if (MINGW)
+	list(APPEND CONAN_OPTS "with_openssl_rand=True")
+endif ()
 
 if (MSVC)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W2 /MP")
