@@ -12,7 +12,6 @@ if (NOT CMAKE_BUILD_TYPE)
 endif ()
 
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(ENABLE_SHARED OFF CACHE BOOL "Build shared lib instead of static")
 set(ENABLE_CONAN ON CACHE BOOL "Enable conan dep manager")
