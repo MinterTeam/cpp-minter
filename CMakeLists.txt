@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.12)
 project(minter_tx
-        VERSION 2.0.3
+        VERSION 2.1.0
         DESCRIPTION "Minter Transaction SDK for C++"
         LANGUAGES CXX
         )
@@ -188,7 +188,7 @@ set(HEADERS
     include/minter/tx/tx_vote_commission.h
     include/minter/tx/tx_vote_update.h
     include/minter/tx/tx_create_swap_pool.h
-    )
+    include/minter/tx/tx_add_limited_order.h include/minter/tx/tx_remove_limited_order.h)
 
 set(SOURCES
     ${HEADERS}
@@ -238,6 +238,8 @@ set(SOURCES
     src/tx/tx_vote_commission.cpp
     src/tx/tx_vote_update.cpp
     src/tx/tx_create_swap_pool.cpp
+    src/tx/tx_add_limited_order.cpp
+    src/tx/tx_remove_limited_order.cpp
     )
 
 set(MINTER_TX_EXPORTING 1)
@@ -326,7 +328,12 @@ if (ENABLE_TEST)
 	    tests/tx_edit_coin_owner_test.cpp
 	    tests/tx_edit_multisig_test.cpp
 	    tests/tx_edit_candidate_public_key_test.cpp
-	    tests/tx_swap_pool_test.cpp tests/tx_liquidity_add_remove_test.cpp tests/tx_edit_candidate_commission_test.cpp tests/tx_token_test.cpp)
+	    tests/tx_swap_pool_test.cpp
+	    tests/tx_liquidity_add_remove_test.cpp
+	    tests/tx_edit_candidate_commission_test.cpp
+	    tests/tx_token_test.cpp
+	    tests/tx_limited_order_test.cpp
+	    )
 
 	add_executable(${PROJECT_NAME_TEST} ${TEST_SOURCES})
 	if (NOT MSVC)

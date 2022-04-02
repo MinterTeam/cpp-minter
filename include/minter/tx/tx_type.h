@@ -61,7 +61,10 @@ enum tx_type_val : uint8_t {
     recreate_token,
     vote_commission,
     vote_update,
-    create_swap_pool
+    create_swap_pool,
+    /// \since minter 2.6
+    add_limited_order,
+    remove_limited_order
 };
 
 /// \brief Map with transaction type names. The key is uint8_t enum: minter::tx_type_val
@@ -137,6 +140,9 @@ constexpr const static auto tx_recreate_token_type = tx_type<tx_recreate_token>(
 constexpr const static auto tx_vote_commission_type = tx_type<tx_vote_commission>(1000.0, tx_type_val::vote_commission);
 constexpr const static auto tx_vote_update_type = tx_type<tx_vote_update>(1000.0, tx_type_val::vote_update);
 constexpr const static auto tx_create_swap_pool_type = tx_type<tx_create_swap_pool>(1000.0, tx_type_val::create_swap_pool);
+/// \since minter 2.6
+constexpr const static auto tx_add_limited_order_type = tx_type<tx_add_limited_order>(10.0, tx_type_val::add_limited_order);
+constexpr const static auto tx_remove_limited_order_type = tx_type<tx_remove_limited_order>(10.0, tx_type_val::remove_limited_order);
 
 } // namespace minter
 

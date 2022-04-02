@@ -3,11 +3,6 @@ find_program(BASH_BIN bash)
 find_program(GREP_BIN grep)
 
 function (add_conan_remote NAME URL)
-	message(STATUS "Conan remote ${NAME} exists ${CONAN_REMOTE_${NAME}_EXISTS}")
-	if (CONAN_REMOTE_${NAME}_EXISTS)
-		return()
-	endif ()
-
 	find_program(CONAN_BIN conan REQUIRED)
 
 	execute_process(
@@ -31,23 +26,32 @@ function (add_conan_remote NAME URL)
 	endif ()
 endfunction ()
 
-if (CONANFILE_NAME)
-	set(CONANFILE_NAME ${CONANFILE_NAME})
-else ()
-	set(CONANFILE_NAME conanfile.py)
-endif ()
-
 macro (conan_init)
 	include(ConanBuild)
-	conan_cmake_run(
-		CONANFILE ${CONANFILE_NAME}
-		BUILD missing
-		BASIC_SETUP
-	)
+	if (NO_OUTPUT_DIRS)
+		conan_cmake_run(
+			CONANFILE conanfile.py
+			BUILD missing
+			BASIC_SETUP
+			NO_OUTPUT_DIRS
+			OPTIONS "${CONAN_OPTS}"
+		)
+	else ()
+		conan_cmake_run(
+			CONANFILE conanfile.py
+			BUILD missing
+			BASIC_SETUP
+			OPTIONS "${CONAN_OPTS}"
+		)
+	endif ()
 
 	if (EXISTS ${CMAKE_CURRENT_BINARY_DIR}/conanbuildinfo.cmake)
 		include(${CMAKE_CURRENT_BINARY_DIR}/conanbuildinfo.cmake)
-		conan_basic_setup(TARGETS)
+		if (NO_OUTPUT_DIRS)
+			conan_basic_setup(TARGETS KEEP_RPATHS)
+		else ()
+			conan_basic_setup(TARGETS KEEP_RPATHS NO_OUTPUT_DIRS)
+		endif ()
 	else ()
 		message(WARNING "The file ${CMAKE_CURRENT_BINARY_DIR}/conanbuildinfo.cmake doesn't exist, you have to run conan install first")
 	endif ()

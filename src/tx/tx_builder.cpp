@@ -265,3 +265,9 @@ std::shared_ptr<minter::tx_vote_update> minter::tx_builder::tx_vote_update() {
 std::shared_ptr<minter::tx_vote_commission> minter::tx_builder::tx_vote_commission() {
     return std::make_shared<minter::tx_vote_commission>(m_tx);
 }
+std::shared_ptr<minter::tx_add_limited_order> minter::tx_builder::tx_add_limited_order() {
+    return std::make_shared<minter::tx_add_limited_order>(m_tx);
+}
+std::shared_ptr<minter::tx_remove_limited_order> minter::tx_builder::tx_remove_limited_order() {
+    return std::make_shared<minter::tx_remove_limited_order>(m_tx);
+}

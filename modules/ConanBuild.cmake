@@ -271,7 +271,6 @@ endfunction ()
 function (conan_cmake_detect_vs_runtime result)
 	string(TOUPPER ${CMAKE_BUILD_TYPE} build_type)
 	set(variables ${CMAKE_CXX_FLAGS_${build_type}} ${CMAKE_C_FLAGS_${build_type}} ${CMAKE_CXX_FLAGS} ${CMAKE_C_FLAGS})
-	message(STATUS ${variables})
 	foreach (variable ${variables})
 		string(REPLACE " " ";" flags ${variable})
 		foreach (flag ${flags})
@@ -360,11 +359,7 @@ function (conan_cmake_install)
 
 	execute_process(COMMAND ${conan_command} ${conan_args}
 	                RESULT_VARIABLE return_code
-	                OUTPUT_VARIABLE conan_output
-	                ERROR_VARIABLE conan_output
 	                WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
-
-	message(STATUS "${conan_output}")
 
 	if (NOT "${return_code}" STREQUAL "0")
 		message(FATAL_ERROR "Conan install failed='${return_code}'")
@@ -512,6 +507,6 @@ macro (conan_add_remote)
 	endif ()
 
 	message(STATUS "Conan: Adding ${CONAN_NAME} remote repositoy (${CONAN_URL})")
-	execute_process(COMMAND ${CONAN_CMD} remote add ${CONAN_NAME} ${CONAN_URL}
+	execute_process(COMMAND ${CONAN_CMD} remote add -f ${CONAN_NAME} ${CONAN_URL}
 	                ${CONAN_INDEX_ARG} -f)
 endmacro ()

@@ -52,6 +52,8 @@ class tx_recreate_token;
 class tx_vote_commission;
 class tx_vote_update;
 class tx_create_swap_pool;
+class tx_add_limited_order;
+class tx_remove_limited_order;
 
 } // namespace minter
 

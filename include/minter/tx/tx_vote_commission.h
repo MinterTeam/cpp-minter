@@ -12,6 +12,7 @@
 
 #include "minter/public_key.h"
 #include "tx_data.h"
+#include <unordered_map>
 
 namespace minter {
 
@@ -71,10 +72,15 @@ public:
     tx_vote_commission& set_fee_burn_token(dev::bigint fee);
     tx_vote_commission& set_fee_vote_commission(dev::bigint fee);
     tx_vote_commission& set_fee_vote_update(dev::bigint fee);
+    tx_vote_commission& set_fee_failed_tx(dev::bigint fee);
+    tx_vote_commission& set_fee_add_limit_order(dev::bigint fee);
+    tx_vote_commission& set_fee_remove_limit_order(dev::bigint fee);
 
     const minter::pubkey_t& get_pub_key() const;
     const dev::bigint& get_height() const;
     const dev::bigint& get_coin_id() const;
+    std::unordered_map<std::string, dev::bigint*>& get_fee_map();
+    tx_vote_commission& set_fee(const std::string& fee_name, dev::bigint fee);
 
     dev::bigint get_fee_payload_byte() const;
     dev::bigint get_fee_send() const;
@@ -118,6 +124,9 @@ public:
     dev::bigint get_fee_burn_token() const;
     dev::bigint get_fee_vote_commission() const;
     dev::bigint get_fee_vote_update() const;
+    dev::bigint get_fee_failed_tx() const;
+    dev::bigint get_fee_add_limit_order() const;
+    dev::bigint get_fee_remove_limit_order() const;
 
 private:
     minter::pubkey_t m_pub_key;
@@ -167,6 +176,12 @@ private:
     dev::bigint m_burn_token;
     dev::bigint m_vote_commission;
     dev::bigint m_vote_update;
+
+    dev::bigint m_failed_tx;
+    dev::bigint m_add_limit_order;
+    dev::bigint m_remove_limit_order;
+
+    std::unordered_map<std::string, dev::bigint*> m_fees_map;
 };
 
 } // namespace minter

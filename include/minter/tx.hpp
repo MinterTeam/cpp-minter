@@ -27,5 +27,7 @@
 #include "tx/tx_set_candidate_on_off.h"
 #include "tx/tx_type.h"
 #include "tx/tx_unbond.h"
+#include "tx/tx_add_limited_order.h"
+#include "tx/tx_remove_limited_order.h"
 
-#endif //MINTER_TX_TX_HPP
+#endif // MINTER_TX_TX_HPP

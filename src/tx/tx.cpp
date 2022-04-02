@@ -9,6 +9,7 @@
 
 #include "minter/tx/tx.h"
 
+#include "minter/tx/tx_add_limited_order.h"
 #include "minter/tx/tx_add_liquidity.h"
 #include "minter/tx/tx_burn_token.h"
 #include "minter/tx/tx_buy_coin.h"
@@ -30,6 +31,7 @@
 #include "minter/tx/tx_recreate_coin.h"
 #include "minter/tx/tx_recreate_token.h"
 #include "minter/tx/tx_redeem_check.h"
+#include "minter/tx/tx_remove_limited_order.h"
 #include "minter/tx/tx_remove_liquidity.h"
 #include "minter/tx/tx_sell_all_coins.h"
 #include "minter/tx/tx_sell_all_swap_pool.h"
@@ -220,6 +222,12 @@ void minter::tx::create_data_from_type() {
         break;
     case tx_vote_update_type.type():
         m_data_raw = tx_vote_update_type.create(shared_from_this(), get_data_raw());
+        break;
+    case tx_add_limited_order_type.type():
+        m_data_raw = tx_add_limited_order_type.create(shared_from_this(), get_data_raw());
+        break;
+    case tx_remove_limited_order_type.type():
+        m_data_raw = tx_remove_limited_order_type.create(shared_from_this(), get_data_raw());
         break;
     default:
         throw std::runtime_error("Unknown tx type: " + minter::utils::to_string(m_type));

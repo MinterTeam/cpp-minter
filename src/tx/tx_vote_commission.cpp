@@ -15,6 +15,49 @@
 
 minter::tx_vote_commission::tx_vote_commission(std::shared_ptr<minter::tx> tx)
     : tx_data(std::move(tx)) {
+
+    m_fees_map["payload_byte"] = &m_payload_byte;
+    m_fees_map["send"] = &m_send;
+    m_fees_map["buy_bancor"] = &m_buy_bancor;
+    m_fees_map["sell_bancor"] = &m_sell_bancor;
+    m_fees_map["sell_all_bancor"] = &m_sell_all_bancor;
+    m_fees_map["buy_pool_base"] = &m_buy_pool_base;
+    m_fees_map["buy_pool_delta"] = &m_buy_pool_delta;
+    m_fees_map["sell_pool_base"] = &m_sell_pool_base;
+    m_fees_map["sell_pool_delta"] = &m_sell_pool_delta;
+    m_fees_map["sell_all_pool_base"] = &m_sell_all_pool_base;
+    m_fees_map["sell_all_pool_delta"] = &m_sell_all_pool_delta;
+    m_fees_map["create_ticker_3"] = &m_create_ticker_3;
+    m_fees_map["create_ticker_4"] = &m_create_ticker_4;
+    m_fees_map["create_ticker_5"] = &m_create_ticker_5;
+    m_fees_map["create_ticker_6"] = &m_create_ticker_6;
+    m_fees_map["create_ticker_7_to_10"] = &m_create_ticker_7_to_10;
+    m_fees_map["create_coin"] = &m_create_coin;
+    m_fees_map["create_token"] = &m_create_token;
+    m_fees_map["recreate_coin"] = &m_recreate_coin;
+    m_fees_map["recreate_token"] = &m_recreate_token;
+    m_fees_map["declare_candidacy"] = &m_declare_candidacy;
+    m_fees_map["delegate"] = &m_delegate;
+    m_fees_map["unbond"] = &m_unbond;
+    m_fees_map["redeem_check"] = &m_redeem_check;
+    m_fees_map["set_candidate_on"] = &m_set_candidate_on;
+    m_fees_map["set_candidate_off"] = &m_set_candidate_off;
+    m_fees_map["create_multisig"] = &m_create_multisig;
+    m_fees_map["multisend_base"] = &m_multisend_base;
+    m_fees_map["multisend_delta"] = &m_multisend_delta;
+    m_fees_map["edit_candidate"] = &m_edit_candidate;
+    m_fees_map["set_halt_block"] = &m_set_halt_block;
+    m_fees_map["edit_ticker_owner"] = &m_edit_ticker_owner;
+    m_fees_map["edit_multisig"] = &m_edit_multisig;
+    m_fees_map["edit_candidate_pub_key"] = &m_edit_candidate_pub_key;
+    m_fees_map["create_swap_pool"] = &m_create_swap_pool;
+    m_fees_map["add_liquidity"] = &m_add_liquidity;
+    m_fees_map["remove_liquidity"] = &m_remove_liquidity;
+    m_fees_map["edit_candidate_commission"] = &m_edit_candidate_commission;
+    m_fees_map["mint_token"] = &m_mint_token;
+    m_fees_map["burn_token"] = &m_burn_token;
+    m_fees_map["vote_commission"] = &m_vote_commission;
+    m_fees_map["vote_update"] = &m_vote_update;
 }
 
 uint16_t minter::tx_vote_commission::type() const {
@@ -159,6 +202,19 @@ const dev::bigint& minter::tx_vote_commission::get_height() const {
 }
 const dev::bigint& minter::tx_vote_commission::get_coin_id() const {
     return m_coin_id;
+}
+
+std::unordered_map<std::string, dev::bigint*>& minter::tx_vote_commission::get_fee_map() {
+    return m_fees_map;
+}
+
+minter::tx_vote_commission& minter::tx_vote_commission::set_fee(const std::string& fee_name, dev::bigint fee) {
+    if (!m_fees_map.count(fee_name)) {
+        throw std::runtime_error("Unknown fee name: " + fee_name);
+    }
+
+    *m_fees_map[fee_name] = std::move(fee);
+    return *this;
 }
 
 minter::tx_vote_commission& minter::tx_vote_commission::set_fee_payload_byte(dev::bigint fee) {
@@ -371,6 +427,19 @@ minter::tx_vote_commission& minter::tx_vote_commission::set_fee_vote_update(dev:
     return *this;
 }
 
+minter::tx_vote_commission& minter::tx_vote_commission::set_fee_failed_tx(dev::bigint fee) {
+    m_failed_tx = std::move(fee);
+    return *this;
+}
+minter::tx_vote_commission& minter::tx_vote_commission::set_fee_add_limit_order(dev::bigint fee) {
+    m_add_limit_order = std::move(fee);
+    return *this;
+}
+minter::tx_vote_commission& minter::tx_vote_commission::set_fee_remove_limit_order(dev::bigint fee) {
+    m_remove_limit_order = std::move(fee);
+    return *this;
+}
+
 dev::bigint minter::tx_vote_commission::get_fee_payload_byte() const {
     return m_payload_byte;
 }
@@ -537,4 +606,14 @@ dev::bigint minter::tx_vote_commission::get_fee_vote_commission() const {
 
 dev::bigint minter::tx_vote_commission::get_fee_vote_update() const {
     return m_vote_update;
+}
+
+dev::bigint minter::tx_vote_commission::get_fee_failed_tx() const {
+    return m_failed_tx;
+}
+dev::bigint minter::tx_vote_commission::get_fee_add_limit_order() const {
+    return m_add_limit_order;
+}
+dev::bigint minter::tx_vote_commission::get_fee_remove_limit_order() const {
+    return m_remove_limit_order;
 }

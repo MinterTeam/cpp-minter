@@ -1,6 +1,14 @@
 # Release notes
 
+## 2.1.0
+
+- Added limited order transactions:
+    - add (`tx_add_limited_order`)
+    - remove (`tx_remove_limited_order`)
+    - updated math library for apple arm64
+
 ## 2.0.3
+
 - Updated `bip3x` as it contains important fixes for windows mingw
 - Updated other dependencies
 - Code cleanup

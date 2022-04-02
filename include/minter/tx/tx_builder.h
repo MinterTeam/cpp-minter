@@ -95,6 +95,8 @@ public:
     std::shared_ptr<minter::tx_edit_candidate_commission> tx_edit_candidate_commission();
     std::shared_ptr<minter::tx_vote_update> tx_vote_update();
     std::shared_ptr<minter::tx_vote_commission> tx_vote_commission();
+    std::shared_ptr<minter::tx_add_limited_order> tx_add_limited_order();
+    std::shared_ptr<minter::tx_remove_limited_order> tx_remove_limited_order();
 
 private:
     std::shared_ptr<minter::tx> m_tx;
